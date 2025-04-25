@@ -1,0 +1,66 @@
+/* تنسيق الفورم */
+.add-service-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .add-service-form {
+    background-color: #f4e9d8; /* لون بيج */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .form-title {
+    color: #8b7355; /* لون عسلي */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* تنسيق الحقول */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #000000; /* لون عسلي */
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #e2b631; /* لون ذهبي فاتح */
+    border-radius: 5px;
+    background-color: #ffffff; /* لون بيج فاتح */
+    
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+  }
+  
+  /* تنسيق زر الإرسال */
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d3ad87; /* لون ذهبي */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .submit-button:hover {
+    background-color: #c9a381; /* لون ذهبي غامق عند التحويم */
+  }

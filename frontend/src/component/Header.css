@@ -1,0 +1,78 @@
+/*
+
+nav{
+    height: auto;
+    width: 100%;
+   
+}
+.Home{
+    align-items: start;
+}
+.About{
+    align-items: end;
+ }
+.Help{
+    
+    
+    }
+.Contact{
+ 
+
+}
+/* تنسيق عام لشريط التنقل */
+.navbar {
+    background-color: #ffffff; /* لون الخلفية */
+    padding: 10px 20px; /* تباعد داخلي */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*position: fixed;  لجعل الشريط ثابتًا في الأعلى */
+    
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* للتأكد من ظهور الشريط فوق العناصر الأخرى */
+}
+
+/* تنسيق قائمة التنقل */
+.nav-list {
+    list-style: none; /* إزالة النقاط */
+    display: flex;
+    margin: 10px;
+    padding: 0;
+}
+
+/* تنسيق عناصر القائمة */
+.nav-item {
+    margin-left: 20px;
+    position: relative; 
+}
+
+/* تنسيق الروابط */
+.nav-item a {
+    text-decoration: none; /* إزالة الخط التحتي */
+    color: #333; /* لون النص */
+    font-size: 16px; /* حجم الخط */
+    padding: 8px 16px; /* تباعد داخلي */
+    transition: background-color 0.3s; /* تأثير انتقالي */
+    text-transform: uppercase; /* تحويل النص إلى أحرف كبيرة */
+}
+
+/* تأثير عند التمرير فوق الروابط */
+.nav-item a:hover {
+    background-color: #d6d6d6; /* لون الخلفية عند التمرير */
+    border-radius: 4px; /* زوايا مدورة */
+}
+.Logo {
+    position: absolute;
+   
+    right: 70%;
+    height: 300px;
+    width: 400px;
+    top: 100px;
+    size: 100%;
+}
+.navbar.scrolled {
+    background-color: #f9f8f9; /* لون الخلفية عند التمرير */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
