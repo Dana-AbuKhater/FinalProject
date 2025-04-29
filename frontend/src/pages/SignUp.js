@@ -10,29 +10,51 @@ const SignUp = () => {
     const phone = event.target.phone.value;
     const password = event.target.password.value;
     const confirmPassword = event.target.confirmPassword.value;
-    const type = localStorage.getItem("type");
+    const type = localStorage.getItem("type"); // تحديد نوع المستخدم (صالون أو كستمر)
 
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    fetch("http://localhost:3000/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, email, username, phone, password }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      if (data.success) {
-        alert("Account created successfully!");
-        window.location.href = "/SignIn";
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch(err => console.error("Error:", err));
+    // تحقق إذا كان نوع المستخدم هو صالون أو كستمر
+    if (type === 'salon') {
+      // تحقق من سكيما الصالون
+      fetch("http://localhost:3000/api/salon/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, email, username, phone, password }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Salon account created successfully!");
+          window.location.href = "/SignIn";
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+    } else if (type === 'customer') {
+      // تحقق من سكيما الكستمر
+      fetch("http://localhost:3000/api/customer/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, email, username, phone, password }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Customer account created successfully!");
+          window.location.href = "/SignIn";
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+    } else {
+      alert("Please select a valid user type (Salon or Customer).");
+    }
   };
 
   return (
