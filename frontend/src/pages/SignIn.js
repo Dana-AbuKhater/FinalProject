@@ -7,8 +7,9 @@ const SignIn = () => {
 
     const email = event.target.username.value;
     const password = event.target.password.value;
-    const type = localStorage.getItem("type");  // هنا بنجيب النوع
+    const type = localStorage.getItem("type");  // جلب النوع من localStorage
 
+    // إرسال الطلب إلى الـ API للتحقق من السكيما بناءً على النوع
     fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,12 +20,14 @@ const SignIn = () => {
       console.log(data);
       if (data.success) {
         if (type === "customer") {
+          // التوجيه إلى لوحة التحكم الخاصة بالكستمر
           window.location.href = "/CustomerDashboard";
-        } else {
+        } else if (type === "salon") {
+          // التوجيه إلى لوحة التحكم الخاصة بالصالون
           window.location.href = "/SalonDashboard";
         }
       } else {
-        alert(data.message);
+        alert(data.message);  // في حال كان هناك خطأ في تسجيل الدخول
       }
     })
     .catch(err => console.error("Error:", err));

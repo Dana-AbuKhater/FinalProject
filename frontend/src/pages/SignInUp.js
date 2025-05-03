@@ -1,23 +1,46 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './SignInUp.css';
+
 function SignInUp() {
   const navigate = useNavigate();
+  const location = useLocation(); // الحصول على الـ location
+  const [userType, setUserType] = useState('');
+
+  // التحقق من نوع المستخدم عند تحميل الصفحة
+  useEffect(() => {
+    if (location.state && location.state.userType) {
+      setUserType(location.state.userType); // تعيين نوع المستخدم من الـ state
+    } else {
+      alert('من فضلك اختر نوع المستخدم أولًا');
+      navigate('/'); // إذا لم يتم تحديد نوع المستخدم، الرجوع للصفحة الرئيسية
+    }
+  }, [location.state, navigate]);
+
+  // الانتقال إلى صفحة تسجيل الدخول
   const handleSignInClick = () => {
-    navigate('/SignIn'); // الانتقال إلى صفحة Sign In
+    navigate('/SignIn', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
+
+  // الانتقال إلى صفحة التسجيل
   const handleSignUpClick = () => {
-    navigate('/SignUp'); // الانتقال إلى صفحة Sign Up
+    navigate('/SignUp', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
-  const salonprofail = () => {  
-    navigate('/SalonInfoForm'); // الانتقال إلى صفحة Sign Up
-  };
+
   return (
     <div>
-      <button onClick={handleSignInClick} className='SignIn-button'>Sign In</button>
-      <button onClick={handleSignUpClick} className='SignUp-button'>Sign Up</button>
-      <button onClick={salonprofail}> salon profail</button>
+      <h2>الرجاء اختيار الإجراء</h2>
+      {/* زر لتسجيل الدخول */}
+      <button onClick={handleSignInClick} className='SignIn-button'>
+        تسجيل الدخول
+      </button>
+
+      {/* زر لإنشاء حساب جديد */}
+      <button onClick={handleSignUpClick} className='SignUp-button'>
+        إنشاء حساب جديد
+      </button>
     </div>
   );
 }
+
 export default SignInUp;
