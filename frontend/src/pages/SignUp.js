@@ -16,23 +16,31 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-
+    const body = JSON.stringify({ type, email, username, phone, password })
+    console.log(body)
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type, email, username, phone, password }),
     })
-    .then(res => res.json())
+    .then(res => {
+      console.log("Response : ",res)
+      return res.json()
+    })
     .then(data => {
-      console.log(data);
+      console.log("Data : ",data);
       if (data.success) {
         alert("Account created successfully!");
         window.location.href = "/SignIn";
       } else {
-        alert(data.message);
+        // alert(data.message);
+        console.log("Data")
       }
     })
-    .catch(err => console.error("Error:", err));
+    .catch(err =>{ 
+      console.log("Test test")
+      // console.error("Error:", err)
+    });
   };
 
   return (
