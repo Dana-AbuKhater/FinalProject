@@ -1,80 +1,171 @@
-import React, { useState } from 'react';
+/**import React from 'react';
 import './SignUp.css';
-import axios from 'axios';
 
 const SignUp = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
   const handleSubmit = (event) => {
-    event.preventDefault(); // منع إعادة تحميل الصفحة
-    setLoading(true);
-    setError(null);
+    event.preventDefault();
 
-    // استخراج القيم من النموذج
     const email = event.target.email.value;
     const username = event.target.username.value;
     const phone = event.target.phone.value;
     const password = event.target.password.value;
     const confirmPassword = event.target.confirmPassword.value;
-    const type = localStorage.getItem("type"); // قراءة نوع المستخدم من localStorage
+    const type = localStorage.getItem("type"); // تحديد نوع المستخدم (صالون أو كستمر)
 
-    // التحقق من تطابق كلمتي المرور
     if (password !== confirmPassword) {
-      setError("كلمتا المرور غير متطابقتين!");
-      setLoading(false);
+      alert("Passwords do not match!");
       return;
     }
-
-    // تحديد endpoint الخاص بالتسجيل
-    const endpoint = "http://localhost:3000/api/auth/register";
-
-    // التحقق من صحة نوع المستخدم
-    if (!type || (type !== 'salon' && type !== 'customer')) {
-      setError("الرجاء تحديد نوع مستخدم صالح (صالون أو عميل).");
-      setLoading(false);
-      return;
-    }
-
-    // إرسال البيانات باستخدام axios بطريقة POST (لا تغيير هنا لأننا عدلنا الباك إند)
-    axios.post(endpoint, {
-      type: type,
-      email: email,
-      username: username,
-      phone: phone,
-      password: password
+<<<<<<< HEAD
+    const body = JSON.stringify({ type, email, username, phone, password })
+    console.log(body)
+    fetch("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, email, username, phone, password }),
     })
-      .then(response => {
-        setLoading(false);
-        // التحقق من حالة الاستجابة
-        if (response.status === 200 || response.status === 201) {
-          const data = response.data;
+    .then(res => {
+      console.log("Response : ",res)
+      return res.json()
+    })
+    .then(data => {
+      console.log("Data : ",data);
+      if (data.success) {
+        alert("Account created successfully!");
+        window.location.href = "/SignIn";
+      } else {
+        // alert(data.message);
+        console.log("Data")
+      }
+    })
+    .catch(err =>{ 
+      console.log("Test test")
+      // console.error("Error:", err)
+    });
+=======
 
-          // التحقق مما إذا كانت العملية نجحت
-          if (data.success) {
-            alert(`تم إنشاء حساب ${type === 'salon' ? 'الصالون' : 'العميل'} بنجاح!`);
-            window.location.href = "/SignIn"; // تحويل المستخدم لصفحة تسجيل الدخول
-          } else {
-            setError(data.message || "فشل التسجيل");
-          }
+    // تحقق إذا كان نوع المستخدم هو صالون أو كستمر
+    if (type === 'salon') {
+      // تحقق من سكيما الصالون
+      fetch("http://localhost:3000/api/salon/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, email, username, phone, password }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Salon account created successfully!");
+          window.location.href = "/SignIn";
         } else {
-          setError("استجابة غير متوقعة من الخادم.");
+          alert(data.message);
         }
       })
-      .catch(error => {
-        setLoading(false);
-        // التعامل مع الخطأ بشكل أكثر تفصيلاً
-        console.error("Error:", error);
-        if (error.response) {
-          // الخادم استجاب برمز حالة خارج نطاق 2xx
-          setError(error.response.data.message || "حدث خطأ أثناء التسجيل");
-        } else if (error.request) {
-          // لم يستجب الخادم
-          setError("لا يمكن الوصول إلى الخادم. تأكد من تشغيل الخادم.");
+      .catch(err => console.error("Error:", err));
+    } else if (type === 'customer') {
+      // تحقق من سكيما الكستمر
+      fetch("http://localhost:3000/api/customer/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, email, username, phone, password }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Customer account created successfully!");
+          window.location.href = "/SignIn";
         } else {
-          // حدث خطأ آخر
-          setError("حدث خطأ أثناء التسجيل");
+          alert(data.message);
         }
+      })
+      .catch(err => console.error("Error:", err));
+    } else {
+      alert("Please select a valid user type (Salon or Customer).");
+    }
+>>>>>>> 35a1976f3eb5acc4525dbe29e073d5fae75e6ea0
+  };
+
+  return (
+    <div style={{ textAlign: 'center', marginTop: '150px', marginRight: 'auto', marginLeft: 'auto', border: '1px solid #e8b923', padding: '20px', width: '300px', borderRadius: '5px', alignContent: 'center', boxShadow: '0 0 10px #bc9c3c' }}>
+      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign Up</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
+        <div style={{ marginBottom: '15px' }}>
+          <label>Email:</label>
+          <input type="email" name="email" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Username:</label>
+          <input type="text" name="username" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Phone Number:</label>
+          <input type="tel" name="phone" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Password:</label>
+          <input type="password" name="password" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+        </div>
+
+        <div style={{ marginBottom: '15px' }}>
+          <label>Confirm Password:</label>
+          <input type="password" name="confirmPassword" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+        </div>
+
+        <button className="signup" type="submit" style={{ width: '100%', padding: '10px', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Sign Up</button>
+      </form>
+      <p style={{ marginTop: '15px', fontSize: '14px' }}>Already have an account? <a href="/SignIn" style={{ textDecoration: 'none' }}>Sign In</a></p>
+    </div>
+  );
+};
+
+export default SignUp;**/
+import React from 'react';
+import './SignUp.css';
+
+const SignUp = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const email = event.target.email.value;
+    const username = event.target.username.value;
+    const phone = event.target.phone.value;
+    const password = event.target.password.value;
+    const confirmPassword = event.target.confirmPassword.value;
+    const type = localStorage.getItem("type"); // Get user type (salon or customer)
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    // Determine the appropriate endpoint based on user type
+    const endpoint = "http://localhost:3000/api/auth/register";
+
+    if (!type || (type !== 'salon' && type !== 'customer')) {
+      alert("Please select a valid user type (Salon or Customer).");
+      return;
+    }
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, email, username, phone, password }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert(`${type === 'salon' ? 'Salon' : 'Customer'} account created successfully!`);
+          window.location.href = "/SignIn";
+        } else {
+          alert(data.message || "Registration failed");
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("An error occurred during registration");
       });
   };
 
@@ -91,17 +182,10 @@ const SignUp = () => {
       alignContent: 'center',
       boxShadow: '0 0 10px #bc9c3c'
     }}>
-      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>إنشاء حساب جديد</h1>
-      
-      {error && (
-        <div style={{ color: 'red', marginBottom: '15px', fontSize: '14px' }}>
-          {error}
-        </div>
-      )}
-      
+      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign Up</h1>
       <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
         <div style={{ marginBottom: '15px' }}>
-          <label>البريد الإلكتروني:</label>
+          <label>Email:</label>
           <input
             type="email"
             name="email"
@@ -111,7 +195,7 @@ const SignUp = () => {
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label>اسم المستخدم:</label>
+          <label>Username:</label>
           <input
             type="text"
             name="username"
@@ -121,7 +205,7 @@ const SignUp = () => {
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label>رقم الهاتف:</label>
+          <label>Phone Number:</label>
           <input
             type="tel"
             name="phone"
@@ -131,7 +215,7 @@ const SignUp = () => {
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label>كلمة المرور:</label>
+          <label>Password:</label>
           <input
             type="password"
             name="password"
@@ -141,7 +225,7 @@ const SignUp = () => {
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label>تأكيد كلمة المرور:</label>
+          <label>Confirm Password:</label>
           <input
             type="password"
             name="confirmPassword"
@@ -153,22 +237,20 @@ const SignUp = () => {
         <button
           className="signup"
           type="submit"
-          disabled={loading}
           style={{
             width: '100%',
             padding: '10px',
             color: '#fff',
             border: 'none',
             borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.7 : 1
+            cursor: 'pointer'
           }}
         >
-          {loading ? 'جارٍ التسجيل...' : 'إنشاء حساب'}
+          Sign Up
         </button>
       </form>
       <p style={{ marginTop: '15px', fontSize: '14px' }}>
-        لديك حساب بالفعل؟ <a href="/SignIn" style={{ textDecoration: 'none' }}>تسجيل الدخول</a>
+        Already have an account? <a href="/SignIn" style={{ textDecoration: 'none' }}>Sign In</a>
       </p>
     </div>
   );
