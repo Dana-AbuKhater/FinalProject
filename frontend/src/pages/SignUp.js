@@ -142,9 +142,7 @@ const SignUp = () => {
     }
 
     // Determine the appropriate endpoint based on user type
-    const endpoint = type === 'salon' 
-      ? "http://localhost:3000/api/salon/register" 
-      : "http://localhost:3000/api/customer/register";
+    const endpoint = "http://localhost:3000/api/auth/register";
 
     if (!type || (type !== 'salon' && type !== 'customer')) {
       alert("Please select a valid user type (Salon or Customer).");
@@ -156,96 +154,96 @@ const SignUp = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ type, email, username, phone, password }),
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        alert(`${type === 'salon' ? 'Salon' : 'Customer'} account created successfully!`);
-        window.location.href = "/SignIn";
-      } else {
-        alert(data.message || "Registration failed");
-      }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("An error occurred during registration");
-    });
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert(`${type === 'salon' ? 'Salon' : 'Customer'} account created successfully!`);
+          window.location.href = "/SignIn";
+        } else {
+          alert(data.message || "Registration failed");
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("An error occurred during registration");
+      });
   };
 
   return (
-    <div style={{ 
-      textAlign: 'center', 
-      marginTop: '150px', 
-      marginRight: 'auto', 
-      marginLeft: 'auto', 
-      border: '1px solid #e8b923', 
-      padding: '20px', 
-      width: '300px', 
-      borderRadius: '5px', 
-      alignContent: 'center', 
-      boxShadow: '0 0 10px #bc9c3c' 
+    <div style={{
+      textAlign: 'center',
+      marginTop: '150px',
+      marginRight: 'auto',
+      marginLeft: 'auto',
+      border: '1px solid #e8b923',
+      padding: '20px',
+      width: '300px',
+      borderRadius: '5px',
+      alignContent: 'center',
+      boxShadow: '0 0 10px #bc9c3c'
     }}>
       <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign Up</h1>
       <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
         <div style={{ marginBottom: '15px' }}>
           <label>Email:</label>
-          <input 
-            type="email" 
-            name="email" 
-            required 
-            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} 
+          <input
+            type="email"
+            name="email"
+            required
+            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }}
           />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
           <label>Username:</label>
-          <input 
-            type="text" 
-            name="username" 
-            required 
-            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} 
+          <input
+            type="text"
+            name="username"
+            required
+            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }}
           />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
           <label>Phone Number:</label>
-          <input 
-            type="tel" 
-            name="phone" 
-            required 
-            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} 
+          <input
+            type="tel"
+            name="phone"
+            required
+            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }}
           />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
           <label>Password:</label>
-          <input 
-            type="password" 
-            name="password" 
-            required 
-            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} 
+          <input
+            type="password"
+            name="password"
+            required
+            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }}
           />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
           <label>Confirm Password:</label>
-          <input 
-            type="password" 
-            name="confirmPassword" 
-            required 
-            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} 
+          <input
+            type="password"
+            name="confirmPassword"
+            required
+            style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }}
           />
         </div>
 
-        <button 
-          className="signup" 
-          type="submit" 
-          style={{ 
-            width: '100%', 
-            padding: '10px', 
-            color: '#fff', 
-            border: 'none', 
-            borderRadius: '4px', 
-            cursor: 'pointer' 
+        <button
+          className="signup"
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '10px',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
           }}
         >
           Sign Up

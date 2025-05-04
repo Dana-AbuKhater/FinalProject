@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const newCustomer = new Customer(req.body);
+  const newCustomer = new Customer(req.query);
   await newCustomer.save();
   res.status(201).json(newCustomer);
 });

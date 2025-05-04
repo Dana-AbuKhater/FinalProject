@@ -1,54 +1,90 @@
 const express = require('express');
 const router = express.Router();
-const Customer = require('../models/Customer');
-const Salon = require('../models/Salon');
+const bcrypt = require('bcryptjs');
+const { body,query, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
-
-// 📝 تسجيل مستخدم جديد
-router.post('/register', async (req, res) => {
-  const { type, name, phone, email } = req.body;
-
-  try {
-    if (type === 'customer') {
-      const newCustomer = new Customer({ name, phone, email });
-      await newCustomer.save();
-      return res.status(201).json({ message: 'Customer registered successfully', user: newCustomer });
-    }
-
-    if (type === 'salon') {
-      const newSalon = new Salon({ name, phone, email });
-      await newSalon.save();
-      return res.status(201).json({ message: 'Salon registered successfully', user: newSalon });
-    }
-
-    res.status(400).json({ message: 'Invalid type' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error registering user', error });
-  }
+// User Schema
+const userSchema = new mongoose.Schema({
+  user_id: { type: Number, required: true},
+  type: { type: String, required: true, enum: ['customer', 'vendor', 'admin'] },
+  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  password: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now }
 });
 
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// 📝 تسجيل دخول
-router.post('/login', async (req, res) => {
-  const { type, email } = req.body;
-
-  try {
-    if (type === 'customer') {
-      const customer = await Customer.findOne({ email });
-      if (!customer) return res.status(404).json({ message: 'Customer not found' });
-      return res.status(200).json({ message: 'Customer login successful', user: customer });
+// 📝 Register
+router.post('/register',
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array().map(err => err.msg)
+      });
     }
 
-    if (type === 'salon') {
-      const salon = await Salon.findOne({ email });
-      if (!salon) return res.status(404).json({ message: 'Salon not found' });
-      return res.status(200).json({ message: 'Salon login successful', user: salon });
-    }
+    const { type, email, username, phone, password } = req.query;
+    
+    try {
+      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'User with this email or username already exists'
+        });
+      }
 
-    res.status(400).json({ message: 'Invalid type' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error logging in', error });
+      const hashedPassword = await bcrypt.hash(password, 12);
+      // Get the user with the highest user_id
+      const lastUser = await User.findOne().sort({ user_id: -1 });
+      
+      // Calculate the new user_id
+      const user_id = lastUser ? lastUser.user_id + 1 : 1;
+      const newUser = new User({
+        user_id,
+        userType:type,
+        email,
+        name:username,
+        phone,
+        password: hashedPassword
+      });
+
+      await newUser.save();
+
+      res.status(201).json({
+        success: true,
+        message: 'Account created successfully!',
+        user: {
+          id: newUser._id,
+          type: newUser.type,
+          email: newUser.email,
+          username: newUser.username,
+          phone: newUser.phone
+        }
+      });
+
+    } catch (error) {
+      console.error('Registration error:', error);
+
+      if (error.code === 11000) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email or username already exists'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
+      });
+    }
   }
-});
+);
 
 module.exports = router;
