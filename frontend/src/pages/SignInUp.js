@@ -11,10 +11,11 @@ function SignInUp() {
   useEffect(() => {
     if (location.state && location.state.userType) {
       setUserType(location.state.userType); // تعيين نوع المستخدم من الـ state
-    } else {
+    }
+    /**  else {
       alert('من فضلك اختر نوع المستخدم أولًا');
       navigate('/'); // إذا لم يتم تحديد نوع المستخدم، الرجوع للصفحة الرئيسية
-    }
+    }*/
   }, [location.state, navigate]);
 
   // الانتقال إلى صفحة تسجيل الدخول
@@ -26,18 +27,21 @@ function SignInUp() {
   const handleSignUpClick = () => {
     navigate('/SignUp', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
-
+  const handleSalonInfoForm = () => {
+    navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
+  };
   return (
     <div>
-      <h2>الرجاء اختيار الإجراء</h2>
       {/* زر لتسجيل الدخول */}
       <button onClick={handleSignInClick} className='SignIn-button'>
-        تسجيل الدخول
+        Sign In      
       </button>
-
       {/* زر لإنشاء حساب جديد */}
       <button onClick={handleSignUpClick} className='SignUp-button'>
-        إنشاء حساب جديد
+        Sign Up      
+      </button>
+      <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
+        SalonInfoForm    
       </button>
     </div>
   );

@@ -28,7 +28,7 @@ app.use('/api/customers', CustomerRoutes);
 app.use('/api/services', ServiceRoutes);
 app.use('/api/appointments', AppointmentsRoutes);
 app.use('/api/ratings', RatingRoutes);
-app.use('/api/auth', authRoutes);
+//app.use('/api/auth', authRoutes);
 
 // Root route handler
 app.get('/', (req, res) => {
@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 // Routes
-app.post('/api/auth/register', 
+app.post('/api/auth/register123', 
   [
     body('type').isIn(['customer', 'vendor', 'admin']).withMessage('Invalid user type'),
     body('email').isEmail().normalizeEmail().withMessage('Invalid email'),
@@ -58,8 +58,10 @@ app.post('/api/auth/register',
   ],
   async (req, res) => {
     // Validation
+    console.log("Req :",req)
+    // console.log("Res :",res.body)
     const errors = validationResult(req);
-    console.log(password)
+    /**console.log(req.body.password)**/
     if (!errors.isEmpty()) {  
       return res.status(400).json({ 
         success: false, 
@@ -70,6 +72,7 @@ app.post('/api/auth/register',
 
     const { type, email, username, phone, password } = req.body;
 
+  
     try {
       // Check if user already exists
       const existingUser = await User.findOne({ $or: [{ email }, { username }] });
@@ -117,7 +120,7 @@ app.post('/api/auth/register',
         return res.status(400).json({ 
           success: false, 
           message: 'Validation error',
-          errors: messages1 
+          errors:  'Internal server error'
         });
       }
       
@@ -140,7 +143,7 @@ app.post('/api/auth/register',
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something broke!' });
+  res.status(500).json({ success: false, message: 'Something broke!123' });
 });
 
 app.listen(3000, () => {
