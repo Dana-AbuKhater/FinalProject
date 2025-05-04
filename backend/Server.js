@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path'); // Add this line to import path
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
+const bodyParse = require("body-parser")
 require('dotenv').config();
 
 const SalonRoutes = require('./routes/SalonRoutes');
@@ -12,6 +13,7 @@ const ServiceRoutes = require('./routes/ServiceRoutes');
 const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
 const RatingRoutes = require('./routes/RatingRoutes');
 const authRoutes = require('./routes/authRoutes');
+const bodyParser = require('body-parser');
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -23,12 +25,12 @@ mongoose.connect(process.env.MONGO_URL)
 app.use(express.static('frontend'));
 
 // API Routes
-app.use('/api/salons', SalonRoutes);
-app.use('/api/customers', CustomerRoutes);
-app.use('/api/services', ServiceRoutes);
-app.use('/api/appointments', AppointmentsRoutes);
-app.use('/api/ratings', RatingRoutes);
-//app.use('/api/auth', authRoutes);
+// app.use('/api/salons', SalonRoutes);
+// app.use('/api/customers', CustomerRoutes);
+// app.use('/api/services', ServiceRoutes);
+// app.use('/api/appointments', AppointmentsRoutes);
+// app.use('/api/ratings', RatingRoutes);
+app.use('/api/auth', authRoutes);
 
 // Root route handler
 app.get('/', (req, res) => {
@@ -43,20 +45,19 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: false },
   createdAt: { type: Date, default: Date.now }
 });
-
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.setHeader("Access-Control-Allow-Headers","*");
+  next();
+});
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
-
+app.engine('html',require('ejs').renderFile)
+let parseBody = bodyParser.urlencoded({extended:true});
 // Routes
-app.post('/api/auth/register123', 
-  [
-    body('type').isIn(['customer', 'vendor', 'admin']).withMessage('Invalid user type'),
-    body('email').isEmail().normalizeEmail().withMessage('Invalid email'),
-    body('username').isLength({ min: 3 }).trim().withMessage('Username must be at least 3 characters'),
-    body('phone').isMobilePhone().withMessage('Invalid phone number'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-  ],
-  async (req, res) => {
+app.post('/register1234', async (req, res) => {
     // Validation
     console.log("Req :",req)
     // console.log("Res :",res.body)
