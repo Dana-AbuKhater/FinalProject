@@ -16,13 +16,16 @@ const authRoutes = require('./routes/authRoutes');
 const bodyParser = require('body-parser');
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3001', // السماح فقط لطلبات من الواجهة الأمامية
+  credentials: true
+}));
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ DB Connection Error", err));
 
 // Serve static files from the frontend directory
-app.use(express.static('frontend'));
+//app.use(express.static('frontend'));
 
 // API Routes
 // app.use('/api/salons', SalonRoutes);
@@ -34,7 +37,11 @@ app.use('/api/auth', authRoutes);
 
 // Root route handler
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.json({ 
+    success: true,
+    message: 'Welcome to the API',
+    documentation: 'Refer to API docs for available endpoints'
+  });
 });
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -54,7 +61,7 @@ app.use(function (req, res, next) {
 });
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
-app.engine('html',require('ejs').renderFile)
+app.engine('JSON',require('ejs').renderFile)
 let parseBody = bodyParser.urlencoded({extended:true});
 // Routes
 app.post('/register1234', async (req, res) => {
@@ -71,7 +78,7 @@ app.post('/register1234', async (req, res) => {
       });
     }
 
-    const { type, email, username, phone, password } = req.body;
+    const { type, email, username, phone, password } = req.query;
 
   
     try {

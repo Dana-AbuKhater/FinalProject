@@ -16,33 +16,32 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-<<<<<<< HEAD
+    
     const body = JSON.stringify({ type, email, username, phone, password })
     console.log(body)
     fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, email, username, phone, password }),
+      query: JSON.stringify({ type, email, username, phone, password }),
     })
-    .then(res => {
-      console.log("Response : ",res)
-      return res.json()
-    })
-    .then(data => {
-      console.log("Data : ",data);
-      if (data.success) {
-        alert("Account created successfully!");
-        window.location.href = "/SignIn";
-      } else {
-        // alert(data.message);
-        console.log("Data")
-      }
-    })
-    .catch(err =>{ 
-      console.log("Test test")
-      // console.error("Error:", err)
-    });
-=======
+      .then(res => {
+        console.log("Response : ", res)
+        return res.json()
+      })
+      .then(data => {
+        console.log("Data : ", data);
+        if (data.success) {
+          alert("Account created successfully!");
+          window.location.href = "/SignIn";
+        } else {
+          // alert(data.message);
+          console.log("Data")
+        }
+      })
+      .catch(err => {
+        console.log("Test test")
+        // console.error("Error:", err)
+      });
 
     // تحقق إذا كان نوع المستخدم هو صالون أو كستمر
     if (type === 'salon') {
@@ -50,39 +49,39 @@ const SignUp = () => {
       fetch("http://localhost:3000/api/salon/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, email, username, phone, password }),
+        query: JSON.stringify({ type, email, username, phone, password }),
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("Salon account created successfully!");
-          window.location.href = "/SignIn";
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(err => console.error("Error:", err));
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Salon account created successfully!");
+            window.location.href = "/SignIn";
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(err => console.error("Error:", err));
     } else if (type === 'customer') {
       // تحقق من سكيما الكستمر
       fetch("http://localhost:3000/api/customer/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, email, username, phone, password }),
+        query: JSON.stringify({ type, email, username, phone, password }),
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("Customer account created successfully!");
-          window.location.href = "/SignIn";
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(err => console.error("Error:", err));
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Customer account created successfully!");
+            window.location.href = "/SignIn";
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(err => console.error("Error:", err));
     } else {
       alert("Please select a valid user type (Salon or Customer).");
     }
->>>>>>> 35a1976f3eb5acc4525dbe29e073d5fae75e6ea0
+    
   };
 
   return (
@@ -122,6 +121,7 @@ const SignUp = () => {
 };
 
 export default SignUp;**/
+
 import React from 'react';
 import './SignUp.css';
 
@@ -142,7 +142,7 @@ const SignUp = () => {
     }
 
     // Determine the appropriate endpoint based on user type
-    const endpoint = "http://localhost:3000/api/auth/register";
+    const endpoint = "http://localhost:3001/api/auth/register";
 
     if (!type || (type !== 'salon' && type !== 'customer')) {
       alert("Please select a valid user type (Salon or Customer).");
@@ -152,7 +152,7 @@ const SignUp = () => {
     fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, email, username, phone, password }),
+      query: JSON.stringify({ type, email, username, phone, password }),
     })
       .then(res => res.json())
       .then(data => {
