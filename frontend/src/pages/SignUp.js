@@ -140,19 +140,20 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-
+    
     // Determine the appropriate endpoint based on user type
-    const endpoint = "http://localhost:3001/api/auth/register";
-
+    const endpoint = "http://localhost:3000/api/auth/register";
+    let query = "?type=" + type + "&email=" + email + "&username=" + username + "&phone=" + phone + "&password=" + password;
+    const url = endpoint + query;
     if (!type || (type !== 'salon' && type !== 'customer')) {
       alert("Please select a valid user type (Salon or Customer).");
       return;
     }
 
-    fetch(endpoint, {
+    fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      query: JSON.stringify({ type, email, username, phone, password }),
+      // query: JSON.stringify({ type, email, username, phone, password }),
     })
       .then(res => res.json())
       .then(data => {
@@ -248,6 +249,7 @@ const SignUp = () => {
         >
           Sign Up
         </button>
+        
       </form>
       <p style={{ marginTop: '15px', fontSize: '14px' }}>
         Already have an account? <a href="/SignIn" style={{ textDecoration: 'none' }}>Sign In</a>

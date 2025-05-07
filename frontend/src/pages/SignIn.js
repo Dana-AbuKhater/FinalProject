@@ -5,15 +5,16 @@ const SignIn = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const email = event.target.username.value;
+    const email = event.target.email.value;
     const password = event.target.password.value;
     const type = localStorage.getItem("type");  // جلب النوع من localStorage
-
-    // إرسال الطلب إلى الـ API للتحقق من السكيما بناءً على النوع
-    fetch("http://localhost:3000/api/auth/login", {
+    const endpoint = "http://localhost:3000/api/auth/login"; // رابط الـ API
+    const query = "email=" + email + "&password=" + password  + "&type=" + type; // بناء الـ query string
+    const url = endpoint + "?" + query; // بناء الرابط النهائي
+    fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, email, password }),
+      //body: JSON.stringify({ type, email, password }),
     })
     .then(res => res.json())
     .then(data => {
@@ -38,8 +39,8 @@ const SignIn = () => {
       <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign In</h1>
       <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
         <div style={{ marginBottom: '15px' }}>
-          <label>User Name:</label>
-          <input type="text" name="username" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+          <label>Email:</label>
+          <input type="text" name="email" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
         </div>
 
         <div style={{ marginBottom: '15px' }}>

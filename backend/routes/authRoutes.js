@@ -15,11 +15,41 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+// Salon Schema
+const salonSchema = new mongoose.Schema({
+  salon_id: { type: Number, required: true, unique: true }, // تم تغييره إلى Number وإضافة unique: true بناءً على المفتاح الأساسي INT
+  owner_email: { type: String, required: true, maxlength: 100 },
+  name: { type: String, required: true, maxlength: 100 },
+  password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
+  type: { type: String, required: true, enum: ['salon'] }, // تم إضافة enum بناء
+  description: { type: String }, // تم تغييره إلى String ليتوافق مع TEXT (يمكن أن يكون نصًا طويلاً)
+  address: { type: String, }, // تم إضافة required: true بناءً على NN
+  phone: { type: String, maxlength: 20 },
+  logo_url: { type: String, maxlength: 255 },
+  created_at: { type: Date, default: Date.now } // تم تغييره ليتوافق مع TIMESTAMP
+});
 
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const Salon = mongoose.models.Salon || mongoose.model('Salon', salonSchema);
 // 📝 Register
-router.post('/register',
-  async (req, res) =>{ 
+router.post('/register', async (req, res) => {
+
+  async function generateUniqueId(model) {
+    let id;
+    let isUnique = false;
+
+    while (!isUnique) {
+      id = crypto.randomInt(100000, 999999); // رقم عشوائي من 6 أرقام
+      const exists = await model.findOne({ [model === User ? 'user_id' : 'salon_id']: id });
+      if (!exists) isUnique = true;
+    }
+
+    return id;
+  }
+
+  if (req.query.type == 'customer') {
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -42,23 +72,8 @@ router.post('/register',
       }
       const user_id = await generateUniqueId(User);
       const hashedPassword = await bcrypt.hash(password, 12);
-      // Get the user with the highest user_id
-      //const lastUser = await User.findOne().sort({ user_id: -1 });
-      
-      // Calculate the new user_id
-      //const user_id = lastUser ? lastUser.user_id + 1 : 1;
-      async function generateUniqueId(model) {
-        let id;
-        let isUnique = false;
-        
-        while (!isUnique) {
-          id = crypto.randomInt(100000, 999999); // رقم عشوائي من 6 أرقام
-          const exists = await model.findOne({ [model === User ? 'user_id' : 'salon_id']: id });
-          if (!exists) isUnique = true;
-        }
-        
-        return id;
-      }
+
+
       const newUser = new User({
         user_id,
         userType: type,
@@ -97,109 +112,130 @@ router.post('/register',
         success: false,
         message: 'Server error'
       });
-    }
-  }
-); // Close the '/register' route properly
 
-// 🏢 Salon Creation
-router.post('/salons', async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      message: 'Validation failed',
-      errors: errors.array().map(err => err.msg)
-    });
+    }
+
   }
-  const {type, email, username, phone, password } = req.query;
-  try {
-    const existingSalon = await Salon.findOne({ $or: [{ name }, { email }] });
-    if (existingSalon) {
+  else if (req.query.type == 'salon') {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Salon with this name or email already exists'
+        message: 'Validation failed',
+        errors: errors.array().map(err => err.msg)
       });
     }
-    const salon_id = await generateUniqueId(Salon);
 
-    const newSalon = new Salon({
-      salon_id,
-      name,
-      phone,
-      email,
-    });
-    await newSalon.save();
+    const { type, email, username, phone, password } = req.query;
 
-    res.status(201).json({
-      success: true,
-      message: 'Salon created successfully!',
-      salon: {
-        id: newSalon._id,
-        salon_id: newSalon.salon_id,
-        name: newSalon.name,
-        owner_id: newSalon.owner_id,
-        email: newSalon.email,
-        phone: newSalon.phone
+    try {
+      const existingSalon = await Salon.findOne({ $or: [{ username }, { email }] });
+      if (existingSalon) {
+        return res.status(400).json({
+          success: false,
+          message: 'Salon with this name or email already exists'
+        });
       }
-    });
 
-  } catch (error) {
-    console.error('Salon creation error:', error);
+      const salon_id = await generateUniqueId(Salon);
+      const hashedPassword = await bcrypt.hash(password, 12);
+      const newSalon = new Salon({
+        salon_id,
+        owner_email: email,
+        name: username,
+        password: hashedPassword,
+        type,
+        phone,
+      });
+      await newSalon.save();
 
-    if (error.code === 11000) {
+      res.status(201).json({
+        success: true,
+        message: 'Salon created successfully!',
+        salon: {
+          id: newSalon._id,
+          salon_id: newSalon.salon_id,
+          name: newSalon.username,
+          owner_id: newSalon.owner_id,
+          email: newSalon.email,
+          phone: newSalon.phone
+        }
+      });
+
+    } catch (error) {
+      console.error('Salon creation error:', error);
+
+      if (error.code === 11000) {
+        return res.status(400).json({
+          success: false,
+          message: 'Salon with this name or email already exists'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
+      });
+    }
+
+  }
+})
+
+router.post('/login', async (req, res) => {
+  const { type, email, password } = req.query;
+
+  try {
+    let user;
+    if (type === 'customer') {
+      user = await User.findOne({ email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
+
+    } 
+    else if (type === 'salon') {
+      
+      // check the email and password in the salon schema
+      user = await Salon.findOne({ owner_email: email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
+      
+      
+    } 
+
+    else {
       return res.status(400).json({
         success: false,
-        message: 'Salon with this name or email already exists'
+        message: 'Invalid user type'
       });
     }
-
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-});
-
-// 🏢 Get All Salons
-router.get('/salons', async (req, res) => {
-  try {
-    const salons = await Salon.find().select('-__v');
-    res.json({
-      success: true,
-      count: salons.length,
-      data: salons
-    });
-  } catch (error) {
-    console.error('Error fetching salons:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-});
-
-// 🏢 Get Single Salon
-router.get('/salons/:id', async (req, res) => {
-  try {
-    const salon = await Salon.findOne({ salon_id: req.params.id }).select('-__v');
-    
-    if (!salon) {
-      return res.status(404).json({
+    console.log("Type : ", type)
+    console.log("User : ", user)
+    if (!user) {
+      return res.status(401).json({
         success: false,
-        message: 'Salon not found'
+        message: 'Invalid email or password'
       });
     }
 
-    res.json({
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+    const { password: _, ...userData } = user._doc; // استبعاد كلمة المرور من البيانات المرسلة
+    res.status(200).json({
       success: true,
-      data: salon
+      message: 'Login successful',
+      user: userData
     });
-  } catch (error) {
-    console.error('Error fetching salon:', error);
+  } 
+  catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
     });
   }
 });
+
 module.exports = router;
