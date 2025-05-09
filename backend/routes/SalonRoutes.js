@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Salon = require('../models/Salon');
-const auth = require('../middleware/auth');
+const auth = require('../middleware/requireAuth');
 
 // جلب بيانات الصالون الحالي (حسب التوكن)
 router.get('/info', auth, async (req, res) => {
