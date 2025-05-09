@@ -25,8 +25,22 @@ const loginUser = async (req, res) => {
       // إنشاء التوكين بعد التحقق من صحة كلمة المرور
       const token = createToken(user._id);
 
-      // إرسال الاستجابة مع التوكين ونوع المستخدم (صالون أو كستمر)
+      // إذا كان المستخدم من نوع صالون → رجّع بيانات الصالون أيضًا
+      if (user.userType === "salon") {
+        return res.status(200).json({
+          email,
+          token,
+          userType: user.userType,
+          salonInfo: {
+            address: user.salonInfo?.address, // يرجع العنوان (ممكن يكون undefined)
+            workingHours: user.salonInfo?.workingHours // يرجع ساعات العمل
+          }
+        });
+      }
+
+      // إذا كان المستخدم من نوع كستمر → رجّع نفس الرد القديم
       res.status(200).json({ email, token, userType: user.userType });
+
     } else {
       // إذا لم يتم العثور على المستخدم
       res.status(400).json({ error: 'Invalid email or password' });
@@ -36,6 +50,7 @@ const loginUser = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 }
+
 
 // التسجيل (Signup)
 const signupUser = async (req, res) => {
@@ -64,7 +79,7 @@ const signupUser = async (req, res) => {
       const token = createToken(user._id); // إنشاء التوكين
 
       // إرسال الاستجابة مع التوكين ونوع المستخدم
-      res.status(200).json({ email, token, userType });
+      res.status(200).json({ email, token, userType ,});
     } 
     // إذا كان المستخدم من نوع كستمر
     else if (userType === 'customer') {
