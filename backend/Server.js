@@ -34,6 +34,7 @@ mongoose.connect(process.env.MONGO_URL)
 // app.use('/api/appointments', AppointmentsRoutes);
 // app.use('/api/ratings', RatingRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/salon', require('./routes/salon'));
 
 // Root route handler
 app.get('/', (req, res) => {
