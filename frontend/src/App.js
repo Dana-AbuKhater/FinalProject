@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import React from 'react';
-/*import './pages/Home.css';*/
 import Header from './component/Header';
+import BackButton from './component/BackButton';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import Help from './pages/Help';
@@ -14,13 +14,16 @@ import SalonInfoForm from './pages/SalonInfoForm';
 import AddServiceForm from './pages/AddServiceForm';
 import ServicesList from './pages/ServicesList';
 import UpdateServiceStatus from './pages/UpdateServiceStatus';
-
+import SalonDashboard from './pages/SalonDashboard';
+import CustomerPage from './pages/CustomerPage';
 
 function App() {
   return (<>
 
     <Router>
       <Header />
+      <BackButton />
+      {/* إضافة زر العودة */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Help" element={<Help />} />
@@ -31,6 +34,9 @@ function App() {
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/" element={<SignIn />} />
         <Route path="/SalonInfoForm" element={<SalonInfoForm />} />
+        <Route path="/SalonDashboard" element={<SalonDashboard />} />
+        <Route path="/CustomerPage" element={<CustomerPage />} />
+        {/* إضافة مسار جديد لصفحة CustomerPage */}
         <Route path="/AddServiceForm" element={<AddServiceForm setServices={(services) => {
           // تحديث الخدمات في SalonInfoForm
           localStorage.setItem('services', JSON.stringify(services));

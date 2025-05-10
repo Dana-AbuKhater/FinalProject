@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './SignInUp.css';
-
+//import BackButton from '../component/BackButton'; // استيراد الزر للرجوع للصفحة السابقة
 function SignInUp() {
   const navigate = useNavigate();
   const location = useLocation(); // الحصول على الـ location
@@ -30,8 +30,15 @@ function SignInUp() {
   const handleSalonInfoForm = () => {
     navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
+  const handleSalonDashboard = () => {
+    navigate('/SalonDashboard'); // تمرير نوع المستخدم مع الـ navigation
+  };
+  const handleCustomerPage = () => {
+    navigate('/CustomerPage', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
+  };
   return (
     <div>
+    {/*<BackButton />*/} {/* زر الرجوع للصفحة السابقة */}
       {/* زر لتسجيل الدخول */}
       <button onClick={handleSignInClick} className='SignIn-button'>
         Sign In      
@@ -43,6 +50,15 @@ function SignInUp() {
       <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
         SalonInfoForm    
       </button>
+      <button onClick={handleSalonDashboard} className='SalonDashboard-button'>
+        SalonDashboard
+      </button>
+      <button onClick={handleCustomerPage} className='CustomerPage-button'>
+        CustomerPage
+      </button>
+      
+      
+    
     </div>
   );
 }
