@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 
 const requireAuth = (userTypeRequired) => {
   return async (req, res, next) => {
+    // verify user is authenticated
     const { authorization } = req.headers;
 
     if (!authorization) {
@@ -13,14 +14,17 @@ const requireAuth = (userTypeRequired) => {
     const token = authorization.split(' ')[1];
 
     try {
-      const { _id, email, userType } = jwt.verify(token, process.env.SECRET);
+      const { _id, userType } = jwt.verify(token, process.env.SECRET); // جلب نوع المستخدم من التوكين
 
+      // التأكد من أن نوع المستخدم يتطابق مع المطلوب
       if (userType !== userTypeRequired) {
         return res.status(403).json({ error: 'Access denied: User type mismatch' });
       }
 
-      req.user = { _id, email }; // إضافة البريد الإلكتروني للمستخدم
+      // إضافة المستخدم إلى request
+      req.user = await User.findOne({ _id }).select('_id userType');
       next();
+
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: 'Request is not authorized' });
@@ -29,3 +33,6 @@ const requireAuth = (userTypeRequired) => {
 };
 
 module.exports = requireAuth;
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+
