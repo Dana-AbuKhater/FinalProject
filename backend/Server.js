@@ -36,7 +36,12 @@ app.use("/api/salons", SalonRoutes);
 // app.use('/api/services', ServiceRoutes);
 app.use("/api/appointments", AppointmentsRoutes);
 // app.use('/api/ratings', RatingRoutes);
+<<<<<<< HEAD
 app.use("/api/auth", authRoutes);
+=======
+app.use('/api/auth', authRoutes);
+app.use('/api/salon', require('./routes/salon'));
+>>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
 // Root route handler
 app.get("/", (req, res) => {

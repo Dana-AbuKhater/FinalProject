@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import "./SignIn.css";
 import { useNavigate } from "react-router-dom";
@@ -6,18 +7,36 @@ const SignIn = () => {
   const handleSubmit = (event) => {
     console.log("signing in...");
     event.preventDefault();
+=======
+import React from 'react';
+import './SignIn.css';
+import { useNavigate } from 'react-router-dom';
+
+const SignIn = () => {
+    const navigate = useNavigate();
+
+  // الدالة لازم تكون async عشان نقدر نستعمل await
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // منع الريفريش الافتراضي
+>>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
     const email = event.target.email.value;
     const password = event.target.password.value;
     const type = localStorage.getItem("type"); // جلب النوع من localStorage
     const endpoint = "http://localhost:3000/api/auth/login"; // رابط الـ API
+<<<<<<< HEAD
     const query = "email=" + email + "&password=" + password + "&type=" + type; // بناء الـ query string
+=======
+   /* const query = "email=" + email + "&password=" + password  + "&type=" + type; // بناء الـ query string
+>>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
     const url = endpoint + "?" + query; // بناء الرابط النهائي
+
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       //body: JSON.stringify({ type, email, password }),
     })
+<<<<<<< HEAD
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -35,6 +54,63 @@ const SignIn = () => {
       })
       .catch((err) => console.error("Error:", err));
   };
+=======
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      if (data.success) {
+        if (type === "customer") {
+          // التوجيه إلى لوحة التحكم الخاصة بالكستمر
+          window.location.href = "/CustomerDashboard";
+        } else if (type === "salon") {
+          const salonData = data.data;
+
+          if (!salonData.address || !salonData.workingHours) {
+            navigate("/SaloninfoForm");
+          } else {
+            navigate("/SalonDashboard");
+          }
+        }
+      } else {
+        alert(data.message);  // في حال كان هناك خطأ في تسجيل الدخول
+      }
+    })
+    .catch(err => console.error("Error:", err));
+  };*/
+  const query = `email=${email}&password=${password}&type=${type}`;
+  const url = `${endpoint}?${query}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // مافي body هون — لأن السيرفر بيقرأ من query
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      if (type === "salon") {
+        const salonData = data.salonInfo;
+
+        if (!salonData || !salonData.address || !salonData.workingHours) {
+          navigate("/SaloninfoForm");
+        } else {
+          navigate("/SalonDashboard");
+        }
+      } else if (type === "customer") {
+        navigate("/CustomerDashboard");
+      }
+    } else {
+      alert(data.error || "Login failed");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong!");
+  }
+};
+>>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
   return (
     <div

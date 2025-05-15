@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // استيراد useLocation
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // استيراد useLocation
 import './Header.css';
 import StyleHiveLogo from '../images/StyleHiveLogo3.png'; // تأكد من المسار الصحيح للصورة
 
 function Header() {
     const location = useLocation(); // الحصول على المسار الحالي
     const [scrolled, setScrolled] = useState(false);
+    const navigate = useNavigate(); // For the back button
 
     useEffect(() => {
         const handleScroll = () => {

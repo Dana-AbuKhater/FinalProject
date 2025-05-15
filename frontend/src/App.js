@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
@@ -17,6 +18,24 @@ import ServicesList from "./pages/ServicesList";
 import UpdateServiceStatus from "./pages/UpdateServiceStatus";
 import SalonDetails from "./pages/SalonDetails";
 import CustomerAppointment from "./pages/CustomerAppointment";
+=======
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import Header from './component/Header';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import Help from './pages/Help';
+import About from './pages/About';
+import SignInUp from './pages/SignInUp';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import SalonInfoForm from './pages/SalonInfoForm';
+import AddServiceForm from './pages/AddServiceForm';
+import ServicesList from './pages/ServicesList';
+import UpdateServiceStatus from './pages/UpdateServiceStatus';
+
+>>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
 function App() {
   return (

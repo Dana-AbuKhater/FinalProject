@@ -32,3 +32,6 @@ const requireAuth = (userTypeRequired) => {
 };
 
 module.exports = requireAuth;
+const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
+

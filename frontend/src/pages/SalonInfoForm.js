@@ -2,68 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './SalonInfoForm.css';
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
 import Calendar from '../InteractiveCalendar/Calendar';
-/*
-const Container = styled.div`
-  width: 300px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  background: #f8f9fa;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-const DropBox = styled.div`
-  border: 2px dashed #007bff;
-  padding: 10px;
-  min-height: 50px;
-  margin-top: 10px;
-  background: white;
-`;
-const InputContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-`;
-const Input = styled.input`
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-const Button = styled.button`
-  padding: 8px;
-  border: none;
-  background: ${(props) => props.bg || "#007bff"};
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-size: 16px;
-  &:hover {
-    background: ${(props) => props.hover || "#0056b3"};
-  }
-`;
-const Item = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px;
-  background: #e9ecef;
-  border-radius: 4px;
-  margin-top: 5px;
-`;
-*/
+
 const SalonInfoForm = () => {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const navigate = useNavigate();
+
   const [salonInfo, setSalonInfo] = useState({
     name: '',
     address: '',
@@ -79,32 +24,10 @@ const SalonInfoForm = () => {
       twitter: ''
     }
   });
-  /* 
-  <div className="social-media-group">
-    <label>Facebook</label>
-    <input
-      type="text"
-      value={salonInfo.socialMedia.facebook}
-      onChange={(e) => setSalonInfo({ ...salonInfo, socialMedia: { ...salonInfo.socialMedia, facebook: e.target.value } })}
-    />
-  </div>
-  <div className="social-media-group">
-    <label>Instagram</label>
-    <input
-      type="text"
-      value={salonInfo.socialMedia.instagram}
-      onChange={(e) => setSalonInfo({ ...salonInfo, socialMedia: { ...salonInfo.socialMedia, instagram: e.target.value } })}
-    />
-  </div>
-  <div className="social-media-group">
-    <label>Twitter</label>
-    <input
-      type="text"
-      value={salonInfo.socialMedia.twitter}
-      onChange={(e) => setSalonInfo({ ...salonInfo, socialMedia: { ...salonInfo.socialMedia, twitter: e.target.value } })}
-    />
-  </div>*/
+
   const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // حالة التحميل
+
   useEffect(() => {
     const storedServices = JSON.parse(localStorage.getItem('services')) || [];
     setServices(storedServices);
@@ -122,8 +45,9 @@ const SalonInfoForm = () => {
       alert(error.response.data.error);
     }
   };
+
   const handleCalendarButtonClick = (e) => {
-    e.preventDefault(); // Prevent form validation
+    e.preventDefault();
     setShowCalendarModal(!showCalendarModal);
   };
 
@@ -132,44 +56,59 @@ const SalonInfoForm = () => {
     setShowCalendarModal(false);
   };
 
-  // تصفية الخدمات حسب الحالة
   const visibleServices = services.filter(service => service.status === 'visible');
   const hiddenServices = services.filter(service => service.status === 'hidden');
   const deletedServices = services.filter(service => service.status === 'deleted');
 
+  useEffect(() => {
+    fetchSalonData();
+  }, []);
+
+  const fetchSalonData = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch('/api/salon/info', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    // التحقق من الـ status code
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} - ${response.statusText}`);
+    }
+
+    // تحقق من نوع المحتوى
+    const contentType = response.headers.get('Content-Type');
+    console.log('Content-Type:', contentType); // طباعة نوع المحتوى للتأكد من أنه JSON
+
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json(); // تحويل الاستجابة إلى JSON
+      if (data && data.name) {
+        setSalonInfo(data);
+      } else {
+        console.error('لم يتم العثور على بيانات الصالون');
+      }
+    } else {
+      console.error('الاستجابة ليست بتنسيق JSON:', contentType);
+      const text = await response.text(); // طباعة النص للاستجابة للتأكد من محتواها
+      console.log('Response body:', text);
+    }
+  } catch (error) {
+    console.error('خطأ في جلب بيانات الصالون:', error);
+  } finally {
+    setIsLoading(false); // بمجرد الانتهاء من جلب البيانات، نوقف حالة التحميل
+  }
+};
+
+
   return (
     <div className="salon-form-container">
       <form onSubmit={handleSubmit} className="salon-form">
-        <h1 className="salon-form-title">Hi, {salonInfo.name || 'Salon'}</h1>
 
-        {/* حقول معلومات الصالون */}
-        <div className="form-group">
-          <label className='lable'>Name</label>
-          <input
-            type="text"
-            value={salonInfo.name}
-            onChange={(e) => setSalonInfo({ ...salonInfo, name: e.target.value })}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            value={salonInfo.email}
-            onChange={(e) => setSalonInfo({ ...salonInfo, email: e.target.value })}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Phone</label>
-          <input
-            type="text"
-            value={salonInfo.phone}
-            onChange={(e) => setSalonInfo({ ...salonInfo, phone: e.target.value })}
-            required
-          />
-        </div>
+        {/* 👇 عرض رسالة التحميل إذا كانت البيانات ما زالت تُحمّل */}
+        <h1 className="salon-form-title">
+          {isLoading ? 'Loading...' : `Hi ${salonInfo.name}`}
+        </h1>
+
         <div className="form-group">
           <label>Address</label>
           <input
@@ -179,6 +118,7 @@ const SalonInfoForm = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label>Working Hours</label>
           <input
@@ -189,6 +129,7 @@ const SalonInfoForm = () => {
             required
           />
         </div>
+
         <div className="form-group">
           <label>Service Type</label>
           <select
@@ -201,6 +142,7 @@ const SalonInfoForm = () => {
             <option value="both">الاثنين معًا</option>
           </select>
         </div>
+
         <div className="form-group">
           <label>Website</label>
           <input
@@ -217,29 +159,27 @@ const SalonInfoForm = () => {
             onChange={(e) => setSalonInfo({ ...salonInfo, description: e.target.value })}
           />
         </div>
+
         <div className="form-group">
           <label>Show appointments</label>
           <button 
             onClick={handleCalendarButtonClick}
             className='show-close-calendar'
-            type="button" // Important: prevents form validation
+            type="button"
           >
             {showCalendarModal ? '❌' : '📅 Show Booked Days'}
           </button>
         </div>
 
-
-
         <div className="add-service-button">
           <button
-            onClick={() => navigate('/AddServiceForm')} // إعادة التوجيه إلى صفحة إضافة الخدمة
+            onClick={() => navigate('/AddServiceForm')}
             className="add-service-link"
           >
             Add New Service
           </button>
         </div>
 
-        {/* عرض الخدمات */}
         <div className="services-section">
           <div className="service-category">
             <h2>Visible Services</h2>
@@ -293,11 +233,11 @@ const SalonInfoForm = () => {
           </div>
         </div>
 
-        {/* زر تحديث معلومات الصالون */}
         <button type="submit" className="submit-button">
           Update Salon Info
         </button>
       </form>
+
       {showCalendarModal && (
         <div className="calendar-modal">
           <div className="calendar-modal-content">
