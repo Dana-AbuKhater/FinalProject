@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import "./SignIn.css";
-import { useNavigate } from "react-router-dom";
-const SignIn = () => {
-  const navigate = useNavigate();
-  const handleSubmit = (event) => {
-    console.log("signing in...");
-    event.preventDefault();
-=======
 import React from 'react';
 import './SignIn.css';
 import { useNavigate } from 'react-router-dom';
@@ -18,17 +8,12 @@ const SignIn = () => {
   // الدالة لازم تكون async عشان نقدر نستعمل await
   const handleSubmit = async (event) => {
     event.preventDefault(); // منع الريفريش الافتراضي
->>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
     const email = event.target.email.value;
     const password = event.target.password.value;
-    const type = localStorage.getItem("type"); // جلب النوع من localStorage
+    const type = localStorage.getItem("type");  // جلب النوع من localStorage
     const endpoint = "http://localhost:3000/api/auth/login"; // رابط الـ API
-<<<<<<< HEAD
-    const query = "email=" + email + "&password=" + password + "&type=" + type; // بناء الـ query string
-=======
    /* const query = "email=" + email + "&password=" + password  + "&type=" + type; // بناء الـ query string
->>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
     const url = endpoint + "?" + query; // بناء الرابط النهائي
 
     fetch(url, {
@@ -36,25 +21,6 @@ const SignIn = () => {
       headers: { "Content-Type": "application/json" },
       //body: JSON.stringify({ type, email, password }),
     })
-<<<<<<< HEAD
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.success) {
-          if (type === "customer") {
-            // التوجيه إلى لوحة التحكم الخاصة بالكستمر
-            navigate("/Customer");
-          } else if (type === "salon") {
-            // التوجيه إلى لوحة التحكم الخاصة بالصالون
-            window.location.href = "/SalonDashboard";
-          }
-        } else {
-          alert(data.message); // في حال كان هناك خطأ في تسجيل الدخول
-        }
-      })
-      .catch((err) => console.error("Error:", err));
-  };
-=======
     .then(res => res.json())
     .then(data => {
       console.log(data);
@@ -110,69 +76,24 @@ const SignIn = () => {
     alert("Something went wrong!");
   }
 };
->>>>>>> 2a8aa8b989ca5bb2000f7c5622bd624ab0fd866a
 
   return (
-    <div
-      style={{
-        textAlign: "center",
-        marginTop: "200px",
-        marginRight: "auto",
-        marginLeft: "auto",
-        border: "1px solid #e8b923",
-        padding: "20px",
-        width: "300px",
-        borderRadius: "5px",
-        alignContent: "center",
-        boxShadow: "0 0 10px #bc9c3c",
-      }}
-    >
-      <h1 style={{ fontSize: "24px", marginBottom: "20px" }}>Sign In</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "inline-block", textAlign: "left" }}
-      >
-        <div style={{ marginBottom: "15px" }}>
+    <div style={{ textAlign: 'center', marginTop: '200px', marginRight: 'auto', marginLeft: 'auto', border: '1px solid #e8b923', padding: '20px', width: '300px', borderRadius: '5px', alignContent: 'center', boxShadow: '0 0 10px #bc9c3c' }}>
+      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign In</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
+        <div style={{ marginBottom: '15px' }}>
           <label>Email:</label>
-          <input
-            type="text"
-            name="email"
-            required
-            style={{ width: "100%", padding: "8px", borderColor: "#e8b923" }}
-          />
+          <input type="text" name="email" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: '15px' }}>
           <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            required
-            style={{ width: "100%", padding: "8px", borderColor: "#e8b923" }}
-          />
+          <input type="password" name="password" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
         </div>
 
-        <button
-          className="signin"
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Sign In
-        </button>
+        <button className="signin" type="submit" style={{ width: '100%', padding: '10px', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Sign In</button>
       </form>
-      <p style={{ marginTop: "15px", fontSize: "14px" }}>
-        New User?{" "}
-        <a href="/SignUp" style={{ textDecoration: "none" }}>
-          Sign Up
-        </a>
-      </p>
+      <p style={{ marginTop: '15px', fontSize: '14px' }}>New User? <a href="/SignUp" style={{ textDecoration: 'none' }}>Sign Up</a></p>
     </div>
   );
 };

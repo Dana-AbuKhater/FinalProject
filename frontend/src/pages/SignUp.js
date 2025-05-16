@@ -159,7 +159,7 @@ const SignUp = () => {
       .then(data => {
         if (data.success) {
           alert(`${type === 'salon' ? 'Salon' : 'Customer'} account created successfully!`);
-          window.location.href = "/SignIn";
+          window.location.href = "/SalonInfoForm";
         } else {
           alert(data.message || "Registration failed");
         }

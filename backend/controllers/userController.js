@@ -1,4 +1,4 @@
-const User = require('../models/userModel'); // استيراد موديل المستخدم
+const User = require('../models/Customer'); // استيراد موديل المستخدم
 const jwt = require('jsonwebtoken'); // استيراد مكتبة لإنشاء التوكين (JWT)
 const bcrypt = require('bcrypt'); // استيراد مكتبة bcrypt لتشفير كلمات المرور
 
