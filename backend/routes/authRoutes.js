@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema({
   type: { type: String, required: true, enum: ['customer', 'vendor', 'admin'] },
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
-  phone: { type: Number, required: true },
-  password: { type: String, required: false },
+  phone: { type: Number, required: true, maxlength: 10 }, // تم تغييره إلى Number ليتوافق مع INT
+  password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -24,7 +24,7 @@ const salonSchema = new mongoose.Schema({
   type: { type: String, required: true, enum: ['salon'] }, // تم إضافة enum بناء
   description: { type: String }, // تم تغييره إلى String ليتوافق مع TEXT (يمكن أن يكون نصًا طويلاً)
   address: { type: String, }, // تم إضافة required: true بناءً على NN
-  phone: { type: String, maxlength: 20 },
+  phone: { type: String, maxlength: 10, required: true }, // تم تغييره إلى String ليتوافق مع VARCHAR
   logo_url: { type: String, maxlength: 255 },
   created_at: { type: Date, default: Date.now } // تم تغييره ليتوافق مع TIMESTAMP
 });
@@ -71,6 +71,12 @@ router.post('/register', async (req, res) => {
         });
       }
       const user_id = await generateUniqueId(User);
+      if (password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters long'
+        });
+      }
       const hashedPassword = await bcrypt.hash(password, 12);
 
 
@@ -140,6 +146,12 @@ router.post('/register', async (req, res) => {
       }
 
       const salon_id = await generateUniqueId(Salon);
+      if (password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters long'
+        });
+      }
       const hashedPassword = await bcrypt.hash(password, 12);
       const newSalon = new Salon({
         salon_id,
@@ -191,14 +203,14 @@ router.post('/login', async (req, res) => {
     if (type === 'customer') {
       user = await User.findOne({ email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
 
-    } 
+    }
     else if (type === 'salon') {
-      
+
       // check the email and password in the salon schema
       user = await Salon.findOne({ owner_email: email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
-      
-      
-    } 
+
+
+    }
 
     else {
       return res.status(400).json({
@@ -228,9 +240,26 @@ router.post('/login', async (req, res) => {
       message: 'Login successful',
       user: userData
     });
-  } 
+  }
   catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+router.get('/getsalons', async (req, res) => {
+  //GET ALL SALONS
+  try {
+    const salons = await Salon.find();
+    res.status(200).json({
+      success: true,
+      salons
+    });
+  } catch (error) {
+    console.error('Error fetching salons:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

@@ -79,8 +79,8 @@ const signupUser = async (req, res) => {
       const token = createToken(user._id); // إنشاء التوكين
 
       // إرسال الاستجابة مع التوكين ونوع المستخدم
-      res.status(200).json({ email, token, userType ,});
-    } 
+      res.status(200).json({ email, token, userType, });
+    }
     // إذا كان المستخدم من نوع كستمر
     else if (userType === 'customer') {
       // إنشاء مستخدم جديد في قاعدة البيانات مع بيانات الكستمر

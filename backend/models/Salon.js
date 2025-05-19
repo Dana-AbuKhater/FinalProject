@@ -8,9 +8,10 @@ const salonSchema = new mongoose.Schema({
   type: { type: String, required: true, enum: ['salon'] },
   description: { type: String },
   address: { type: String },
-  phone: { type: String, maxlength: 20 },
+  phone: { type: Number, maxlength: 10, required: true },
   logo_url: { type: String, maxlength: 255 },
   created_at: { type: Date, default: Date.now }
+  
 });
 
 

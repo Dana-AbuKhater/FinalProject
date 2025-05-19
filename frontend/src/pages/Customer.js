@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import Salon from "../models/Salons";
-
+import "./Customer.css";
 export default function SalonScreen() {
   const [salons, setSalons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ export default function SalonScreen() {
   useEffect(() => {
     const fetchSalons = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/salons");
+        const response = await fetch("http://localhost:3000/api/getsalons");
         const data = await response.json();
         const loadedSalons = data.salons.map((s) => new Salon(s));
         setSalons(loadedSalons);
@@ -27,7 +27,7 @@ export default function SalonScreen() {
 
   return (
     <div className="min-h-screen bg-pink-100 p-4">
-      {/* Navbar */}
+      {/* Navbar 
       <div className="relative">
         <button className="absolute top-2 right-4 border px-3 py-1 rounded-full text-sm hover:bg-gray-100">
           Sign In
@@ -42,7 +42,7 @@ export default function SalonScreen() {
           </nav>
         </div>
       </div>
-
+*/}
       {/* Filters */}
       <div className="my-4 flex flex-wrap items-center gap-2">
         <button className="border px-3 py-1 rounded bg-white">

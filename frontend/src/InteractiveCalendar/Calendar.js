@@ -40,18 +40,18 @@ const Calendar = () => {
         <h2>{format(currentDate, 'MMMM yyyy', { locale: enUS })}</h2> {/* English date */}
         <button onClick={handleNextMonth}>&gt;</button>
       </div>
-      
+
       <div className="days-grid">
         {/* عناوين الأيام بالإنجليزية */}
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} className="day-header">{day}</div>
         ))}
-        
+
         {/* أيام التقويم */}
         {days.map((date, index) => {
           const isCurrent = isSameMonth(date, currentDate);
           const isSelected = selectedDate && isSameDay(date, selectedDate);
-          
+
           return (
             <div
               key={index}

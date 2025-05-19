@@ -30,19 +30,21 @@ function SignInUp() {
   const handleSalonInfoForm = () => {
     navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
+
   return (
     <div>
       {/* زر لتسجيل الدخول */}
       <button onClick={handleSignInClick} className='SignIn-button'>
-        Sign In      
+        Sign In
       </button>
       {/* زر لإنشاء حساب جديد */}
       <button onClick={handleSignUpClick} className='SignUp-button'>
-        Sign Up      
+        Sign Up
       </button>
       <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
-        SalonInfoForm    
+        SalonInfoForm
       </button>
+
     </div>
   );
 }
