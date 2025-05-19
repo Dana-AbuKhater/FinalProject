@@ -132,7 +132,7 @@ const SalonInfoForm = () => {
       const data = await response.json();
       console.log('Salon Data:', data); // طباعة البيانات المسترجعة
       setSalonInfo(data.user);
-      const test = 213;
+
       // if (contentType && contentType.includes('application/json')) {
       //   const data = await response.json(); // تحويل الاستجابة إلى JSON
       //   if (data && data.name) {
