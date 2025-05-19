@@ -17,11 +17,6 @@ const SalonInfoForm = () => {
     workingHours: "",
     description: "",
     serviceType: "salon-only",
-    socialMedia: {
-      facebook: "",
-      instagram: "",
-      twitter: "",
-    },
   });
 
   const [services, setServices] = useState([]);
@@ -109,22 +104,6 @@ const SalonInfoForm = () => {
     try {
       const token = localStorage.getItem("token");
       console.log("Token= ", token);
-      const response = await fetch("/api/salon/info", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // التحقق من الـ status code
-      if (!response.ok) {
-        throw new Error(
-          `API error: ${response.status} - ${response.statusText}`
-        );
-      }
-
-      // تحقق من نوع المحتوى
-      // const contentType = response.headers.get('Content-Type');
-      //console.log('Content-Type:', contentType); // طباعة نوع المحتوى للتأكد من أنه JSON
-      console.log("Response Headers:", response.headers); // طباعة جميع الهيدرز
-      console.log("Response:", response); // طباعة الاستجابة بالكامل
       const salonId = localStorage.getItem("salonId");
       const salonName = localStorage.getItem("salonName");
       const salonEmail = localStorage.getItem("salonEmail");
@@ -133,9 +112,32 @@ const SalonInfoForm = () => {
       console.log("salonName= ", salonName);
       console.log("salonEmail= ", salonEmail);
       console.log("salonPhone= ", salonPhone);
-      const data = await response.json();
+      const salonData = {
+        name: salonName,
+        email: salonEmail,
+        phone: salonPhone,
+      };
+
+      setSalonInfo(salonData);
+      // const response = await fetch("/api/salon/info", {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+
+      // console.log("Response:", response); // طباعة الاستجابة بالكامل
+      // console.log("Response Headers:", response.headers); // طباعة جميع الهيدرز
+      // // التحقق من الـ status code
+      // if (!response.ok) {
+      //   throw new Error(
+      //     `API error: ${response.status} - ${response.statusText}`
+      //   );
+      // }
+
+      // تحقق من نوع المحتوى
+      // const contentType = response.headers.get('Content-Type');
+      //console.log('Content-Type:', contentType); // طباعة نوع المحتوى للتأكد من أنه JSON
+      // const data = await response.json();
+
       //console.log('Salon Data:', data); // طباعة البيانات المسترجعة
-      setSalonInfo(data.user);
 
       // if (contentType && contentType.includes('application/json')) {
       //   const data = await response.json(); // تحويل الاستجابة إلى JSON
