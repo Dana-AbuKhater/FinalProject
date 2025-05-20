@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
 const { body, query, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const crypto = require("crypto"); // مطلوب لإنشاء الأرقام العشوائية
+
+
 // User Schema
 const userSchema = new mongoose.Schema({
   user_id: { type: Number, required: true, unique: true }, // تغيير التأكد إلى unique
@@ -13,16 +14,16 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   phone: { type: Number, required: true, maxlength: 10 }, // تم تغييره إلى Number ليتوافق مع INT
-  password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
+  password: { type: String, required: true, minlength: 6, select: false }, // تم إضافة minlength: 6 بناءً على NN
   createdAt: { type: Date, default: Date.now },
 });
 
 // Salon Schema
 const salonSchema = new mongoose.Schema({
   salon_id: { type: Number, required: true, unique: true }, // تم تغييره إلى Number وإضافة unique: true بناءً على المفتاح الأساسي INT
-  owner_email: { type: String, required: true, maxlength: 100 },
+  owner_email: { type: String, required: true, maxlength: 100, unique: true },
   name: { type: String, required: true, maxlength: 100 },
-  password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
+  password: { type: String, required: true, minlength: 6, select: false }, // تم إضافة minlength: 6 بناءً على NN
   type: { type: String, required: true, enum: ["salon"] }, // تم إضافة enum بناء
   description: { type: String }, // تم تغييره إلى String ليتوافق مع TEXT (يمكن أن يكون نصًا طويلاً)
   address: { type: String }, // تم إضافة required: true بناءً على NN
@@ -107,7 +108,7 @@ router.post("/register", async (req, res) => {
           user_id: newUser.user_id,
           type: newUser.type,
           email: newUser.email,
-          username: newUser.username,
+          username: newUser.name, //انت استخدمت name في الـ Schema
           phone: newUser.phone,
         },
       });
@@ -167,14 +168,20 @@ router.post("/register", async (req, res) => {
         phone,
       });
       await newSalon.save();
+      const salonToken = jwt.sign(
+        { id: newSalon._id, type: newSalon.type },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
 
       res.status(201).json({
         success: true,
         message: "Salon created successfully!",
+        token: salonToken,
         salon: {
           id: newSalon._id,
           salon_id: newSalon.salon_id,
-          name: newSalon.username,
+          name: newSalon.name,
           owner_id: newSalon.owner_id,
           email: newSalon.email,
           phone: newSalon.phone,
