@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const salonSchema = new mongoose.Schema({
   salon_id: { type: Number, required: true, unique: true },
-  owner_email: { type: String, required: true, maxlength: 100 },
+  owner_email: { type: String, required: true, maxlength: 100 ,unique:true},
   name: { type: String, required: true, maxlength: 100 },
   password: { type: String, required: true, minlength: 6 },
   type: { type: String, required: true, enum: ['salon'] },

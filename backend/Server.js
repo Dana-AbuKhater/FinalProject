@@ -104,11 +104,20 @@ app.post('/register1234', async (req, res) => {
         password: hashedPassword
       });
 
+      const jwt = require('jsonwebtoken');
+
       await newUser.save();
+      // Generate JWT token
+const token = jwt.sign(
+  { id: newUser._id, type: newUser.type },
+  process.env.JWT_SECRET,
+  { expiresIn: '1h' }
+);
 
       res.status(201).json({ 
         success: true, 
         message: 'Account created successfully!',
+        token,
         user: {
           id: newUser._id,
           type: newUser.type,

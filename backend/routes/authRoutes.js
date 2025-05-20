@@ -1,18 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const { body, query, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
-const crypto = require('crypto'); // مطلوب لإنشاء الأرقام العشوائية
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const { body, query, validationResult } = require("express-validator");
+const mongoose = require("mongoose");
+const crypto = require("crypto"); // مطلوب لإنشاء الأرقام العشوائية
 // User Schema
 const userSchema = new mongoose.Schema({
   user_id: { type: Number, required: true, unique: true }, // تغيير التأكد إلى unique
-  type: { type: String, required: true, enum: ['customer', 'vendor', 'admin'] },
+  type: { type: String, required: true, enum: ["customer", "vendor", "admin"] },
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true, unique: true },
   phone: { type: Number, required: true, maxlength: 10 }, // تم تغييره إلى Number ليتوافق مع INT
   password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
 // Salon Schema
@@ -21,127 +23,130 @@ const salonSchema = new mongoose.Schema({
   owner_email: { type: String, required: true, maxlength: 100 },
   name: { type: String, required: true, maxlength: 100 },
   password: { type: String, required: true, minlength: 6 }, // تم إضافة minlength: 6 بناءً على NN
-  type: { type: String, required: true, enum: ['salon'] }, // تم إضافة enum بناء
+  type: { type: String, required: true, enum: ["salon"] }, // تم إضافة enum بناء
   description: { type: String }, // تم تغييره إلى String ليتوافق مع TEXT (يمكن أن يكون نصًا طويلاً)
-  address: { type: String, }, // تم إضافة required: true بناءً على NN
+  address: { type: String }, // تم إضافة required: true بناءً على NN
   phone: { type: String, maxlength: 10, required: true }, // تم تغييره إلى String ليتوافق مع VARCHAR
   logo_url: { type: String, maxlength: 255 },
-  created_at: { type: Date, default: Date.now } // تم تغييره ليتوافق مع TIMESTAMP
+  created_at: { type: Date, default: Date.now }, // تم تغييره ليتوافق مع TIMESTAMP
 });
 
-
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-const Salon = mongoose.models.Salon || mongoose.model('Salon', salonSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+const Salon = mongoose.models.Salon || mongoose.model("Salon", salonSchema);
 // 📝 Register
-router.post('/register', async (req, res) => {
-
+router.post("/register", async (req, res) => {
   async function generateUniqueId(model) {
     let id;
     let isUnique = false;
 
     while (!isUnique) {
       id = crypto.randomInt(100000, 999999); // رقم عشوائي من 6 أرقام
-      const exists = await model.findOne({ [model === User ? 'user_id' : 'salon_id']: id });
+      const exists = await model.findOne({
+        [model === User ? "user_id" : "salon_id"]: id,
+      });
       if (!exists) isUnique = true;
     }
 
     return id;
   }
 
-  if (req.query.type == 'customer') {
-
+  if (req.query.type == "customer") {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array().map(err => err.msg)
+        message: "Validation failed",
+        errors: errors.array().map((err) => err.msg),
       });
     }
 
     const { type, email, username, phone, password } = req.query;
 
-
     try {
-      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+      const existingUser = await User.findOne({
+        $or: [{ email }, { username }],
+      });
       if (existingUser) {
         return res.status(400).json({
           success: false,
-          message: 'User with this email or username already exists'
+          message: "User with this email or username already exists",
         });
       }
-      const user_id = await generateUniqueId(User);
       if (password.length < 6) {
         return res.status(400).json({
           success: false,
-          message: 'Password must be at least 6 characters long'
+          message: "Password must be at least 6 characters long",
         });
       }
       const hashedPassword = await bcrypt.hash(password, 12);
-
+      const user_id = await generateUniqueId(User);
 
       const newUser = new User({
         user_id,
-        userType: type,
+        type,
         email,
         name: username,
         phone,
-        password: hashedPassword
+        password: hashedPassword,
       });
 
       await newUser.save();
 
+      // **هنا تولد التوكن بعد إنشاء المستخدم**
+      const token = jwt.sign(
+        { id: newUser._id, type: newUser.type },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
       res.status(201).json({
         success: true,
-        message: 'Account created successfully!',
+        message: "Account created successfully!",
+        token, // ضروري يكون هون
         user: {
           id: newUser._id,
           user_id: newUser.user_id,
           type: newUser.type,
           email: newUser.email,
           username: newUser.username,
-          phone: newUser.phone
-        }
+          phone: newUser.phone,
+        },
       });
-
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
 
       if (error.code === 11000) {
         return res.status(400).json({
           success: false,
-          message: 'Email or username already exists'
+          message: "Email or username already exists",
         });
       }
 
       res.status(500).json({
         success: false,
-        message: 'Server error'
+        message: "Server error",
       });
-
     }
-
-  }
-  else if (req.query.type == 'salon') {
-
+  } else if (req.query.type == "salon") {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array().map(err => err.msg)
+        message: "Validation failed",
+        errors: errors.array().map((err) => err.msg),
       });
     }
 
     const { type, email, username, phone, password } = req.query;
 
     try {
-      const existingSalon = await Salon.findOne({ $or: [{ username }, { email }] });
+      const existingSalon = await Salon.findOne({
+        $or: [{ email }, { name: username }],
+      });
       if (existingSalon) {
         return res.status(400).json({
           success: false,
-          message: 'Salon with this name or email already exists'
+          message: "Salon with this name or email already exists",
         });
       }
 
@@ -149,7 +154,7 @@ router.post('/register', async (req, res) => {
       if (password.length < 6) {
         return res.status(400).json({
           success: false,
-          message: 'Password must be at least 6 characters long'
+          message: "Password must be at least 6 characters long",
         });
       }
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -165,65 +170,56 @@ router.post('/register', async (req, res) => {
 
       res.status(201).json({
         success: true,
-        message: 'Salon created successfully!',
+        message: "Salon created successfully!",
         salon: {
           id: newSalon._id,
           salon_id: newSalon.salon_id,
           name: newSalon.username,
           owner_id: newSalon.owner_id,
           email: newSalon.email,
-          phone: newSalon.phone
-        }
+          phone: newSalon.phone,
+        },
       });
-
     } catch (error) {
-      console.error('Salon creation error:', error);
+      console.error("Salon creation error:", error);
 
       if (error.code === 11000) {
         return res.status(400).json({
           success: false,
-          message: 'Salon with this name or email already exists'
+          message: "Salon with this name or email already exists",
         });
       }
 
       res.status(500).json({
         success: false,
-        message: 'Server error'
+        message: "Server error",
       });
     }
-
   }
-})
+});
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { type, email, password } = req.query;
 
   try {
     let user;
-    if (type === 'customer') {
-      user = await User.findOne({ email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
-
-    }
-    else if (type === 'salon') {
-
+    if (type === "customer") {
+      user = await User.findOne({ email }).select("+password"); // تأكد من تضمين كلمة المرور في الاستعلام
+    } else if (type === "salon") {
       // check the email and password in the salon schema
-      user = await Salon.findOne({ owner_email: email }).select('+password'); // تأكد من تضمين كلمة المرور في الاستعلام
-
-
-    }
-
-    else {
+      user = await Salon.findOne({ owner_email: email }).select("+password"); // تأكد من تضمين كلمة المرور في الاستعلام
+    } else {
       return res.status(400).json({
         success: false,
-        message: 'Invalid user type'
+        message: "Invalid user type",
       });
     }
-    console.log("Type : ", type)
-    console.log("User : ", user)
+    console.log("Type : ", type);
+    console.log("User : ", user);
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
 
@@ -231,38 +227,71 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
-    const { password: _, ...userData } = user._doc; // استبعاد كلمة المرور من البيانات المرسلة
+    const { password: _, ...userData } = user._doc;
+
+    const token = jwt.sign(
+      { id: user._id, type: type }, // البيانات التي تريد تشفيرها في التوكن
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    console.log("token=", token);
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token, // إرسال التوكن مع الرد
+      user: userData, // بيانات المستخدم بدون كلمة المرور
+    });
+    /*const { password: _, ...userData } = user._doc; // استبعاد كلمة المرور من البيانات المرسلة
     res.status(200).json({
       success: true,
       message: 'Login successful',
       user: userData
-    });
-  }
-  catch (error) {
-    console.error('Login error:', error);
+    });*/
+  } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: "Server error",
     });
   }
 });
+/*
+const salonToken = jwt.sign(
+  { id: newSalon._id, type: newSalon.type },
+  process.env.JWT_SECRET,
+  { expiresIn: "1h" }
+);
 
-router.get('/getsalons', async (req, res) => {
+res.status(201).json({
+  success: true,
+  message: "Salon created successfully!",
+  token: salonToken,
+  salon: {
+    id: newSalon._id,
+    salon_id: newSalon.salon_id,
+    name: newSalon.name,
+    email: newSalon.owner_email,
+    phone: newSalon.phone,
+  },
+});
+*/
+router.get("/getsalons", async (req, res) => {
   //GET ALL SALONS
   try {
     const salons = await Salon.find();
     res.status(200).json({
       success: true,
-      salons
+      salons,
     });
   } catch (error) {
-    console.error('Error fetching salons:', error);
+    console.error("Error fetching salons:", error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: "Server error",
     });
   }
 });
