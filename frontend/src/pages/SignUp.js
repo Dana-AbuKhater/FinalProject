@@ -38,6 +38,8 @@ const SignUp = () => {
           if (type === 'salon') {
             //localStorage
             localStorage.setItem("userLoggedIn", true)
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("salonId", data.salon.id);
             window.location.href = "/SalonInfoForm";
           }
           else if (type === 'customer') {
