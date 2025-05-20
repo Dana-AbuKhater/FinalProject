@@ -51,15 +51,12 @@ const SalonInfoForm = () => {
     const token = localStorage.getItem("token");
     const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
     const url = endpoint + query;
-    if (!token) {
-      alert("Token not found");
-      return;
-    }
     
     console.log(localStorage.getItem("token"))
     if (!token) {
       alert("Token not found");
       return; // توقف تنفيذ الدالة إذا التوكن مش موجود
+      
     }
     fetch(url, {
       method: "PUT",
@@ -381,5 +378,6 @@ const SalonInfoForm = () => {
     </div>
   );
 };
+console.log(localStorage.getItem("salonId"))
 
 export default SalonInfoForm;

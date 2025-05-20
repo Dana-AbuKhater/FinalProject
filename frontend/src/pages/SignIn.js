@@ -61,8 +61,10 @@ const SignIn = () => {
         if (type === "salon") {
           const salonData = data.salonInfo;
           const user = data.user;
+          console.log("user= ", user);  // ✅ هون
+
           localStorage.setItem("token", data.token); 
-          localStorage.setItem("salonId", user.salon_id); // تخزين الـ salonId في localStorage
+          localStorage.setItem("salonId", user._id); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonName", user.name); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonPhone", user.phone); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonEmail", user.owner_email); // تخزين الـ salonId في localStorage

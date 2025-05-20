@@ -30,6 +30,13 @@ function SignInUp() {
   const handleSalonInfoForm = () => {
     navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
+  const handleCustomerPage = () => {
+    navigate('/Customer', { state: { userType } });
+  };
+
+  const handleSalonDashboard = () => {
+    navigate('/SalonDashboard', { state: { userType } });
+  };
 
   return (
     <div>
@@ -43,6 +50,12 @@ function SignInUp() {
       </button>
       <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
         SalonInfoForm
+      </button>
+      <button onClick={handleCustomerPage} className='Customer-button'>
+        Customer Page
+      </button>
+      <button onClick={handleSalonDashboard} className='Dashboard-button'>
+        Salon Dashboard
       </button>
 
     </div>
