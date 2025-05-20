@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   user_id: { type: Number, required: true, unique: true }, // تم تغيير نوعه إلى Number وإضافة unique: true بناءً على المفتاح الأساسي INT
   name: { type: String, required: true, maxlength: 100 },
-  email: { type: String, required: true, maxlength: 100 },
+  email: { type: String, required: true, maxlength: 100, unique: true }, // إضافة unique: true لضمان عدم تكرار البريد الإلكتروني
   password: { type: String, required: true, minlength: 6 },
   phone: { type: Number, required: true, maxlength: 10 },
   gender: { type: String, enum: ['Male', 'Female'] }, // استخدام enum للقيم المحددة
