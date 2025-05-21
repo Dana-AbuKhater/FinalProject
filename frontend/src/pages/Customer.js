@@ -10,16 +10,38 @@ export default function SalonScreen() {
 
   useEffect(() => {
     const fetchSalons = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/getsalons");
-        const data = await response.json();
-        const loadedSalons = data.salons.map((s) => new Salon(s));
-        setSalons(loadedSalons);
-      } catch (error) {
-        console.error("Error fetching salons:", error);
-      } finally {
-        setLoading(false);
-      }
+      const url = "http://localhost:3000/api/salon/getsalons";
+      fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        // query: JSON.stringify({ type, email, username, phone, password }),
+      })
+        .then((res) => {
+          console.log("Response:", res);
+          return res.json()
+        })
+        .then((data) => {
+          console.log("Salons data123:", data);
+          if (data.success) {
+            console.log("Salons data:", data);
+            const loadedSalons = data.salons.map((s) => new Salon(s));
+            setSalons(loadedSalons);
+            setLoading(false);
+          } else {
+            alert(data.message || "Failed to load salons");
+          }
+        })
+      // try {
+      //   const response = await fetch("/api/getsalons");
+      //   const data = await response.json();
+      //   console.log("Salons data:", data);
+      //   const loadedSalons = data.salons.map((s) => new Salon(s));
+      //   setSalons(loadedSalons);
+      // } catch (error) {
+      //   console.error("Error fetching salons:", error);
+      // } finally {
+      //   setLoading(false);
+      // }
     };
 
     fetchSalons();

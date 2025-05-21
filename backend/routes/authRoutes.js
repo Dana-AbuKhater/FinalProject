@@ -286,21 +286,6 @@ res.status(201).json({
   },
 });
 */
-router.get("/getsalons", async (req, res) => {
-  //GET ALL SALONS
-  try {
-    const salons = await Salon.find();
-    res.status(200).json({
-      success: true,
-      salons,
-    });
-  } catch (error) {
-    console.error("Error fetching salons:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-});
+
 
 module.exports = router;

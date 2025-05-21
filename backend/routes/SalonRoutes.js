@@ -6,7 +6,8 @@ const requireAuth = require('../middleware/requireAuth');
 // جلب بيانات الصالون الحالي (حسب التوكن)
 router.get('/info', requireAuth('salon'), async (req, res) => {
   try {
-    const salon = await Salon.findOne({ owner_email: req.user.email });
+
+    const salon = await Salon.findOne({ owner_email: req.user.owner_email });
     if (!salon) return res.status(404).json({ error: 'Salon not found' });
 
     res.json(salon);
@@ -22,16 +23,33 @@ router.put('/info', requireAuth('salon'), async (req, res) => {
     const salon = await Salon.findOneAndUpdate(
       { owner_email: req.user.email },
       { $set: req.body },
-      { new: true , runValidators: true }
+      { new: true, runValidators: true }
     );
     if (!salon) return res.status(404).json({ error: 'Salon not found' });
 
     res.json(salon);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' ,
-      details: err.message});
+    res.status(500).json({
+      error: 'Server error',
+      details: err.message
+    });
   }
 });
-
+router.get("/getsalons", async (req, res) => {
+  //GET ALL SALONS
+  try {
+    const salons = await Salon.find();
+    res.status(200).json({
+      success: true,
+      salons,
+    });
+  } catch (error) {
+    console.error("Error fetching salons:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
 module.exports = router;

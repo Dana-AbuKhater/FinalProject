@@ -1,5 +1,6 @@
 import React from 'react';
 import './SignUp.css';
+import { CodeSquare } from 'lucide-react';
 
 const SignUp = () => {
   const handleSubmit = (event) => {
@@ -35,6 +36,7 @@ const SignUp = () => {
       .then(data => {
         if (data.success) {
           alert(`${type === 'salon' ? 'Salon' : 'Customer'} account created successfully!`);
+          console.log("Type:", type);
           if (type === 'salon') {
             //localStorage
             localStorage.setItem("userLoggedIn", true)

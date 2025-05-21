@@ -6,7 +6,7 @@ const requireAuth = (userTypeRequired) => {
   return async (req, res, next) => {
     // verify user is authenticated
     const { authorization } = req.headers;
-
+    console.log("Authorization ===== :", authorization);
     if (!authorization) {
       return res.status(401).json({ error: 'Authorization token required' });
     }
@@ -14,18 +14,20 @@ const requireAuth = (userTypeRequired) => {
     const token = authorization.split(' ')[1];
 
     try {
-      const { _id, userType, email } = jwt.verify(token, process.env.SECRET); // جلب نوع المستخدم من التوكين
-
+      const { id, type, email } = jwt.verify(token, process.env.JWT_SECRET); // جلب نوع المستخدم من التوكين
+      console.log("ID : ", id);
+      console.log("Type : ", type);
+      console.log("Email : ", email);
       // التأكد من أن نوع المستخدم يتطابق مع المطلوب
-      if (userType !== userTypeRequired) {
+      if (type !== userTypeRequired) {
         return res.status(403).json({ error: 'Access denied: User type mismatch' });
       }
       // جلب بيانات المستخدم حسب نوعه
       let user;
-      if (userType === 'customer') {
-        user = await Customer.findOne({ _id }).select('_id userType email');
-      } else if (userType === 'salon') {
-        user = await Salon.findOne({ owner_email: email }).select('_id owner_email serviceType');
+      if (type === 'customer') {
+        user = await Customer.findOne({ _id: id }).select('_id userType email');
+      } else if (type === 'salon') {
+        user = await Salon.findOne({ _id: id }).select('_id owner_email serviceType');
       }
 
       if (!user) {

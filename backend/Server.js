@@ -28,7 +28,7 @@ mongoose.connect(process.env.MONGO_URL)
 //app.use(express.static('frontend'));
 
 // API Routes
-// app.use('/api/salons', SalonRoutes);
+//app.use('/api/salons', SalonRoutes);
 // app.use('/api/customers', CustomerRoutes);
 // app.use('/api/services', ServiceRoutes);
 // app.use('/api/appointments', AppointmentsRoutes);
@@ -38,7 +38,7 @@ app.use('/api/salon', require('./routes/SalonRoutes'));
 
 // Root route handler
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     success: true,
     message: 'Welcome to the API',
     documentation: 'Refer to API docs for available endpoints'
@@ -57,105 +57,105 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-  res.setHeader("Access-Control-Allow-Headers","*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
   next();
 });
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
-app.engine('JSON',require('ejs').renderFile)
-let parseBody = bodyParser.urlencoded({extended:true});
+app.engine('JSON', require('ejs').renderFile)
+let parseBody = bodyParser.urlencoded({ extended: true });
 // Routes
 app.post('/register1234', async (req, res) => {
-    // Validation
-    console.log("Req :",req)
-    // console.log("Res :",res.body)
-    const errors = validationResult(req);
-    /**console.log(req.body.password)**/
-    if (!errors.isEmpty()) {  
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Validation failed',
-        errors: errors.array().map(err => err.msg)
-      });
-    }
-
-    const { type, email, username, phone, password } = req.query;
-
-  
-    try {
-      // Check if user already exists
-      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-      if (existingUser) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'User with this email or username already exists' 
-        });
-      }
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 12);
-
-      // Create new user
-      const newUser = new User({
-        type,
-        email,
-        username,
-        phone,
-        password: hashedPassword
-      });
-
-      const jwt = require('jsonwebtoken');
-
-      await newUser.save();
-      // Generate JWT token
-const token = jwt.sign(
-  { id: newUser._id, type: newUser.type },
-  process.env.JWT_SECRET,
-  { expiresIn: '1h' }
-);
-
-      res.status(201).json({ 
-        success: true, 
-        message: 'Account created successfully!',
-        token,
-        user: {
-          id: newUser._id,
-          type: newUser.type,
-          email: newUser.email,
-          username: newUser.username,
-          phone: newUser.phone
-        }
-      });
-
-    } catch (error) {
-      console.error('Registration error:', error);
-      
-      // Handle specific MongoDB errors
-      if (error.name === 'ValidationError') {
-
-        const messages = Object.values(error.errors).map(val => val.message);
-        const messages1 = "test"
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Validation error',
-          errors:  'Internal server error'
-        });
-      }
-      
-      // Handle duplicate key error
-      if (error.code === 11000) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Email or username already exists' 
-        });
-      }
-      
-      res.status(500).json({ 
-        success: false, 
-        message: messages1
-      });
-    }
+  // Validation
+  console.log("Req :", req)
+  // console.log("Res :",res.body)
+  const errors = validationResult(req);
+  /**console.log(req.body.password)**/
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors: errors.array().map(err => err.msg)
+    });
   }
+
+  const { type, email, username, phone, password } = req.query;
+
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email or username already exists'
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create new user
+    const newUser = new User({
+      type,
+      email,
+      username,
+      phone,
+      password: hashedPassword
+    });
+
+    const jwt = require('jsonwebtoken');
+
+    await newUser.save();
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: newUser._id, type: newUser.type },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Account created successfully!',
+      token,
+      user: {
+        id: newUser._id,
+        type: newUser.type,
+        email: newUser.email,
+        username: newUser.username,
+        phone: newUser.phone
+      }
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+
+    // Handle specific MongoDB errors
+    if (error.name === 'ValidationError') {
+
+      const messages = Object.values(error.errors).map(val => val.message);
+      const messages1 = "test"
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: 'Internal server error'
+      });
+    }
+
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email or username already exists'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: messages1
+    });
+  }
+}
 );
 
 // Error handling middleware

@@ -63,7 +63,7 @@ const SignIn = () => {
           const user = data.user;
           console.log("user= ", user);  // ✅ هون
 
-          localStorage.setItem("token", data.token); 
+          localStorage.setItem("token", data.token);
           localStorage.setItem("salonId", user._id); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonName", user.name); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonPhone", user.phone); // تخزين الـ salonId في localStorage
@@ -75,7 +75,7 @@ const SignIn = () => {
             navigate("/SalonDashboard");
           }
         } else if (type === "customer") {
-          navigate("/CustomerDashboard");
+          navigate("/Customer");
         }
       } else {
         alert(data.error || "Login failed");

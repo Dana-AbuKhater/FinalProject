@@ -29,11 +29,11 @@ const SalonInfoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   /* const address = e.target.address.value;
-    const workingHours = e.target.workingHours.value;
-    const serviceType = e.target.serviceType.value;
-    const website = e.target.website.value;
-    const description = e.target.description.value;*/
+    /* const address = e.target.address.value;
+     const workingHours = e.target.workingHours.value;
+     const serviceType = e.target.serviceType.value;
+     const website = e.target.website.value;
+     const description = e.target.description.value;*/
     const { address, workingHours, serviceType, website, description } = salonInfo;
 
     const id = localStorage.getItem("salonId");
@@ -51,12 +51,12 @@ const SalonInfoForm = () => {
     const token = localStorage.getItem("token");
     const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
     const url = endpoint + query;
-    
+
     console.log(localStorage.getItem("token"))
     if (!token) {
       alert("Token not found");
       return; // توقف تنفيذ الدالة إذا التوكن مش موجود
-      
+
     }
     fetch(url, {
       method: "PUT",
@@ -133,43 +133,59 @@ const SalonInfoForm = () => {
         phone: salonPhone,
       }));
 
-      
-    if (!token || !salonId) {
-      alert("برجاء تسجيل الدخول أولاً");
-      navigate("/login");
-      return;
-    }
 
-    const response = await fetch(`http://localhost:3000/api/salons/${salonId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status} - ${response.statusText}`);
-    }
-
-    const contentType = response.headers.get("Content-Type");
-    if (contentType && contentType.includes("application/json")) {
-      const data = await response.json();
-      console.log("Salon Data:", data);
-
-      if (data) {
-        setSalonInfo({
-          name: data.name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          address: data.address || "",
-          workingHours: data.workingHours || "",
-          website: data.website || "",
-          description: data.description || "",
-          serviceType: data.serviceType || "salon-only",
-        });
+      if (!token || !salonId) {
+        alert("برجاء تسجيل الدخول أولاً");
+        navigate("/login");
+        return;
       }
-    } else {
-      console.error("الاستجابة ليست JSON:", contentType);
-      const text = await response.text();
-      console.log("Response body:", text);
-    }
+
+      // const response = await fetch(`http://localhost:3000/api/salon/info/${salonId}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error(`API error: ${response.status} - ${response.statusText}`);
+      // }
+      fetch(`http://localhost:3000/api/salon/info`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => {
+          console.log("Response:", res);
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Salon data:", data);
+          if (data.success) {
+            const salonData = data.salon;
+            // const contentType = response.headers.get("Content-Type");
+            // if (contentType && contentType.includes("application/json")) {
+            const data = JSON.parse(data); // تحويل الاستجابة إلى JSON
+            console.log("Salon Data:", data);
+
+            if (data) {
+              setSalonInfo({
+                name: data.name || "",
+                email: data.email || "",
+                phone: data.phone || "",
+                address: data.address || "",
+                workingHours: data.workingHours || "",
+                website: data.website || "",
+                description: data.description || "",
+                serviceType: data.serviceType || "salon-only",
+              });
+            }
+            /*}*/
+          }
+          else {
+            // console.error("الاستجابة ليست JSON:", contentType);
+            const text = data; // طباعة النص للاستجابة للتأكد من محتواها
+            console.log("Response body:", text);
+            // alert("الاستجابة ليست بتنسيق JSON");
+          }
+
+        })
+
       // const response = await fetch("/api/salon/info", {
       //   headers: { Authorization: `Bearer ${token}` },
       // });

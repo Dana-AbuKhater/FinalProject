@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now },// تم تغيير نوعه ليتوافق مع TIMESTAMP
   userType: { // حقل يحدد نوع المستخدم
     type: String,
-    required: true,
     enum: ['salon', 'customer'], // يمكن أن يكون صالون أو كستمر
   }
 });
