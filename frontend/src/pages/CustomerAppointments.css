@@ -1,0 +1,83 @@
+/* Container */
+.appointments-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff8f0; /* برتقالي فاتح مائل للعسلي */
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(255, 165, 79, 0.2); /* ظل ناعم برتقالي */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 80vh;
+}
+
+/* Title */
+.appointments-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #d9781e; /* برتقالي غامق */
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* Appointment Card */
+.appointment-card {
+  background-color: #fff2de;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(255, 140, 26, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease;
+  cursor: default;
+}
+
+.appointment-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Appointment Header */
+.appointment-header {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #cc6600; /* برتقالي متوسط */
+}
+
+/* Text details */
+.appointment-detail {
+  font-size: 1rem;
+  color: #7a4a00; /* بني برتقالي */
+}
+
+/* Status styles */
+.status-confirmed {
+  color: #2a9d8f; /* أخضر هادئ */
+  font-weight: 600;
+}
+
+.status-cancelled {
+  color: #e76f51; /* أحمر هادئ */
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f4a261; /* أصفر/برتقالي */
+  font-weight: 600;
+}
+
+/* Loading & Empty */
+.loading-text,
+.empty-text {
+  text-align: center;
+  color: #cc6600;
+  font-size: 1.2rem;
+  margin-top: 40px;
+}
+
+/* DatePicker container */
+.datepicker-wrapper {
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(255, 140, 26, 0.15);
+}
