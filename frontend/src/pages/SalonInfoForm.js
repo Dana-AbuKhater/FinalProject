@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SalonInfoForm.css";
 import Calendar from "../InteractiveCalendar/Calendar";
@@ -17,283 +17,342 @@ const SalonInfoForm = () => {
     workingHours: "",
     description: "",
     serviceType: "salon-only",
+    imageUrl: "",
   });
 
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+  // Handle image selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle form submission (updated)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append('image', selectedImage);
+
+    // Append other form data
+    Object.entries(salonInfo).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    const id = localStorage.getItem("salonId");
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/salons/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Don't set Content-Type - the browser will set it with boundary
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert("Salon info updated successfully!");
+        navigate("/SalonInfoForm");
+      } else {
+        alert(data.message || "Update failed");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      alert("An error occurred during update");
+    }
+  };
 
   useEffect(() => {
     const storedServices = JSON.parse(localStorage.getItem("services")) || [];
     setServices(storedServices);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    /* const address = e.target.address.value;
-     const workingHours = e.target.workingHours.value;
-     const serviceType = e.target.serviceType.value;
-     const website = e.target.website.value;
-     const description = e.target.description.value;*/
-    const { address, workingHours, serviceType, website, description } = salonInfo;
+  /* const handleSubmit = async (e) => {
+     e.preventDefault();
+     const address = e.target.address.value;
+      const workingHours = e.target.workingHours.value;
+      const serviceType = e.target.serviceType.value;
+      const website = e.target.website.value;
+      const description = e.target.description.value;*/
+  const { address, workingHours, serviceType, website, description } = salonInfo;
 
-    const id = localStorage.getItem("salonId");
-    console.log("id= ", id);
-    /**try {
-      const token = localStorage.getItem('token');
-      await axios.put('/api/salon/info', salonInfo, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert('Salon info updated successfully!');
-    } catch (error) {
-      alert(error.response.data.error);
-    }**/
-    const endpoint = `http://localhost:3000/api/salons/${id}`;
-    const token = localStorage.getItem("token");
-    const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
-    const url = endpoint + query;
+  const id = localStorage.getItem("salonId");
+  console.log("id= ", id);
+  /**try {
+    const token = localStorage.getItem('token');
+    await axios.put('/api/salon/info', salonInfo, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    alert('Salon info updated successfully!');
+  } catch (error) {
+    alert(error.response.data.error);
+  }**/
+  const endpoint = `http://localhost:3000/api/salons/${id}`;
+  const token = localStorage.getItem("token");
+  const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
+  const url = endpoint + query;
 
-    console.log(localStorage.getItem("token"))
-    if (!token) {
-      alert("Token not found");
-      return; // توقف تنفيذ الدالة إذا التوكن مش موجود
+  console.log(localStorage.getItem("token"))
+  if (!token) {
+    alert("Token not found");
+    return; // توقف تنفيذ الدالة إذا التوكن مش موجود
 
-    }
-    fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(salonInfo),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          alert("Salon info updated successfully!");
-          navigate("/SalonInfoForm");
-        } else {
-          alert(data.message || "Update failed");
-        }
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        alert("An error occurred during update");
-      });
-  };
-
-  const handleCalendarButtonClick = (e) => {
-    e.preventDefault();
-    setShowCalendarModal(!showCalendarModal);
-  };
-
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-    setShowCalendarModal(false);
-  };
-
-  const visibleServices = services.filter(
-    (service) => service.status === "visible"
-  );
-  const hiddenServices = services.filter(
-    (service) => service.status === "hidden"
-  );
-  const deletedServices = services.filter(
-    (service) => service.status === "deleted"
-  );
-
-  useEffect(() => {
-    fetchSalonData();
-  }, []);
-
-  const fetchSalonData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      console.log("Token= ", token);
-      const salonId = localStorage.getItem("salonId");
-      const salonName = localStorage.getItem("salonName");
-      const salonEmail = localStorage.getItem("salonEmail");
-      const salonPhone = localStorage.getItem("salonPhone");
-      console.log("salonId= ", salonId);
-      console.log("salonName= ", salonName);
-      console.log("salonEmail= ", salonEmail);
-      console.log("salonPhone= ", salonPhone);
-      console.log("Token =", token);
-      console.log("salonId =", salonId);
-      /*const salonData = {
-        name: salonName,
-        email: salonEmail,
-        phone: salonPhone,
-      };
-
-      setSalonInfo(salonData);*/
-      setSalonInfo((prev) => ({
-        ...prev,
-        name: salonName,
-        email: salonEmail,
-        phone: salonPhone,
-      }));
-
-
-      if (!token || !salonId) {
-        alert("برجاء تسجيل الدخول أولاً");
-        navigate("/login");
-        return;
+  }
+  fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(salonInfo),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Salon info updated successfully!");
+        navigate("/SalonInfoForm");
+      } else {
+        alert(data.message || "Update failed");
       }
+    })
+    .catch((err) => {
+      console.error("Error:", err);
+      alert("An error occurred during update");
+    });
+};
 
-      // const response = await fetch(`http://localhost:3000/api/salon/info/${salonId}`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
+const handleCalendarButtonClick = (e) => {
+  e.preventDefault();
+  setShowCalendarModal(!showCalendarModal);
+};
 
-      // if (!response.ok) {
-      //   throw new Error(`API error: ${response.status} - ${response.statusText}`);
-      // }
-      fetch(`http://localhost:3000/api/salon/info`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => {
-          console.log("Response:", res);
-          return res.json();
-        })
-        .then((data) => {
-          console.log("Salon data:", data);
-          if (data.success) {
-            const salonData = data.salon;
-            // const contentType = response.headers.get("Content-Type");
-            // if (contentType && contentType.includes("application/json")) {
-            const data = JSON.parse(data); // تحويل الاستجابة إلى JSON
-            console.log("Salon Data:", data);
+const handleDateSelect = (date) => {
+  setSelectedDate(date);
+  setShowCalendarModal(false);
+};
 
-            if (data) {
-              setSalonInfo({
-                name: data.name || "",
-                email: data.email || "",
-                phone: data.phone || "",
-                address: data.address || "",
-                workingHours: data.workingHours || "",
-                website: data.website || "",
-                description: data.description || "",
-                serviceType: data.serviceType || "salon-only",
-              });
-            }
-            /*}*/
-          }
-          else {
-            // console.error("الاستجابة ليست JSON:", contentType);
-            const text = data; // طباعة النص للاستجابة للتأكد من محتواها
-            console.log("Response body:", text);
-            // alert("الاستجابة ليست بتنسيق JSON");
-          }
+const visibleServices = services.filter(
+  (service) => service.status === "visible"
+);
+const hiddenServices = services.filter(
+  (service) => service.status === "hidden"
+);
+const deletedServices = services.filter(
+  (service) => service.status === "deleted"
+);
 
-        })
+useEffect(() => {
+  fetchSalonData();
+}, []);
 
-      // const response = await fetch("/api/salon/info", {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
+const fetchSalonData = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("Token= ", token);
+    const salonId = localStorage.getItem("salonId");
+    const salonName = localStorage.getItem("salonName");
+    const salonEmail = localStorage.getItem("salonEmail");
+    const salonPhone = localStorage.getItem("salonPhone");
+    console.log("salonId= ", salonId);
+    console.log("salonName= ", salonName);
+    console.log("salonEmail= ", salonEmail);
+    console.log("salonPhone= ", salonPhone);
+    console.log("Token =", token);
+    console.log("salonId =", salonId);
+    /*const salonData = {
+      name: salonName,
+      email: salonEmail,
+      phone: salonPhone,
+    };
 
-      // console.log("Response:", response); // طباعة الاستجابة بالكامل
-      // console.log("Response Headers:", response.headers); // طباعة جميع الهيدرز
-      // // التحقق من الـ status code
-      // if (!response.ok) {
-      //   throw new Error(
-      //     `API error: ${response.status} - ${response.statusText}`
-      //   );
-      // }
+    setSalonInfo(salonData);*/
+    setSalonInfo((prev) => ({
+      ...prev,
+      name: salonName,
+      email: salonEmail,
+      phone: salonPhone,
+    }));
 
-      // تحقق من نوع المحتوى
-      // const contentType = response.headers.get('Content-Type');
-      //console.log('Content-Type:', contentType); // طباعة نوع المحتوى للتأكد من أنه JSON
-      // const data = await response.json();
 
-      //console.log('Salon Data:', data); // طباعة البيانات المسترجعة
-
-      // if (contentType && contentType.includes('application/json')) {
-      //   const data = await response.json(); // تحويل الاستجابة إلى JSON
-      //   if (data && data.name) {
-      //     setSalonInfo(data);
-      //   } else {
-      //     console.error('لم يتم  العثور على بيانات الصالون');
-      //   }
-      // } else {
-      //   console.error('الاستجابة ليست بتنسيق JSON:', contentType);
-      //   const text = await response.text(); // طباعة النص للاستجابة للتأكد من محتواها
-      //   //console.log('Response body:', text);
-      // }
-    } catch (error) {
-      console.error("خطأ في جلب بيانات الصالون:", error);
-    } finally {
-      setIsLoading(false); // بمجرد الانتهاء من جلب البيانات، نوقف حالة التحميل
+    if (!token || !salonId) {
+      alert("برجاء تسجيل الدخول أولاً");
+      navigate("/login");
+      return;
     }
-  };
 
-  return (
-    <div className="salon-form-container">
-      <form onSubmit={handleSubmit} className="salon-form">
-        {/* 👇 عرض رسالة التحميل إذا كانت البيانات ما زالت تُحمّل */}
-        <h1 className="salon-form-title">
-          {isLoading ? "Loading..." : `Hi ${salonInfo.name}`}
-        </h1>
+    // const response = await fetch(`http://localhost:3000/api/salon/info/${salonId}`, {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // });
 
-        <div className="form-group">
-          <label>Address</label>
-          <input
-            type="text"
-            value={salonInfo.address}
-            onChange={(e) =>
-              setSalonInfo({ ...salonInfo, address: e.target.value })
-            }
-            required
-          />
-        </div>
+    // if (!response.ok) {
+    //   throw new Error(`API error: ${response.status} - ${response.statusText}`);
+    // }
+    fetch(`http://localhost:3000/api/salon/info`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        console.log("Response:", res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Salon data:", data);
+        if (data.success) {
+          const salonData = data.salon;
+          // const contentType = response.headers.get("Content-Type");
+          // if (contentType && contentType.includes("application/json")) {
+          const data = JSON.parse(data); // تحويل الاستجابة إلى JSON
+          console.log("Salon Data:", data);
 
-        <div className="form-group">
-          <label>Working Hours</label>
-          <input
-            type="text"
-            placeholder="e.g., 9 AM - 6 PM"
-            value={salonInfo.workingHours}
-            onChange={(e) =>
-              setSalonInfo({ ...salonInfo, workingHours: e.target.value })
-            }
-            required
-          />
-        </div>
+          if (data) {
+            setSalonInfo({
+              name: data.name || "",
+              email: data.email || "",
+              phone: data.phone || "",
+              address: data.address || "",
+              workingHours: data.workingHours || "",
+              website: data.website || "",
+              description: data.description || "",
+              serviceType: data.serviceType || "salon-only",
+            });
+          }
+          /*}*/
+        }
+        else {
+          // console.error("الاستجابة ليست JSON:", contentType);
+          const text = data; // طباعة النص للاستجابة للتأكد من محتواها
+          console.log("Response body:", text);
+          // alert("الاستجابة ليست بتنسيق JSON");
+        }
 
-        <div className="form-group">
-          <label>Service Type</label>
-          <select
-            value={salonInfo.serviceType}
-            onChange={(e) =>
-              setSalonInfo({ ...salonInfo, serviceType: e.target.value })
-            }
-            required
-          >
-            <option value="home-only">منزلي فقط</option>
-            <option value="salon-only">صالون فقط</option>
-            <option value="both">الاثنين معًا</option>
-          </select>
-        </div>
+      })
 
-        <div className="form-group">
-          <label>Website</label>
-          <input
-            type="text"
-            value={salonInfo.website}
-            onChange={(e) =>
-              setSalonInfo({ ...salonInfo, website: e.target.value })
-            }
-          />
-        </div>
+    // const response = await fetch("/api/salon/info", {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // });
 
-        <div className="form-group">
-          <label>Description</label>
-          <textarea
-            value={salonInfo.description}
-            onChange={(e) =>
-              setSalonInfo({ ...salonInfo, description: e.target.value })
-            }
-          />
-        </div>
+    // console.log("Response:", response); // طباعة الاستجابة بالكامل
+    // console.log("Response Headers:", response.headers); // طباعة جميع الهيدرز
+    // // التحقق من الـ status code
+    // if (!response.ok) {
+    //   throw new Error(
+    //     `API error: ${response.status} - ${response.statusText}`
+    //   );
+    // }
 
+    // تحقق من نوع المحتوى
+    // const contentType = response.headers.get('Content-Type');
+    //console.log('Content-Type:', contentType); // طباعة نوع المحتوى للتأكد من أنه JSON
+    // const data = await response.json();
+
+    //console.log('Salon Data:', data); // طباعة البيانات المسترجعة
+
+    // if (contentType && contentType.includes('application/json')) {
+    //   const data = await response.json(); // تحويل الاستجابة إلى JSON
+    //   if (data && data.name) {
+    //     setSalonInfo(data);
+    //   } else {
+    //     console.error('لم يتم  العثور على بيانات الصالون');
+    //   }
+    // } else {
+    //   console.error('الاستجابة ليست بتنسيق JSON:', contentType);
+    //   const text = await response.text(); // طباعة النص للاستجابة للتأكد من محتواها
+    //   //console.log('Response body:', text);
+    // }
+  } catch (error) {
+    console.error("خطأ في جلب بيانات الصالون:", error);
+  } finally {
+    setIsLoading(false); // بمجرد الانتهاء من جلب البيانات، نوقف حالة التحميل
+  }
+};
+
+return (
+  <div className="salon-form-container">
+    <form onSubmit={handleSubmit} className="salon-form">
+      {/* 👇 عرض رسالة التحميل إذا كانت البيانات ما زالت تُحمّل */}
+      <h1 className="salon-form-title">
+        {isLoading ? "Loading..." : `Hi ${salonInfo.name}`}
+      </h1>
+
+      <div className="form-group">
+        <label>Address</label>
+        <input
+          type="text"
+          value={salonInfo.address}
+          onChange={(e) =>
+            setSalonInfo({ ...salonInfo, address: e.target.value })
+          }
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Working Hours</label>
+        <input
+          type="text"
+          placeholder="e.g., 9 AM - 6 PM"
+          value={salonInfo.workingHours}
+          onChange={(e) =>
+            setSalonInfo({ ...salonInfo, workingHours: e.target.value })
+          }
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Service Type</label>
+        <select
+          value={salonInfo.serviceType}
+          onChange={(e) =>
+            setSalonInfo({ ...salonInfo, serviceType: e.target.value })
+          }
+          required
+        >
+          <option value="home-only">منزلي فقط</option>
+          <option value="salon-only">صالون فقط</option>
+          <option value="both">الاثنين معًا</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label>Website</label>
+        <input
+          type="text"
+          value={salonInfo.website}
+          onChange={(e) =>
+            setSalonInfo({ ...salonInfo, website: e.target.value })
+          }
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Description</label>
+        <textarea
+          value={salonInfo.description}
+          onChange={(e) =>
+            setSalonInfo({ ...salonInfo, description: e.target.value })
+          }
+        />
+      </div>
+      {/*  
         <div className="form-group">
           <label>Show appointments</label>
           <button
@@ -377,23 +436,61 @@ const SalonInfoForm = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        <button type="submit" className="submit-button">
-          Update Salon Info
+        </div> */}
+      {/* Image Upload Section */}
+      <div className="form-group">
+        <label>Salon Image</label>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          accept="image/*"
+          style={{ display: 'none' }}
+        />
+        <button
+          type="button"
+          className="upload-button"
+          onClick={() => fileInputRef.current.click()}
+        >
+          Choose Image
         </button>
-      </form>
-
-      {showCalendarModal && (
-        <div className="calendar-modal">
-          <div className="calendar-modal-content">
-            <Calendar onDateSelect={handleDateSelect} />
+        {imagePreview && (
+          <div className="image-preview-container">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="image-preview"
+            />
+            <button
+              type="button"
+              className="remove-image"
+              onClick={() => {
+                setSelectedImage(null);
+                setImagePreview(null);
+              }}
+            >
+              × Remove
+            </button>
           </div>
+        )}
+      </div>
+      <button type="submit" className="submit-button">
+        Update Salon Info
+      </button>
+    </form>
+
+    {showCalendarModal && (
+      <div className="calendar-modal">
+        <div className="calendar-modal-content">
+          <Calendar onDateSelect={handleDateSelect} />
         </div>
-      )}
-    </div>
-  );
-};
+      </div>
+    )}
+  </div>
+);
+
+console.log(localStorage.getItem("salonId"))
+
 console.log(localStorage.getItem("salonId"))
 
 export default SalonInfoForm;

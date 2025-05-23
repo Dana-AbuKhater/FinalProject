@@ -10,7 +10,8 @@ const salonSchema = new mongoose.Schema({
   address: { type: String },
   phone: { type: Number, maxlength: 10, required: true },
   logo_url: { type: String, maxlength: 255 },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  workingHours: { type: String },
 
 });
 

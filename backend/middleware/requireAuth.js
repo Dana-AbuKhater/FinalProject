@@ -2,6 +2,25 @@ const jwt = require('jsonwebtoken');
 const Customer = require('../models/Customer');
 const Salon = require('../models/Salon');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+router.put('/api/salons/:id', upload.single('image'), async (req, res) => {
+  try {
+    const salonId = req.params.id;
+    const updateData = {
+      ...req.body,
+      imagePath: req.file ? req.file.path : null
+    };
+
+    // Update salon in database
+    const updatedSalon = await Salon.findByIdAndUpdate(salonId, updateData, { new: true });
+
+    res.json({ success: true, salon: updatedSalon });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 const requireAuth = (userTypeRequired) => {
   return async (req, res, next) => {
     // verify user is authenticated
