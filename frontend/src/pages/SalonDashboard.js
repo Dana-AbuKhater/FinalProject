@@ -8,6 +8,7 @@ import Calendar from "../InteractiveCalendar/Calendar";
 const SalonDashboard = () => {
 
   const [setSelectedDate] = useState(null);
+  const [appointmentsCount, setAppointmentsCount] = useState(0);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [salonInfo, setSalonInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,10 @@ const SalonDashboard = () => {
         }
 
         setLoading(true);
+        const { data } = await axios.get('/api/salon/info', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
         const endpoint = `http://localhost:3000/api/salon/info`;
 
         fetch(endpoint, {
@@ -67,12 +72,25 @@ const SalonDashboard = () => {
      });*/
         // setSalonInfo(data);
         setLoading(false);
+        // بعد ما نجيب بيانات الصالون نجيب عدد الحجوزات
+        fetchAppointmentsCount(data._id); // اتأكد إنه الصالون بيرجع _id هون
+
       } catch (err) {
         setError('Failed to load salon information');
         setLoading(false);
         console.error('Error fetching salon info:', err);
       }
     };
+    // دالة لجلب عدد الحجوزات
+    const fetchAppointmentsCount = async (salonId) => {
+      try {
+        const { data } = await axios.get(`http://localhost:3000/appointments/count/${salonId}`);
+        setAppointmentsCount(data.total_appointments);
+      } catch (err) {
+        console.error('Error fetching appointments count:', err);
+      }
+    };
+  
 
     fetchSalonInfo();
   }, [navigate]);
@@ -145,6 +163,16 @@ const SalonDashboard = () => {
             عرض المواعيد
           </button>
         </div>
+        {/* كارد عدد الحجوزات */}
+        <div className="info-section">
+          <h2>إحصائيات</h2>
+          <div className="info-card" style={{ background: '#f5f5f5', padding: '20px', borderRadius: '10px' }}>
+            <h3>عدد الحجوزات</h3>
+            <p style={{ fontSize: '30px', fontWeight: 'bold', marginTop: '10px' }}>{appointmentsCount}</p>
+          </div>
+        </div>
+
+
 
         {salonInfo.description && (
           <div className="description-section">
