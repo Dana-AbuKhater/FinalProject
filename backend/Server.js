@@ -7,6 +7,9 @@ const { body, validationResult } = require('express-validator');
 const bodyParse = require("body-parser")
 require('dotenv').config();
 
+//const upload = multer({ dest: 'uploads/' });
+
+const multer = require('multer');
 const SalonRoutes = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
 const ServiceRoutes = require('./routes/ServiceRoutes');
@@ -157,7 +160,20 @@ app.post('/register1234', async (req, res) => {
   }
 }
 );
+// Multer configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Ensure this directory exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Appends extension
+  }
+});
 
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

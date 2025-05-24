@@ -17,6 +17,38 @@ router.get('/info', requireAuth('salon'), async (req, res) => {
   }
 });
 
+module.exports = (upload) => {
+  const router = require('express').Router();
+  const requireAuth = require('../middleware/requireAuth');
+
+  // Configure routes that need file uploads
+  router.post('/upload', upload.single('image'), async (req, res) => {
+    // Handle file upload
+    try {
+      const updateData = {
+        ...req.body,
+        ...(req.file && { imageUrl: `/uploads/${req.file.filename}` })
+      };
+
+      // Update salon in database
+      const updatedSalon = await Salon.findByIdAndUpdate(
+        req.user.salonId, // Assuming you have the salon ID in req.user
+        updateData,
+        { new: true }
+      );
+
+      res.json({ success: true, salon: updatedSalon });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+
+  });
+
+  // Other routes...
+  router.get('/info', requireAuth('salon'), (req, res) => { /*...*/ });
+
+  return router;
+};
 // تعديل بيانات الصالون (حسب التوكن)
 router.put('/info', requireAuth('salon'), async (req, res) => {
   try {

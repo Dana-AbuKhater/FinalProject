@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SalonInfoForm.css";
 import Calendar from "../InteractiveCalendar/Calendar";
@@ -7,7 +7,9 @@ const SalonInfoForm = () => {
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [setSelectedDate] = useState(null);
   const navigate = useNavigate();
-
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const fileInputRef = useRef(null);
   const [salonInfo, setSalonInfo] = useState({
     name: "",
     address: "",
@@ -18,7 +20,20 @@ const SalonInfoForm = () => {
     description: "",
     serviceType: "salon-only",
   });
+  // Handle image selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
 
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
 
@@ -52,6 +67,29 @@ const SalonInfoForm = () => {
     const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
     const url = endpoint + query;
 
+    const formData = new FormData();
+    formData.append('image', selectedImage);
+
+    // Append other form data
+    Object.entries(salonInfo).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    try {
+      const response = await fetch('/api/salon/upload', {
+        method: 'POST',
+        body: formData,
+        // Don't set Content-Type header - the browser will set it with boundary
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Salon info updated successfully!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error updating salon info');
+    }
     console.log(localStorage.getItem("token"))
     if (!token) {
       alert("Token not found");
@@ -226,12 +264,51 @@ const SalonInfoForm = () => {
   };
 
   return (
-    <div className="salon-form-container">
+    <div className="salon-form-container" >
       <form onSubmit={handleSubmit} className="salon-form">
         {/* 👇 عرض رسالة التحميل إذا كانت البيانات ما زالت تُحمّل */}
         <h1 className="salon-form-title">
           {isLoading ? "Loading..." : `Hi ${salonInfo.name}`}
         </h1>
+        {/* عرض الصورة  */}
+        <div className="form-group">
+          <label>Salon Image</label>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current.click()}
+            className="upload-button"
+          >
+            Choose Image
+          </button>
+
+          {/* Image Preview */}
+          {imagePreview && (
+            <div className="image-preview">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ maxWidth: '200px', marginTop: '10px' }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage(null);
+                  setImagePreview('');
+                }}
+                className="remove-image"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
 
         <div className="form-group">
           <label>Address</label>
@@ -294,7 +371,7 @@ const SalonInfoForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Show appointments</label>
           <button
             onClick={handleCalendarButtonClick}
@@ -377,7 +454,7 @@ const SalonInfoForm = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <button type="submit" className="submit-button">
           Update Salon Info
