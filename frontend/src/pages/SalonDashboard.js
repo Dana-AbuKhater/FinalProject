@@ -1,13 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Calendar from "../InteractiveCalendar/Calendar";
+
 //import './SalonDashboard.css';
 
 const SalonDashboard = () => {
+
+  const [setSelectedDate] = useState(null);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [salonInfo, setSalonInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // حالة التحميل
+
+  const handleCalendarButtonClick = (e) => {
+    e.preventDefault();
+    setShowCalendarModal(!showCalendarModal);
+  };
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    setShowCalendarModal(false);
+  };
+
+  const visibleServices = services.filter(
+    (service) => service.status === "visible"
+  );
+  const hiddenServices = services.filter(
+    (service) => service.status === "hidden"
+  );
+  const deletedServices = services.filter(
+    (service) => service.status === "deleted"
+  );
+
 
   useEffect(() => {
     const fetchSalonInfo = async () => {
@@ -17,12 +46,26 @@ const SalonDashboard = () => {
           navigate('/login');
           return;
         }
-        
+
         setLoading(true);
-        const { data } = await axios.get('/api/salon/info', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setSalonInfo(data);
+        const endpoint = `http://localhost:3000/api/salon/info`;
+
+        fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+        })
+          .then((res) => {
+            console.log("response ", res)
+            return res.json()
+          })
+        /*const { data } = await axios.get('/api/salon/info', {
+       headers: { Authorization: `Bearer ${token}` }
+     });*/
+        // setSalonInfo(data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load salon information');
@@ -41,7 +84,7 @@ const SalonDashboard = () => {
     <div className="salon-dashboard">
       <div className="dashboard-header">
         <h1>مرحباً {salonInfo.name}</h1>
-        <button 
+        <button
           className="edit-button"
           onClick={() => navigate('/edit-salon')}
         >
@@ -108,7 +151,103 @@ const SalonDashboard = () => {
             <h2>وصف الصالون</h2>
             <p className="salon-description">{salonInfo.description}</p>
           </div>
+
+
+
         )}
+        <div className="form-group">
+          <label>Show appointments</label>
+          <button
+            onClick={handleCalendarButtonClick}
+            className="show-close-calendar"
+            type="button"
+          >
+            {showCalendarModal ? "❌" : "📅 Show Booked Days"}
+          </button>
+        </div>
+        <div className="add-service-button">
+          <button
+            onClick={() => navigate("/AddServiceForm")}
+            className="add-service-link"
+          >
+            Add New Service
+          </button>
+        </div>
+
+
+
+        <div className="services-section">
+          <div className="service-category">
+            <h2>Visible Services</h2>
+            {visibleServices.map((service) => (
+              <div key={service.id} className="service-item">
+                <img
+                  src={service.image || "https://via.placeholder.com/50"}
+                  alt={service.name}
+                  className="service-image"
+                />
+                <div className="service-details">
+                  <h3>{service.name}</h3>
+                  <p>Price: ${service.price}</p>
+                  <p>Discount: {service.discount}%</p>
+                  <p>Duration: {service.duration} minutes</p>
+                  <p>Category: {service.category}</p>
+                  <p>Description: {service.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="service-category">
+            <h2>Hidden Services</h2>
+            {hiddenServices.map((service) => (
+              <div key={service.id} className="service-item">
+                <img
+                  src={service.image || "https://via.placeholder.com/50"}
+                  alt={service.name}
+                  className="service-image"
+                />
+                <div className="service-details">
+                  <h3>{service.name}</h3>
+                  <p>Price: ${service.price}</p>
+                  <p>Discount: {service.discount}%</p>
+                  <p>Duration: {service.duration} minutes</p>
+                  <p>Category: {service.category}</p>
+                  <p>Description: {service.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="service-category">
+            <h2>Deleted Services</h2>
+            {deletedServices.map((service) => (
+              <div key={service.id} className="service-item">
+                <img
+                  src={service.image || "https://via.placeholder.com/50"}
+                  alt={service.name}
+                  className="service-image"
+                />
+                <div className="service-details">
+                  <h3>{service.name}</h3>
+                  <p>Price: ${service.price}</p>
+                  <p>Discount: {service.discount}%</p>
+                  <p>Duration: {service.duration} minutes</p>
+                  <p>Category: {service.category}</p>
+                  <p>Description: {service.description}</p>
+                </div>
+              </div>
+            ))}
+            {showCalendarModal && (
+              <div className="calendar-modal">
+                <div className="calendar-modal-content">
+                  <Calendar onDateSelect={handleDateSelect} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

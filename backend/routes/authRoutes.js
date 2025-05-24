@@ -239,6 +239,7 @@ router.post("/login", async (req, res) => {
     }
     const { password: _, ...userData } = user._doc;
 
+    console.log("data=",userData)
     const token = jwt.sign(
       { id: user._id, type: type }, // البيانات التي تريد تشفيرها في التوكن
       process.env.JWT_SECRET,

@@ -59,7 +59,6 @@ const SignIn = () => {
 
       if (response.ok) {
         if (type === "salon") {
-          const salonData = data.salonInfo;
           const user = data.user;
           console.log("user= ", user);  // ✅ هون
 
@@ -68,8 +67,9 @@ const SignIn = () => {
           localStorage.setItem("salonName", user.name); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonPhone", user.phone); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonEmail", user.owner_email); // تخزين الـ salonId في localStorage
+
           // تخزين الـ salonId في localStorage
-          if (!salonData || !salonData.address || !salonData.workingHours) {
+          if (!user || !user.address || !user.workingHours) {
             navigate("/SaloninfoForm");
           } else {
             navigate("/SalonDashboard");
