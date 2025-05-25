@@ -13,7 +13,7 @@ const multer = require('multer');
 const SalonRoutes = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
 const ServiceRoutes = require('./routes/ServiceRoutes');
-const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
+//const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
 const RatingRoutes = require('./routes/RatingRoutes');
 const authRoutes = require('./routes/authRoutes');
 const bodyParser = require('body-parser');
@@ -27,6 +27,10 @@ mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ DB Connection Error", err));
 
+const appointmentRoutes = require('./routes/AppointmentsRoutes');
+app.use('/appointments', appointmentRoutes);
+
+app.listen(3000, () => console.log('Server running on port 3000'));
 // Serve static files from the frontend directory
 //app.use(express.static('frontend'));
 
