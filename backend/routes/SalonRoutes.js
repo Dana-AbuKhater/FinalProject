@@ -84,4 +84,31 @@ router.get("/getsalons", async (req, res) => {
     });
   }
 });
+
+// ✅ تعديل بيانات الصالون عن طريق salon_id من query
+router.put('/update-salon/:salon_id', async (req, res) => {
+  try {
+    const { salon_id } = req.params;
+
+    const updateData = req.query; // 👈 البيانات من query
+
+    const updatedSalon = await Salon.findOneAndUpdate(
+      { salon_id: salon_id },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedSalon) return res.status(404).json({ error: 'Salon not found' });
+
+    res.status(200).json({
+      message: 'Salon info updated successfully',
+      data: updatedSalon,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

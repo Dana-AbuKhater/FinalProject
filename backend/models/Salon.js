@@ -12,6 +12,8 @@ const salonSchema = new mongoose.Schema({
   logo_url: { type: String, maxlength: 255, required: true },
   created_at: { type: Date, default: Date.now },
   workingHours: { type: String },
+  website: { type: String, maxlength: 255 },
+
 
 });
 
