@@ -1,141 +1,128 @@
-/* SalonScreen.css */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
 
-/* Base Styles */
-.salon-screen {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fff5f7;
-    /* Lighter pink background */
+.cinzel-decorative-regular {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 400;
 }
 
-/* Loading State */
-.loading-text {
-    text-align: center;
-    color: #9d174d;
-    /* Dark pink */
-    font-size: 1.2rem;
-    margin-top: 2rem;
+.cinzel-decorative-bold {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
 }
 
-/* Filter Section */
-.filter-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding: 1rem 0;
-    margin-bottom: 1.5rem;
-    align-items: center;
+.cinzel-decorative-black {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 900;
 }
 
-.filter-button {
-    border: 1px solid #f472b6;
-    /* Medium pink */
-    border-radius: 0.375rem;
-    padding: 0.5rem 1rem;
-    background-color: white;
-    color: #831843;
-    /* Dark pink */
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white; /* خلفية الصفحة بيضاء */
+  font-family: "Cinzel Decorative", serif;
+  height: 100%;
+  width: 100%;
 }
 
-.filter-button:hover {
-    background-color: #fce7f3;
-    /* Very light pink */
-    border-color: #db2777;
-    /* Stronger pink */
+.salon-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
 }
 
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-button,
 .filter-select {
-    border: 1px solid #f472b6;
-    border-radius: 0.375rem;
-    padding: 0.5rem;
-    background-color: white;
-    color: #831843;
-    cursor: pointer;
+  border: 2px solid #d8a76a; /* لون الحدود عسلي فاتح */
+  background-color: white;
+  color: #5a3e1b; /* لون الخط عسلي غامق */
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  font-family: "Cinzel Decorative", serif;
 }
 
-/* Salon List */
+.filter-button:hover,
+.filter-select:hover,
+.filter-button:focus,
+.filter-select:focus {
+  background-color: transparent; /* خلفية شفافة */
+  border-color: #e1b26b; /* حدود أورانج فاتح */
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(225, 178, 107, 0.4); /* توهج بسيط بالأورانج */
+}
+
 .salon-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .salon-card {
-    width: 100%;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border: 1px solid #fbcfe8;
-    /* Light pink border */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
-.salon-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fdf2f8;
-    /* Very light pink */
+.salon-card:hover,
+.salon-card:focus {
+  background-color: #fff5e6; /* لون خلفية فاتح جداً عسلي */
+  border-color: #e1b26b; /* حدود أورانج فاتح */
+  outline: none;
 }
 
-.salon-color {
-    width: 4rem;
-    height: 2.5rem;
-    border-radius: 0.25rem;
-    background-color: #fbcfe8;
-    /* Default color if none specified */
+.salon-color-box {
+  width: 64px;
+  height: 40px;
+  border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .salon-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
-.salon-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #831843;
-    /* Dark pink */
+.salon-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #5a3e1b; /* لون عسلي غامق */
+}
+
+.salon-rating {
+  display: flex;
+  color: gold;
 }
 
 .salon-address {
-    font-size: 0.875rem;
-    color: #6b7280;
-    /* Gray */
+  font-size: 0.9rem;
+  color: #7b6b4a; /* لون عسلي متوسط */
 }
 
-/* Star Rating */
-.star-rating {
-    display: flex;
-    color: #f59e0b;
-    /* Amber for stars */
-}
-
-/* Responsive Adjustments */
-@media (max-width: 640px) {
-    .filter-container {
-        justify-content: center;
-    }
-
-    .salon-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .salon-color {
-        width: 100%;
-        height: 1.5rem;
-    }
+.loading-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #a38e5f; /* لون عسلي متوسط */
 }

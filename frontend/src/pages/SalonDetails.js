@@ -1,9 +1,10 @@
+// src/components/SalonDetails.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from "react-router-dom";
+import "./SalonDetails.css"; // استيراد ملف CSS الجديد
 
 export default function SalonDetails() {
   const navigate = useNavigate();
@@ -35,13 +36,12 @@ export default function SalonDetails() {
 
   const handleAddAppointment = async () => {
     const appointmentData = {
-      user_id: 1, // عدلها حسب المستخدم الحالي
-      salon_id: salon.salon_id, // يجب أن يكون متوفر عندك
-      service_id: 3, // يجب أن يكون متوفر عندك
+      user_id: 1,
+      salon_id: salon.salon_id,
+      service_id: 3,
       Appointment_date: selectedDate,
-      start_time: "10:00", // عدل حسب اختيار المستخدم أو حسب logic معين
-      end_time: "11:00", // مثلاً ساعة واحدة بعد البدء
-      // status: "Pending", // اختياري لأن له default
+      start_time: "10:00",
+      end_time: "11:00",
     };
 
     try {
@@ -53,13 +53,10 @@ export default function SalonDetails() {
         body: JSON.stringify(appointmentData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to add appointment");
-      }
+      if (!response.ok) throw new Error("Failed to add appointment");
 
       const data = await response.json();
       console.log("Appointment added:", data);
-
       setShowModal(false);
       navigate("/CustomerAppointment");
     } catch (error) {
@@ -67,63 +64,47 @@ export default function SalonDetails() {
     }
   };
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!salon) return <div className="p-4">Salon not found.</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (!salon) return <div className="not-found">Salon not found.</div>;
 
   return (
-    <div className="min-h-screen bg-pink-100 p-4">
-      <div className="bg-white p-6 rounded shadow">
-        <div className="flex items-center space-x-4">
-          <div className="w-24 h-24 bg-gray-200 rounded">
-            <img
-              src={salon.logo_url}
-              alt={`${salon.name} logo`}
-              className="object-cover w-full h-full rounded"
-            />
+    <div className="salon-page">
+      <div className="salon-card">
+        <div className="salon-header">
+          <div className="salon-logo">
+            <img src={salon.logo_url} alt={`${salon.name} logo`} />
           </div>
-          <div>
-            <h2 className="text-2xl font-bold">{salon.name}</h2>
-            <div className="flex text-yellow-500">
+          <div className="salon-info">
+            <h2 className="salon-name">{salon.name}</h2>
+            <div className="salon-rating">
               {Array.from({ length: salon.rating || 0 }).map((_, i) => (
                 <Star key={i} size={16} fill="gold" stroke="gold" />
               ))}
             </div>
-            <p className="text-sm text-gray-600">{salon.description}</p>
-            <p className="text-sm">📞 {salon.phone}</p>
-            <p className="text-sm">📍 {salon.address}</p>
+            <p className="salon-description">{salon.description}</p>
+            <p className="salon-phone">📞 {salon.phone}</p>
+            <p className="salon-address">📍 {salon.address}</p>
           </div>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="mt-6 bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700"
-        >
+        <button className="appointment-btn" onClick={() => setShowModal(true)}>
           Add Appointment
         </button>
       </div>
 
-      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl p-6 w-80 shadow-lg relative">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
-            >
+        <div className="modal-overlay">
+          <div className="modal">
+            <button className="modal-close" onClick={() => setShowModal(false)}>
               ✕
             </button>
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              Add Appointment
-            </h2>
+            <h2 className="modal-title">Add Appointment</h2>
             <DatePicker
               selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={setSelectedDate}
               inline
             />
-            <button
-              onClick={handleAddAppointment}
-              className="mt-4 w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700"
-            >
+            <button className="confirm-btn" onClick={handleAddAppointment}>
               Confirm Appointment
             </button>
           </div>
