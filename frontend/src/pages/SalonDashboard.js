@@ -38,6 +38,25 @@ const SalonDashboard = () => {
     (service) => service.status === "deleted"
   );
 
+  // دالة لجلب عدد الحجوزات (تم نقلها لتكون دالة مستقلة وليست داخل الـ catch)
+  const fetchAppointmentsCount = async (salonId) => {
+    console.log("  salonId  =", salonId);
+    try {
+      const { data } = await axios.get(`http://localhost:3000/appointments/count/${salonId}`);
+      setAppointmentsCount(data.total_appointments);
+    } catch (err) {
+      console.error('Error fetching appointments count:', err);
+      // التعامل مع خطأ الـ 401 بشكل خاص
+      if (err.response && err.response.status === 401) {
+        setError('يرجى تسجيل الدخول مرة أخرى. الجلسة انتهت.');
+        localStorage.removeItem('token'); // إزالة التوكن القديم
+        navigate('/login'); // توجيه لصفحة تسجيل الدخول
+      } else {
+        setError(err.response?.data?.message || 'فشل في تحميل عدد الحجوزات.'); // غيرتها لـ 'فشل في تحميل عدد الحجوزات.'
+      }
+    }
+  }; // 🌟 هذا هو القوس الذي يغلق دالة `WorkspaceAppointmentsCount`
+
 
   useEffect(() => {
     const fetchSalonInfo = async () => {
@@ -49,48 +68,60 @@ const SalonDashboard = () => {
         }
 
         setLoading(true);
-        const { data } = await axios.get('/api/salon/info', {
+        const { data } = await axios.get('http://localhost:3000/api/salon/info', {
           headers: { Authorization: `Bearer ${token}` }
         });
+        console.log("Salon Info Data:", data); // Add this to see the structure of data
 
-        const endpoint = `http://localhost:3000/api/salon/info`;
 
-        fetch(endpoint, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        /* const endpoint = `http://localhost:3000/api/salon/info`;
 
-        })
-          .then((res) => {
-            console.log("response ", res)
-            return res.json()
-          })
+         fetch(endpoint, {
+           method: "GET",
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: `Bearer ${token}`,
+           },
+
+         })
+           .then((res) => {
+             console.log("response ", res)
+             return res.json()
+           })*/
+
         /*const { data } = await axios.get('/api/salon/info', {
        headers: { Authorization: `Bearer ${token}` }
      });*/
-        // setSalonInfo(data);
+        setSalonInfo(data);
+        if (data._id) {
+          console.log("Fetching appointments count for Salon ID:", data._id);
+          // قم باستدعاء الدالة fetchAppointmentsCount هنا
+          await fetchAppointmentsCount(data._id);
+        } else {
+          console.warn("Salon _id not found in fetched salon info. Cannot fetch appointments count.");
+          setAppointmentsCount(0); // حط 0 إذا ما لقيت الـ ID
+        }
         setLoading(false);
+        setError(null); // مسح أي أخطاء سابقة
+
         // بعد ما نجيب بيانات الصالون نجيب عدد الحجوزات
-        fetchAppointmentsCount(data._id); // اتأكد إنه الصالون بيرجع _id هون
+        // fetchAppointmentsCount(data._id); // اتأكد إنه الصالون بيرجع _id هون
 
       } catch (err) {
-        setError('Failed to load salon information');
-        setLoading(false);
-        console.error('Error fetching salon info:', err);
-      }
-    };
-    // دالة لجلب عدد الحجوزات
-    const fetchAppointmentsCount = async (salonId) => {
-      try {
-        const { data } = await axios.get(`http://localhost:3000/appointments/count/${salonId}`);
-        setAppointmentsCount(data.total_appointments);
-      } catch (err) {
-        console.error('Error fetching appointments count:', err);
-      }
-    };
-  
+        setLoading(false); // انتهى التحميل بخطأ
+        console.error('Error fetching salon info or appointments count:', err);
+
+        // التعامل مع خطأ الـ 401 بشكل خاص
+        if (err.response && err.response.status === 401) {
+          setError('يرجى تسجيل الدخول مرة أخرى. الجلسة انتهت.');
+          localStorage.removeItem('token'); // إزالة التوكن القديم
+          navigate('/login'); // توجيه لصفحة تسجيل الدخول
+        } else {
+          setError(err.response?.data?.message || 'فشل في تحميل معلومات الصالون.');
+        }
+      } // 🌟 هذا هو القوس الذي يغلق الـ `catch` block الخاص بـ `WorkspaceSalonInfo`
+    }; // 🌟 وهذا هو القوس الذي يغلق دالة `WorkspaceSalonInfo`
+
 
     fetchSalonInfo();
   }, [navigate]);
