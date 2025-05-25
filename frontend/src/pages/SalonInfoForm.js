@@ -21,7 +21,7 @@ const SalonInfoForm = () => {
     serviceType: "salon-only",
   });
   // Handle image selection
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
@@ -32,6 +32,22 @@ const SalonInfoForm = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
+      // try {
+      //   const response = await fetch('/api/salon/upload', {
+      //     method: 'POST',
+      //     body: file,
+      //     // Don't set Content-Type header - the browser will set it with boundary
+      //   });
+
+      //   const data = await response.json();
+      //   console.log("data123:", data);
+      //   if (data.success) {
+      //     alert('Salon info updated successfully!');
+      //   }
+      // } catch (error) {
+      //   console.error('Error:', error);
+      //   alert('Error updating salon info');
+      // }
     }
   };
   const [services, setServices] = useState([]);
@@ -83,6 +99,7 @@ const SalonInfoForm = () => {
       });
 
       const data = await response.json();
+      console.log("Response data123:", data);
       if (data.success) {
         alert('Salon info updated successfully!');
       }

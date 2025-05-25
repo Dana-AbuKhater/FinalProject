@@ -7,7 +7,6 @@ const { body, validationResult } = require('express-validator');
 const bodyParse = require("body-parser")
 require('dotenv').config();
 
-//const upload = multer({ dest: 'uploads/' });
 
 const multer = require('multer');
 const SalonRoutes = require('./routes/SalonRoutes');
@@ -160,20 +159,44 @@ app.post('/register1234', async (req, res) => {
   }
 }
 );
-// Multer configuration
+// Enhanced Multer config
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Ensure this directory exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Appends extension
+  destination: 'uploads/',
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
   }
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+const uploads = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
+app.post("/uploads", uploads.single("inputuploads"), async (request, response) => {
+  let token = request.headers.cookie;
+  filePath = `uploads/${request.file.filename}`;
+  if (token) {
+    tokenIndex = token.indexOf("token=") + 1;
+    token = token.substring((tokenIndex + 5),).split(";")[0];
+    jwt.verify(token, 'jsfashlaekhe', function (err, decoded) {
+      if (err) {
+        // return /response.status(401).redirect("../login");
+        return response.status(500).send(err)
+      }
+      connection.query("UPDATE `application` SET assignment=? where student_id = ?",
+        [filePath, decoded.id], (err, data) => {
+          if (err) {
+            response.status(500).send(err);
+          }
+          response.status(200).redirect("../candidate-dashboard")
+        })
+    })
+
+  }
+  else {
+    response.status(402).send("failed token")
+  }
+})
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
