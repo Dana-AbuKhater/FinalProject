@@ -1,17 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap");
 
 .cinzel-decorative-regular {
-  font-family: "Cinzel Decorative", serif;
+
   font-weight: 400;
 }
 
 .cinzel-decorative-bold {
-  font-family: "Cinzel Decorative", serif;
+
   font-weight: 700;
 }
 
 .cinzel-decorative-black {
-  font-family: "Cinzel Decorative", serif;
+
   font-weight: 900;
 }
 
@@ -19,8 +19,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: white; /* خلفية الصفحة بيضاء */
-  font-family: "Cinzel Decorative", serif;
+  background-color: white;
+  /* خلفية الصفحة بيضاء */
+
   height: 100%;
   width: 100%;
 }
@@ -40,9 +41,11 @@ body {
 
 .filter-button,
 .filter-select {
-  border: 2px solid #d8a76a; /* لون الحدود عسلي فاتح */
+  border: 2px solid #d8a76a;
+  /* لون الحدود عسلي فاتح */
   background-color: white;
-  color: #5a3e1b; /* لون الخط عسلي غامق */
+  color: #5a3e1b;
+  /* لون الخط عسلي غامق */
   font-weight: 700;
   padding: 6px 12px;
   border-radius: 8px;
@@ -50,17 +53,20 @@ body {
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
-  font-family: "Cinzel Decorative", serif;
+
 }
 
 .filter-button:hover,
 .filter-select:hover,
 .filter-button:focus,
 .filter-select:focus {
-  background-color: transparent; /* خلفية شفافة */
-  border-color: #e1b26b; /* حدود أورانج فاتح */
+  background-color: transparent;
+  /* خلفية شفافة */
+  border-color: #e1b26b;
+  /* حدود أورانج فاتح */
   outline: none;
-  box-shadow: 0 0 5px 2px rgba(225, 178, 107, 0.4); /* توهج بسيط بالأورانج */
+  box-shadow: 0 0 5px 2px rgba(225, 178, 107, 0.4);
+  /* توهج بسيط بالأورانج */
 }
 
 .salon-list {
@@ -85,8 +91,10 @@ body {
 
 .salon-card:hover,
 .salon-card:focus {
-  background-color: #fff5e6; /* لون خلفية فاتح جداً عسلي */
-  border-color: #e1b26b; /* حدود أورانج فاتح */
+  background-color: #fff5e6;
+  /* لون خلفية فاتح جداً عسلي */
+  border-color: #e1b26b;
+  /* حدود أورانج فاتح */
   outline: none;
 }
 
@@ -108,7 +116,8 @@ body {
   gap: 8px;
   font-weight: 700;
   font-size: 1.2rem;
-  color: #5a3e1b; /* لون عسلي غامق */
+  color: #5a3e1b;
+  /* لون عسلي غامق */
 }
 
 .salon-rating {
@@ -118,11 +127,13 @@ body {
 
 .salon-address {
   font-size: 0.9rem;
-  color: #7b6b4a; /* لون عسلي متوسط */
+  color: #7b6b4a;
+  /* لون عسلي متوسط */
 }
 
 .loading-text {
   text-align: center;
   font-size: 1rem;
-  color: #a38e5f; /* لون عسلي متوسط */
+  color: #a38e5f;
+  /* لون عسلي متوسط */
 }

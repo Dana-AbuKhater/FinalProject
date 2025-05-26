@@ -1,7 +1,7 @@
 import React from 'react';
 import './SignUp.css';
 import { CodeSquare } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -70,6 +70,11 @@ const SignUp = () => {
       alignContent: 'center',
       boxShadow: '0 0 10px #bc9c3c'
     }}>
+      <div className="back-button">
+        <Link to="/SignInUp">
+          <button className="back-button">←</button>
+        </Link>
+      </div>
       <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign Up</h1>
       <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
         <div style={{ marginBottom: '15px' }}>

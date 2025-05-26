@@ -156,7 +156,7 @@ textarea {
   
 }
   */
-.show-close-calendar {
+/* .show-close-calendar {
   color: #e8b923;
   font-weight: bold;
   padding: 10px;
@@ -166,9 +166,9 @@ textarea {
   cursor: pointer;
   font-size: 14px;
   border: 1px solid #e2b631;
-  box-shadow: 0 4px 8px #bc9c3c;
+  
 
-}
+} */
 
 .image-preview {
   margin-top: 10px;

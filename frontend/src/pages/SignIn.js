@@ -1,6 +1,6 @@
 import React from 'react';
 import './SignIn.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const SignIn = () => {
@@ -87,24 +87,34 @@ const SignIn = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '200px', marginRight: 'auto', marginLeft: 'auto', border: '1px solid #e8b923', padding: '20px', width: '300px', borderRadius: '5px', alignContent: 'center', boxShadow: '0 0 10px #bc9c3c' }}>
-      <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign In</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Email:</label>
-          <input type="text" name="email" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
-        </div>
+    <div className="signin-container">
+      <div className="back-button">
+        <Link to="/SignInUp">
+          <button className="back-button">←</button>
+        </Link>
+      </div>
+      <div style={{ textAlign: 'center', marginTop: '200px', marginRight: 'auto', marginLeft: 'auto', border: '1px solid #e8b923', padding: '20px', width: '300px', borderRadius: '5px', alignContent: 'center', boxShadow: '0 0 10px #bc9c3c' }}>
 
-        <div style={{ marginBottom: '15px' }}>
-          <label>Password:</label>
-          <input type="password" name="password" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
-        </div>
+        <h1 style={{ fontSize: '24px', marginBottom: '20px' }}>Sign In</h1>
+        <form onSubmit={handleSubmit} style={{ display: 'inline-block', textAlign: 'left' }}>
+          <div style={{ marginBottom: '15px' }}>
+            <label>Email:</label>
+            <input type="text" name="email" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+          </div>
 
-        <button className="signin" type="submit" style={{ width: '100%', padding: '10px', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Sign In</button>
-      </form>
-      <p style={{ marginTop: '15px', fontSize: '14px' }}>New User? <a href="/SignUp" style={{ textDecoration: 'none' }}>Sign Up</a></p>
+          <div style={{ marginBottom: '15px' }}>
+            <label>Password:</label>
+            <input type="password" name="password" required style={{ width: '100%', padding: '8px', borderColor: '#e8b923' }} />
+          </div>
+
+          <button className="signin" type="submit" style={{ width: '100%', padding: '10px', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Sign In</button>
+        </form>
+        <p style={{ marginTop: '15px', fontSize: '14px' }}>New User? <a href="/SignUp" style={{ textDecoration: 'none' }}>Sign Up</a></p>
+      </div>
     </div>
   );
+
+
 };
 
 export default SignIn;

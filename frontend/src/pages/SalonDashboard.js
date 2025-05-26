@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Calendar from "../InteractiveCalendar/Calendar";
+import './SalonDashboard.css'; // تأكد من وجود ملف CSS المناسب
 
-//import './SalonDashboard.css';
 
 const SalonDashboard = () => {
 
@@ -48,11 +48,11 @@ const SalonDashboard = () => {
       console.error('Error fetching appointments count:', err);
       // التعامل مع خطأ الـ 401 بشكل خاص
       if (err.response && err.response.status === 401) {
-        setError('يرجى تسجيل الدخول مرة أخرى. الجلسة انتهت.');
+        setError('Please login again. Session expired.');
         localStorage.removeItem('token'); // إزالة التوكن القديم
         navigate('/login'); // توجيه لصفحة تسجيل الدخول
       } else {
-        setError(err.response?.data?.message || 'فشل في تحميل عدد الحجوزات.'); // غيرتها لـ 'فشل في تحميل عدد الحجوزات.'
+        setError(err.response?.data?.message || 'Failed to load appointments count.'); // غيرتها لـ 'فشل في تحميل عدد الحجوزات.'
       }
     }
   }; // 🌟 هذا هو القوس الذي يغلق دالة `WorkspaceAppointmentsCount`
@@ -113,11 +113,11 @@ const SalonDashboard = () => {
 
         // التعامل مع خطأ الـ 401 بشكل خاص
         if (err.response && err.response.status === 401) {
-          setError('يرجى تسجيل الدخول مرة أخرى. الجلسة انتهت.');
+          setError('Please login again. Session expired.');
           localStorage.removeItem('token'); // إزالة التوكن القديم
           navigate('/login'); // توجيه لصفحة تسجيل الدخول
         } else {
-          setError(err.response?.data?.message || 'فشل في تحميل معلومات الصالون.');
+          setError(err.response?.data?.message || 'Failed to load salon information.');
         }
       } // 🌟 هذا هو القوس الذي يغلق الـ `catch` block الخاص بـ `WorkspaceSalonInfo`
     }; // 🌟 وهذا هو القوس الذي يغلق دالة `WorkspaceSalonInfo`
@@ -132,50 +132,44 @@ const SalonDashboard = () => {
   return (
     <div className="salon-dashboard">
       <div className="dashboard-header">
-        <h1>مرحباً {salonInfo.name}</h1>
-        <button
-          className="edit-button"
-          onClick={() => navigate('/edit-salon')}
-        >
-          تعديل المعلومات
-        </button>
+        <h1>Welcome {salonInfo.name}</h1>
       </div>
 
       <div className="dashboard-content">
         <div className="info-section">
-          <h2>معلومات الصالون</h2>
+          <h2>Salon Information</h2>
           <div className="info-card">
             <div className="info-item">
-              <span className="info-label">الاسم:</span>
+              <span className="info-label">Name:</span>
               <span className="info-value">{salonInfo.name}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">البريد الإلكتروني:</span>
+              <span className="info-label">Email:</span>
               <span className="info-value">{salonInfo.email}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">رقم الهاتف:</span>
+              <span className="info-label">Phone:</span>
               <span className="info-value">{salonInfo.phone}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">العنوان:</span>
+              <span className="info-label">Address:</span>
               <span className="info-value">{salonInfo.address}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">ساعات العمل:</span>
+              <span className="info-label">Working Hours:</span>
               <span className="info-value">{salonInfo.workingHours}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">نوع الخدمة:</span>
+              <span className="info-label">Service Type:</span>
               <span className="info-value">
-                {salonInfo.serviceType === 'home-only' && 'منزلي فقط'}
-                {salonInfo.serviceType === 'salon-only' && 'صالون فقط'}
-                {salonInfo.serviceType === 'both' && 'منزلي وصالون'}
+                {salonInfo.serviceType === 'home-only'}
+                {salonInfo.serviceType === 'salon-only'}
+                {salonInfo.serviceType === 'both'}
               </span>
             </div>
             {salonInfo.website && (
               <div className="info-item">
-                <span className="info-label">الموقع الإلكتروني:</span>
+                <span className="info-label">Website:</span>
                 <span className="info-value">
                   <a href={salonInfo.website} target="_blank" rel="noopener noreferrer">
                     {salonInfo.website}
@@ -184,58 +178,65 @@ const SalonDashboard = () => {
               </div>
             )}
           </div>
+          <button
+            className="edit-button"
+            onClick={() => navigate('/SalonDetails')}
+          >
+            Edit Information
+          </button>
         </div>
 
-        <div className="action-section">
-          <button className="action-button" onClick={() => navigate('/salon-services')}>
-            إدارة الخدمات
+        <div className="appointments-section">
+          <div className="form-group">
+            <label>Show appointments</label>
+            <button
+              onClick={handleCalendarButtonClick}
+              className="show-close-calendar"
+              type="button"
+            >
+              {showCalendarModal ? "❌" : "📅 Show Booked Days"}
+            </button>
+          </div>
+          <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
+            View Appointments
           </button>
-          <button className="action-button" onClick={() => navigate('/appointments')}>
-            عرض المواعيد
-          </button>
-        </div>
-        {/* كارد عدد الحجوزات */}
-        <div className="info-section">
-          <h2>إحصائيات</h2>
+          <h2>Statistics</h2>
           <div className="info-card" style={{ background: '#f5f5f5', padding: '20px', borderRadius: '10px' }}>
-            <h3>عدد الحجوزات</h3>
+            <h3>Appointments Count</h3>
             <p style={{ fontSize: '30px', fontWeight: 'bold', marginTop: '10px' }}>{appointmentsCount}</p>
           </div>
+          {/* كارد عدد الحجوزات */}
+
         </div>
 
 
 
         {salonInfo.description && (
           <div className="description-section">
-            <h2>وصف الصالون</h2>
+            <h2>Description</h2>
             <p className="salon-description">{salonInfo.description}</p>
           </div>
 
 
 
         )}
-        <div className="form-group">
-          <label>Show appointments</label>
-          <button
-            onClick={handleCalendarButtonClick}
-            className="show-close-calendar"
-            type="button"
-          >
-            {showCalendarModal ? "❌" : "📅 Show Booked Days"}
-          </button>
-        </div>
-        <div className="add-service-button">
-          <button
-            onClick={() => navigate("/AddServiceForm")}
-            className="add-service-link"
-          >
-            Add New Service
-          </button>
-        </div>
-
-
-
         <div className="services-section">
+          <div className="add-service-button">
+            <button
+              onClick={() => navigate("/AddServiceForm")}
+              className="add-service-link"
+            >
+              Add New Service
+            </button>
+          </div>
+          <div className="info-section">
+            <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
+              Manage Services
+            </button>
+          </div>
+
+
+
           <div className="service-category">
             <h2>Visible Services</h2>
             {visibleServices.map((service) => (
