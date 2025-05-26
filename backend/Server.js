@@ -9,7 +9,7 @@ require('dotenv').config();
 
 
 const multer = require('multer');
-const SalonRoutes = require('./routes/SalonRoutes');
+const ذ= require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
 const ServiceRoutes = require('./routes/ServiceRoutes');
 //const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
@@ -36,7 +36,7 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 // API Routes
 //app.use('/api/salons', SalonRoutes);
 // app.use('/api/customers', CustomerRoutes);
-// app.use('/api/services', ServiceRoutes);
+app.use('/api/services', ServiceRoutes);
 // app.use('/api/appointments', AppointmentsRoutes);
 // app.use('/api/ratings', RatingRoutes);
 app.use('/api/auth', authRoutes);
@@ -97,6 +97,7 @@ app.post('/register1234', async (req, res) => {
         message: 'User with this email or username already exists'
       });
     }
+
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
