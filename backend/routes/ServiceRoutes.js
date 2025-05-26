@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Service = require('../models/Service');
+const jwt = require('jsonwebtoken');
+const Salon = require('../models/Salon'); // استدعاء موديل الصالون
 
 /*
 router.get('/', async (req, res) => {
@@ -43,6 +45,23 @@ router.get('/salon/:salonId', async (req, res) => {
 // مسار POST لإضافة خدمة جديدة
 router.post('/', async (req, res) => {
   try {
+    // فك التوكن
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const salonEmail = decoded.email;
+
+    // جلب الصالون من قاعدة البيانات بناء على الإيميل
+    const salon = await Salon.findOne({ email: salonEmail });
+    if (!salon) return res.status(404).json({ message: 'Salon not found' });
+
+    const salon_id = salon.salon_id; // أو حسب اسم الحقل في الـ Schema تبعك
+ 
+    console.log('--- Inside POST /api/services ---');
+    console.log('Received req.body:', req.body);
+    console.log('Received name:', req.body.name);
+    console.log('Received price:', req.body.price);
     const { name, price, discount, duration, description, category, status } = req.body;
 
     // تحويل البيانات إلى الأنواع الصحيحة
@@ -58,28 +77,75 @@ router.post('/', async (req, res) => {
     // --- اعتبارات مهمة لـ service_id و salon_id ---
     const lastService = await Service.findOne().sort({ service_id: -1 });
     const service_id = lastService ? lastService.service_id + 1 : 1;
-    const salon_id = 1; // قيمة افتراضية، يجب استبدالها بمنطق الحصول على ID الصالون الفعلي
 
     // إنشاء كائن خدمة جديد بناءً على الـ Schema الخاص بك
     const newService = new Service({
       service_id,
       salon_id,
       name,
-      price: parsedPrice,
-      duration_minutes: parsedDuration, // ربط حقل 'duration' بـ 'duration_minutes'
+      price: parseFloat(price),
+      duration_minutes: parseInt(duration, 10), // ربط حقل 'duration' بـ 'duration_minutes'
       description,
       category,
-      is_discounted: parsedDiscount > 0, // تعيين لـ true إذا كان هناك خصم
-      discount_price: parsedDiscount > 0 ? parsedDiscount : undefined // تخزين قيمة الخصم فقط إذا كان أكبر من صفر
+      is_discounted: parsedDiscount > 0, // هذا صحيح، parsedDiscount هو رقم
+      discount_price: parsedDiscount > 0 ? parsedDiscount : undefined, // هذا صحيح، parsedDiscount هو رقم
       // ملاحظة: حقل 'status' من الواجهة الأمامية غير موجود مباشرة في الـ Schema الخاص بك.
       // إذا كنت بحاجة لتخزين حالة الخدمة، يجب إضافة حقل 'status' إلى الـ serviceSchema.
-      // status: status // إذا أضفت الحقل للـ Schema
+      status: status // إذا أضفت الحقل للـ Schema
     });
 
     await newService.save(); // حفظ الخدمة الجديدة في قاعدة البيانات
+    console.log('Service successfully saved to DB:', newService);
     res.status(201).json({ message: 'تمت إضافة الخدمة بنجاح!', service: newService });
   } catch (error) {
     console.error('خطأ في إضافة الخدمة:', error);
+    res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
+  }
+});
+
+// مسار PUT لتحديث حالة خدمة معينة (مرئية/مخفية/محذوفة)
+router.put('/:serviceId', async (req, res) => {
+  try {
+    const serviceId = parseInt(req.params.serviceId, 10); // تحويل serviceId من string إلى number
+
+    // التحقق من أن serviceId رقم صحيح
+    if (isNaN(serviceId)) {
+      return res.status(400).json({ message: 'معرف الخدمة غير صالح.' });
+    }
+
+    // استخراج الحالة الجديدة من req.body
+    // سنقوم بتلقي 'status' مباشرة بدلاً من isActive و isDeleted
+    const { status } = req.body;
+
+    // التحقق من أن الحالة المرسلة صالحة وفقاً لـ enum
+    const validStatuses = ['visible', 'hidden', 'deleted'];
+    if (status && !validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'قيمة الحالة غير صالحة. يجب أن تكون visible, hidden, أو deleted.' });
+    }
+
+    // بناء كائن التحديث
+    const updateFields = {};
+    if (status) {
+      updateFields.status = status;
+    }
+    // يمكنك إضافة حقول أخرى هنا إذا كنت تريد تحديثها أيضاً
+
+    // البحث عن الخدمة بواسطة service_id وتحديثها
+    const updatedService = await Service.findOneAndUpdate(
+      { service_id: serviceId },
+      { $set: updateFields },
+      { new: true, runValidators: true } // new: true لإرجاع المستند المحدث، runValidators لتطبيق قواعد الـ Schema
+    );
+
+    // إذا لم يتم العثور على الخدمة
+    if (!updatedService) {
+      return res.status(404).json({ message: 'الخدمة غير موجودة.' });
+    }
+
+    res.status(200).json({ message: 'تم تحديث حالة الخدمة بنجاح!', service: updatedService });
+
+  } catch (error) {
+    console.error('خطأ في تحديث حالة الخدمة:', error);
     res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
   }
 });
