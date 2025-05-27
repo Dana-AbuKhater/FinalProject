@@ -61,16 +61,21 @@ const SalonInfoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const address = e.target.address.value;
+   /* const address = e.target.address.value;
     const workingHours = e.target.workingHours.value;
     const serviceType = e.target.serviceType.value;
     const website = e.target.website.value;
-    const description = e.target.description.value;
+    const description = e.target.description.value;*/
 
-    // const { logo_url, address, workingHours, serviceType, website, description } = salonInfo;
+    const { logo_url, address, workingHours, serviceType, website, description } = salonInfo;
 
     const id = localStorage.getItem("salonId");
     console.log("id= ", id);
+    console.log("address= ", address);
+    console.log("workingHours= ", workingHours);
+    console.log("serviceType= ", serviceType);
+    console.log("website= ", website);
+    console.log("description= ", description);
     /**try {
       const token = localStorage.getItem('token');
       await axios.put('/api/salon/info', salonInfo, {
@@ -86,7 +91,7 @@ const SalonInfoForm = () => {
     const url = endpoint + query;
 
     const formData = new FormData();
-    formData.append('image', selectedImage);
+    formData.append('inputuploads', selectedImage);
 
     // Append other form data
     Object.entries(salonInfo).forEach(([key, value]) => {
@@ -94,7 +99,7 @@ const SalonInfoForm = () => {
     });
 
     try {
-      const response = await fetch('/api/salon/upload', {
+      const response = await fetch('http://localhost:3000/api/salon/upload', {
         method: 'POST',
         body: formData,
         // Don't set Content-Type header - the browser will set it with boundary

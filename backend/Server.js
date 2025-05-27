@@ -5,7 +5,12 @@ const path = require('path'); // Add this line to import path
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const bodyParse = require("body-parser")
+
 require('dotenv').config();
+
+
+
+const router = express.Router();
 
 const requireAuth = require('./middleware/requireAuth'); // عدل المسار حسب مكان الملف الحقيقي
 
@@ -196,7 +201,7 @@ const uploads = multer({
   fileFilter
 });
 
-app.post("/uploads", requireAuth('salon'), uploads.single("inputuploads"), async (req, res) => {
+app.post("/api/salon/upload", requireAuth('salon'), uploads.single("inputuploads"), async (req, res) => {
 
   // console.log("Token :", req.cookies.token)
   // console.log("Token2 :", req.cookies.token || req.headers.cookie?.split('token=')[1]?.split(';')[0])
