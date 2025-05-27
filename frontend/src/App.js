@@ -16,6 +16,7 @@ import UpdateServiceStatus from './pages/UpdateServiceStatus';
 import Customer from './pages/Customer';
 import CustomerAppointment from './pages/CustomerAppointment';
 import SalonDashboard from './pages/SalonDashboard';
+import SalonDetails from './pages/SalonDetails'; // استيراد صفحة تفاصيل الصالون
 
 function App() {
   return (<>
@@ -35,6 +36,8 @@ function App() {
         <Route path="/Customer" element={<Customer />} />
         <Route path="/CustomerAppointment" element={<CustomerAppointment />} />
         <Route path="/SalonDashboard" element={<SalonDashboard />} />
+        <Route path="/SalonDetails" element={<SalonDetails />} /> {/* تعريف مسار تفاصيل الصالون مع باراميتر id */}
+        {/* يمكن استخدام :id في الرابط لتمرير معرف الصالون */}Ks
         <Route path="/AddServiceForm" element={<AddServiceForm setServices={(services) => {
           // تحديث الخدمات في SalonInfoForm
           localStorage.setItem('services', JSON.stringify(services));

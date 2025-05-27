@@ -1,5 +1,5 @@
 // src/components/SalonDetails.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Link } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import DatePicker from "react-datepicker";
@@ -68,7 +68,13 @@ export default function SalonDetails() {
   if (!salon) return <div className="not-found">Salon not found.</div>;
 
   return (
+
     <div className="salon-page">
+      <div className="back-button">
+        <Link to="/SalonDashboard">
+          <button className="back-button">←</button>
+        </Link>
+      </div>
       <div className="salon-card">
         <div className="salon-header">
           <div className="salon-logo">

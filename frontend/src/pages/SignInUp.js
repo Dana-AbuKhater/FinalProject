@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './SignInUp.css';
+
 
 function SignInUp() {
   const navigate = useNavigate();
@@ -57,7 +58,9 @@ function SignInUp() {
       <button onClick={handleSalonDashboard} className='Dashboard-button'>
         Salon Dashboard
       </button>
-
+      <Link to="/">
+        <button>←</button>
+      </Link>
     </div>
   );
 }
