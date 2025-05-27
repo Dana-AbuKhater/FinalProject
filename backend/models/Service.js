@@ -10,11 +10,8 @@ const serviceSchema = new mongoose.Schema({
   category: { type: String, maxlength: 50 },
   is_discounted: { type: Boolean, default: false }, // قيمة افتراضية لـ BOOLEAN
   discount_price: { type: Number } ,// استخدام Number لـ DECIMAL
-  status: {
-    type: String,
-    enum: ['visible', 'hidden', 'deleted'], // القيم المسموح بها
-    default: 'visible' // شالقيمة الافتراضية إذا لم يتم تحديدها
-  }
+  status: { type: String, enum: ['visible', 'hidden', 'deleted'], default: 'visible' }
+
 });
 
 module.exports = mongoose.model('Service', serviceSchema);

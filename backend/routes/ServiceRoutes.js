@@ -42,6 +42,20 @@ router.get('/salon/:salonId', async (req, res) => {
   }
 });
 
+router.post('/create', async (req, res) => {
+  console.log("🚀🚀 create service API called");
+  console.log("📥 البيانات واصلة:", req.body);
+
+  try {
+    const newService = new Service(req.body);
+    await newService.save();
+    res.status(201).json({ success: true, message: "تمت إضافة الخدمة!", data: newService });
+  } catch (error) {
+    console.error("❌ خطأ أثناء الإضافة:", error);
+    res.status(500).json({ success: false, message: "فشل في الإضافة." });
+  }
+});
+
 // مسار POST لإضافة خدمة جديدة
 router.post('/', async (req, res) => {
   try {
@@ -57,7 +71,7 @@ router.post('/', async (req, res) => {
     if (!salon) return res.status(404).json({ message: 'Salon not found' });
 
     const salon_id = salon.salon_id; // أو حسب اسم الحقل في الـ Schema تبعك
- 
+
     console.log('--- Inside POST /api/services ---');
     console.log('Received req.body:', req.body);
     console.log('Received name:', req.body.name);
@@ -119,7 +133,7 @@ router.put('/:serviceId', async (req, res) => {
 
     // التحقق من أن الحالة المرسلة صالحة وفقاً لـ enum
     const validStatuses = ['visible', 'hidden', 'deleted'];
-    if (status && !validStatuses.includes(status)) {
+    if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({ message: 'قيمة الحالة غير صالحة. يجب أن تكون visible, hidden, أو deleted.' });
     }
 
