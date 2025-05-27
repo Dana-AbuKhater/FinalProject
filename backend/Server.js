@@ -264,29 +264,4 @@ app.listen(3000, () => {
   console.log("🚀 Server is running on port 3000");
 });
 
-router.post('/create', async (req, res) => {
-  try {
-    console.log(req.body); // شوف شو واصل
 
-    const newService = new Service(req.body);
-    await newService.save();
-
-    res.status(201).json({ success: true, message: "Service added!", data: newService });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Failed to add service." });
-  }
-});
-// router.post('/create', async (req, res) => {
-//   try {
-//     console.log(req.body); // شوف شو واصل
-
-//     const newService = new Service(req.body);
-//     await newService.save();
-
-//     res.status(201).json({ success: true, message: "Service added!", data: newService });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Failed to add service." });
-//   }
-// });
