@@ -9,7 +9,7 @@ require('dotenv').config();
 
 
 const multer = require('multer');
-const ذ= require('./routes/SalonRoutes');
+const ذ = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
 const ServiceRoutes = require('./routes/ServiceRoutes');
 //const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
@@ -20,6 +20,8 @@ const app = express();
 app.use(express.json());
 app.use(cors({
   origin: 'http://localhost:3001', // السماح فقط لطلبات من الواجهة الأمامية
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 mongoose.connect(process.env.MONGO_URL)
@@ -59,13 +61,17 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: false },
   createdAt: { type: Date, default: Date.now }
 });
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+//   res.setHeader("Access-Control-Allow-Headers", "*");
+//   if (req.method === "OPTIONS") {
+//     return res.sendStatus(200);
+//   }
+
+//   next();
+// });
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 app.engine('JSON', require('ejs').renderFile)
@@ -164,50 +170,107 @@ app.post('/register1234', async (req, res) => {
   }
 }
 );
-// Enhanced Multer config
 const storage = multer.diskStorage({
   destination: 'uploads/',
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type'), false);
+  }
+};
 
 const uploads = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter
 });
-app.post("/uploads", uploads.single("inputuploads"), async (request, response) => {
-  let token = request.headers.cookie;
-  filePath = `uploads/${request.file.filename}`;
-  if (token) {
-    tokenIndex = token.indexOf("token=") + 1;
-    token = token.substring((tokenIndex + 5),).split(";")[0];
-    jwt.verify(token, 'jsfashlaekhe', function (err, decoded) {
-      if (err) {
-        // return /response.status(401).redirect("../login");
-        return response.status(500).send(err)
+
+app.post("/uploads", requireAuth('salon'), uploads.single("inputuploads"), async (req, res) => {
+
+  // console.log("Token :", req.cookies.token)
+  // console.log("Token2 :", req.cookies.token || req.headers.cookie?.split('token=')[1]?.split(';')[0])
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
+    }
+
+
+
+
+    const filePath = "uploads/" + req.file.filename;
+    console.log("File Name :", req.file.filename);
+    console.log("File Name :", req.file.filename);
+    console.log("User :", req.user);
+    // add the file path to the salon's document in the database
+    const salon = await require('./models/Salon').findOneAndUpdate(
+      { owner_email: req.user.owner_email },
+      { $set: { logo_url: filePath } },
+      { new: true }
+    );
+    if (!salon) {
+      return res.status(404).send('Salon not found');
+    }
+    res.json({
+      success: true,
+      message: 'File uploaded successfully',
+      filePath: filePath,
+      salon: {
+        id: salon._id,
+        name: salon.name,
+        owner_email: salon.owner_email,
+        logo_url: salon.logo_url
       }
-      connection.query("UPDATE `application` SET assignment=? where student_id = ?",
-        [filePath, decoded.id], (err, data) => {
-          if (err) {
-            response.status(500).send(err);
-          }
-          response.status(200).redirect("../candidate-dashboard")
-        })
-    })
+    });
 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
   }
-  else {
-    response.status(402).send("failed token")
-  }
-})
-
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something broke!123' });
+  res.status(500).json({ success: false, message: res.locals.errorMessage || 'Internal Server Error' });
 });
+
+app.get('/uploads/:filename', (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', req.params
+    .filename
+  );
+  console.log("File Path14 :", filePath);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('File not found:', err);
+      res.status(404).send('File not found');
+    } else {
+      console.log('File sent:', req.params.filename);
+    }
+  });
+});
+
 
 app.listen(3000, () => {
   console.log("🚀 Server is running on port 3000");
+});
+
+router.post('/create', async (req, res) => {
+  try {
+    console.log(req.body); // شوف شو واصل
+
+    const newService = new Service(req.body);
+    await newService.save();
+
+    res.status(201).json({ success: true, message: "Service added!", data: newService });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to add service." });
+  }
 });
