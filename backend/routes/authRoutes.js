@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { body, query, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const crypto = require("crypto"); // مطلوب لإنشاء الأرقام العشوائية
-
+const cors = require("cors");
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -35,7 +35,22 @@ const salonSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 const Salon = mongoose.models.Salon || mongoose.model("Salon", salonSchema);
 // 📝 Register
+
+router.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 router.post("/register", async (req, res) => {
+  console.log("Req : ", req);
+  console.log("Req Body: ", req.body);
   async function generateUniqueId(model) {
     let id;
     let isUnique = false;
@@ -73,6 +88,7 @@ router.post("/register", async (req, res) => {
           message: "User with this email or username already exists",
         });
       }
+
       if (password.length < 6) {
         return res.status(400).json({
           success: false,
@@ -152,6 +168,11 @@ router.post("/register", async (req, res) => {
       }
 
       const salon_id = await generateUniqueId(Salon);
+      console.log("username: ", username);
+      console.log("Type : ", type);
+      console.log("Mail : ", email);
+      console.log("Passw : ", password);
+      console.log("Passs Length : ", password.length);
       if (password.length < 6) {
         return res.status(400).json({
           success: false,
@@ -205,6 +226,8 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.options('/api/auth/register', cors()); // Enable preflight for this route
+
 router.post("/login", async (req, res) => {
   const { type, email, password } = req.query;
 
@@ -239,7 +262,7 @@ router.post("/login", async (req, res) => {
     }
     const { password: _, ...userData } = user._doc;
 
-    console.log("data=",userData)
+    console.log("data=", userData)
     const token = jwt.sign(
       { id: user._id, type: type }, // البيانات التي تريد تشفيرها في التوكن
       process.env.JWT_SECRET,
