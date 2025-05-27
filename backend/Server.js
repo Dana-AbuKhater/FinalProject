@@ -7,9 +7,12 @@ const { body, validationResult } = require('express-validator');
 const bodyParse = require("body-parser")
 require('dotenv').config();
 
+const requireAuth = require('./middleware/requireAuth'); // عدل المسار حسب مكان الملف الحقيقي
 
 const multer = require('multer');
 const ذ = require('./routes/SalonRoutes');
+
+const SalonRoutes = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
 const ServiceRoutes = require('./routes/ServiceRoutes');
 //const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
@@ -274,3 +277,16 @@ router.post('/create', async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to add service." });
   }
 });
+// router.post('/create', async (req, res) => {
+//   try {
+//     console.log(req.body); // شوف شو واصل
+
+//     const newService = new Service(req.body);
+//     await newService.save();
+
+//     res.status(201).json({ success: true, message: "Service added!", data: newService });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Failed to add service." });
+//   }
+// });
