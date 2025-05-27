@@ -19,6 +19,7 @@ const SalonInfoForm = () => {
     workingHours: "",
     description: "",
     serviceType: "salon-only",
+    logo_url: "",
   });
   // Handle image selection
   const handleImageChange = async (e) => {
@@ -60,12 +61,13 @@ const SalonInfoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    /* const address = e.target.address.value;
-     const workingHours = e.target.workingHours.value;
-     const serviceType = e.target.serviceType.value;
-     const website = e.target.website.value;
-     const description = e.target.description.value;*/
-    const { address, workingHours, serviceType, website, description } = salonInfo;
+    const address = e.target.address.value;
+    const workingHours = e.target.workingHours.value;
+    const serviceType = e.target.serviceType.value;
+    const website = e.target.website.value;
+    const description = e.target.description.value;
+
+    // const { logo_url, address, workingHours, serviceType, website, description } = salonInfo;
 
     const id = localStorage.getItem("salonId");
     console.log("id= ", id);
@@ -179,7 +181,7 @@ const SalonInfoForm = () => {
         email: salonEmail,
         phone: salonPhone,
       };
-
+  
       setSalonInfo(salonData);*/
       setSalonInfo((prev) => ({
         ...prev,

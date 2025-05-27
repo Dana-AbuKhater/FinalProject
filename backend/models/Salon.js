@@ -9,7 +9,7 @@ const salonSchema = new mongoose.Schema({
   description: { type: String },
   address: { type: String },
   phone: { type: Number, maxlength: 10, required: true },
-  logo_url: { type: String, maxlength: 255, required: true },
+  logo_url: { type: String, maxlength: 255 },
   created_at: { type: Date, default: Date.now },
   workingHours: { type: String },
   website: { type: String, maxlength: 255 },

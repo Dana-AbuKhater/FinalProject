@@ -19,8 +19,18 @@ const SignUp = () => {
     }
 
     // Determine the appropriate endpoint based on user type
+    console.log("Password:", password);
     const endpoint = "http://localhost:3000/api/auth/register";
+    const body = {
+      type,
+      email,
+      username,
+      phone,
+      password,
+    };
+    console.log("Body:", body);
     let query = "?type=" + type + "&email=" + email + "&username=" + username + "&phone=" + phone + "&password=" + password;
+    console.log("Query:", query);
     const url = endpoint + query;
     if (!type || (type !== 'salon' && type !== 'customer')) {
       alert("Please select a valid user type (Salon or Customer).");
@@ -48,6 +58,7 @@ const SignUp = () => {
             window.location.href = "/Customer";
           }
         } else {
+          console.log("Error:", data);
           alert(data.message || "Registration failed");
         }
       })
