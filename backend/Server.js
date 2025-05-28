@@ -34,7 +34,7 @@ mongoose.connect(process.env.MONGO_URL)
 const appointmentRoutes = require('./routes/AppointmentsRoutes');
 app.use('/appointments', appointmentRoutes);
 // app.use('/api/salon', SalonRoutes);
-app.listen(3000, () => console.log('Server running on port 3000'));
+// app.listen(3000, () => console.log('Server running on port 3000'));
 // Serve static files from the frontend directory
 //app.use(express.static('frontend'));
 
@@ -174,7 +174,7 @@ app.post('/register1234', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: messages1
+      message: error.message
     });
   }
 }
