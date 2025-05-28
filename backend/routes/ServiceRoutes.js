@@ -3,6 +3,7 @@ const router = express.Router();
 const Service = require('../models/Service');
 const jwt = require('jsonwebtoken');
 const Salon = require('../models/Salon'); // استدعاء موديل الصالون
+const { updateServiceStatus } = require('../controllers/serviceController');
 
 /*
 router.get('/', async (req, res) => {
@@ -116,7 +117,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
   }
 });
-
+/*
 // مسار PUT لتحديث حالة خدمة معينة (مرئية/مخفية/محذوفة)
 router.put('/:serviceId', async (req, res) => {
   console.log();
@@ -163,5 +164,8 @@ router.put('/:serviceId', async (req, res) => {
     console.error('خطأ في تحديث حالة الخدمة:', error);
     res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
   }
-});
+});*/
+
+// تحديث حالة خدمة
+router.put('/services/:id/status', updateServiceStatus);
 module.exports = router;

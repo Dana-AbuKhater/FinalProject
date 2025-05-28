@@ -17,10 +17,25 @@ const UpdateServiceStatus = ({ serviceId, currentStatus }) => { // استقبا�
         alert('Authentication token is missing. Please log in.');
         return;
       }
+      /*
       await axios.put(`/api/services/${serviceId}`, { status: selectedStatus }, { // إرسال 'status'
         headers: { Authorization: `Bearer ${token}` } // أرسل التوكن إذا كان مطلوباً
 
+      });*/
+
+      const response = await fetch(`http://localhost:3000/api/services/${serviceId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: selectedStatus }),
       });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update service status');
+      }
       alert('Service status updated successfully!');
     } catch (error) {
       console.error('Error updating service status:', error.response ? error.response.data : error.message);

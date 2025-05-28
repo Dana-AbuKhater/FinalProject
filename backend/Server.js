@@ -41,6 +41,8 @@ app.use('/appointments', appointmentRoutes);
 // API Routes
 //app.use('/api/salons', SalonRoutes);
 // app.use('/api/customers', CustomerRoutes);
+//app.use('/api', serviceRoutes);
+
 app.use('/api/services', ServiceRoutes);
 // app.use('/api/appointments', AppointmentsRoutes);
 // app.use('/api/ratings', RatingRoutes);
