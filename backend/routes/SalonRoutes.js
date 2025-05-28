@@ -1,8 +1,113 @@
+//SalonRouts
 // routes/salon.js
 const express = require('express');
 const router = express.Router();
 const Salon = require('../models/Salon');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
 const requireAuth = require('../middleware/requireAuth');
+
+// تهيئة multer لرفع الملفات
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+// router.post('/register', (req, res) => {
+//   res.send('تم استلام الطلب!');
+// });
+router.post('/register', upload.single('logo'), async (req, res) => {
+  try {
+    const newSalon = new Salon(req.body);
+    await newSalon.save();
+    res.status(201).json({ success: true, data: newSalon });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+router.get('/test', (req, res) => {
+  res.json({ success: true, message: "Salon routes working!" });
+});
+
+// مسار تسجيل الصالون
+router.post('/register', upload.single('logo'), async (req, res) => {
+  try {
+    const {
+      salon_id,
+      owner_email,
+      name,
+      password,
+      description,
+      address,
+      phone,
+      workingHours,
+      website
+    } = req.body;
+
+    // التحقق من البريد الإلكتروني الفريد
+    const existingSalon = await Salon.findOne({ $or: [{ owner_email }, { salon_id }] });
+    if (existingSalon) {
+      return res.status(400).json({
+        success: false,
+        message: 'البريد الإلكتروني أو معرف الصالون موجود مسبقاً'
+      });
+    }
+
+    // تشفير كلمة المرور
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // إنشاء صالون جديد
+    const newSalon = new Salon({
+      salon_id,
+      owner_email,
+      name,
+      password: hashedPassword,
+      type: 'salon',
+      description,
+      address,
+      phone,
+      logo_url: req.file ? req.file.path : null,
+      workingHours,
+      website
+    });
+
+    await newSalon.save();
+
+    // إنشاء توكن
+    const token = jwt.sign(
+      { id: newSalon._id, type: 'salon', owner_email: newSalon.owner_email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'تم تسجيل الصالون بنجاح',
+      token,
+      salon: {
+        id: newSalon._id,
+        name: newSalon.name,
+        email: newSalon.owner_email
+      }
+    });
+
+  } catch (error) {
+    console.error('خطأ في تسجيل الصالون:', error);
+    res.status(500).json({
+      success: false,
+      message: 'حدث خطأ أثناء تسجيل الصالون',
+      error: error.message
+    });
+  }
+});
+
 // جلب بيانات الصالون الحالي (حسب التوكن)
 router.get('/info', requireAuth('salon'), async (req, res) => {
   try {

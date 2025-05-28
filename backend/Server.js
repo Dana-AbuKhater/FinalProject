@@ -1,3 +1,4 @@
+//Server.js
 const express = require('express');
 const cors = require("cors");
 const mongoose = require('mongoose');
@@ -5,17 +6,11 @@ const path = require('path'); // Add this line to import path
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const bodyParse = require("body-parser")
-
 require('dotenv').config();
-
-
-
 const router = express.Router();
-
 const requireAuth = require('./middleware/requireAuth'); // عدل المسار حسب مكان الملف الحقيقي
 
 const multer = require('multer');
-const ذ = require('./routes/SalonRoutes');
 
 const SalonRoutes = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
@@ -38,7 +33,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 const appointmentRoutes = require('./routes/AppointmentsRoutes');
 app.use('/appointments', appointmentRoutes);
-
+// app.use('/api/salon', SalonRoutes);
 app.listen(3000, () => console.log('Server running on port 3000'));
 // Serve static files from the frontend directory
 //app.use(express.static('frontend'));
@@ -51,7 +46,13 @@ app.use('/api/services', ServiceRoutes);
 // app.use('/api/ratings', RatingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/salon', require('./routes/SalonRoutes'));
-
+// console.log(app._router.stack
+//   .filter(r => r.route)
+//   .map(r => ({
+//     path: r.route.path,
+//     method: Object.keys(r.route.methods)[0]
+//   }))
+// );
 // Root route handler
 app.get('/', (req, res) => {
   res.json({
@@ -201,7 +202,7 @@ const uploads = multer({
   fileFilter
 });
 
-app.post("/api/salon/upload", requireAuth('salon'), uploads.single("inputuploads"), async (req, res) => {
+app.post("/uploads", requireAuth('salon'), uploads.single("inputuploads"), async (req, res) => {
 
   // console.log("Token :", req.cookies.token)
   // console.log("Token2 :", req.cookies.token || req.headers.cookie?.split('token=')[1]?.split(';')[0])
@@ -267,6 +268,20 @@ app.get('/uploads/:filename', (req, res) => {
 
 app.listen(3000, () => {
   console.log("🚀 Server is running on port 3000");
+});
+
+router.post('/create', async (req, res) => {
+  try {
+    console.log(req.body); // شوف شو واصل
+
+    const newService = new Service(req.body);
+    await newService.save();
+
+    res.status(201).json({ success: true, message: "Service added!", data: newService });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to add service." });
+  }
 });
 
 

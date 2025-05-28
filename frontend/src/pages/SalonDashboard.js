@@ -180,7 +180,7 @@ const SalonDashboard = () => {
           </div>
           <button
             className="edit-button"
-            onClick={() => navigate('/SalonDetails')}
+            onClick={() => navigate('./SalonInfoForm')}
           >
             Edit Information
           </button>
@@ -197,9 +197,9 @@ const SalonDashboard = () => {
               {showCalendarModal ? "❌" : "📅 Show Booked Days"}
             </button>
           </div>
-          <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
+          {/* <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
             View Appointments
-          </button>
+          </button> */}
           <h2>Statistics</h2>
           <div className="info-card" style={{ background: '#f5f5f5', padding: '20px', borderRadius: '10px' }}>
             <h3>Appointments Count</h3>
