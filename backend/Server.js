@@ -99,7 +99,7 @@ app.post('/register1234', async (req, res) => {
     });
   }
 
-  const { type, email, username, phone, password } = req.query;
+  const { type, email, username, phone, password } = req.body;
 
 
   try {
