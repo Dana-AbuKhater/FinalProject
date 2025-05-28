@@ -26,7 +26,7 @@ const salonSchema = new mongoose.Schema({
   password: { type: String, required: true, minlength: 6, select: false }, // تم إضافة minlength: 6 بناءً على NN
   type: { type: String, required: true, enum: ["salon"] }, // تم إضافة enum بناء
   description: { type: String }, // تم تغييره إلى String ليتوافق مع TEXT (يمكن أن يكون نصًا طويلاً)
-  address: { type: String }, // تم إضافة required: true بناءً على NN
+  address: { type: String, required: true }, // تم إضافة required: true بناءً على NN
   phone: { type: String, maxlength: 10, required: true }, // تم تغييره إلى String ليتوافق مع VARCHAR
   logo_url: { type: String, maxlength: 255 },
   created_at: { type: Date, default: Date.now }, // تم تغييره ليتوافق مع TIMESTAMP
@@ -37,7 +37,7 @@ const Salon = mongoose.models.Salon || mongoose.model("Salon", salonSchema);
 // 📝 Register
 
 router.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  //res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
   res.setHeader("Access-Control-Allow-Headers", "*");
@@ -158,7 +158,7 @@ router.post("/register", async (req, res) => {
 
     try {
       const existingSalon = await Salon.findOne({
-        $or: [{ email }, { name: username }],
+        $or: [{ owner_email: email }, { name: username }],
       });
       if (existingSalon) {
         return res.status(400).json({
@@ -204,7 +204,7 @@ router.post("/register", async (req, res) => {
           salon_id: newSalon.salon_id,
           name: newSalon.name,
           owner_id: newSalon.owner_id,
-          email: newSalon.email,
+          email: newSalon.owner_email,
           phone: newSalon.phone,
         },
       });
@@ -226,7 +226,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.options('/api/auth/register', cors()); // Enable preflight for this route
+//router.options('/api/auth/register', cors()); // Enable preflight for this route
 
 router.post("/login", async (req, res) => {
   const { type, email, password } = req.body;
@@ -261,6 +261,10 @@ router.post("/login", async (req, res) => {
       });
     }
     const { password: _, ...userData } = user._doc;
+    if (type === "salon") {
+      userData.email = userData.owner_email;
+      delete userData.owner_email;
+    }
 
     console.log("data=", userData)
     const token = jwt.sign(

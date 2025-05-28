@@ -13,7 +13,7 @@ const SignIn = () => {
     const email = event.target.email.value;
     const password = event.target.password.value;
     const type = localStorage.getItem("type");  // جلب النوع من localStorage
-    const endpoint = "http://localhost:3000/api/auth/login"; // رابط الـ API
+    //const endpoint = "http://localhost:3000/api/auth/login"; // رابط الـ API
     /* const query = "email=" + email + "&password=" + password  + "&type=" + type; // بناء الـ query string
      const url = endpoint + "?" + query; // بناء الرابط النهائي
  
@@ -44,14 +44,16 @@ const SignIn = () => {
      })
      .catch(err => console.error("Error:", err));
    };*/
+   /*
     const query = `email=${email}&password=${password}&type=${type}`;
     const url = `${endpoint}?${query}`;
-
+*/
     try {
-      const response = await fetch(url, {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // مافي body هون — لأن السيرفر بيقرأ من query
+        body: JSON.stringify({ email, password, userType: type }), // نرسل البيانات في body كـ JSON
+
       });
 
       const data = await response.json();

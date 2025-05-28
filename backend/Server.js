@@ -81,7 +81,7 @@ const userSchema = new mongoose.Schema({
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 app.engine('JSON', require('ejs').renderFile)
-let parseBody = bodyParser.urlencoded({ extended: true });
+//let parseBody = bodyParser.urlencoded({ extended: true });
 // Routes
 app.post('/register1234', async (req, res) => {
   // Validation

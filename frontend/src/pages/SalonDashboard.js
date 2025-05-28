@@ -229,6 +229,8 @@ const SalonDashboard = () => {
               Add New Service
             </button>
           </div>
+
+          
           <div className="info-section">
             <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
               Manage Services
