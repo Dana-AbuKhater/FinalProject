@@ -13,7 +13,11 @@ const UpdateServiceStatus = ({ serviceId, currentStatus }) => { // استقبا�
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`/api/services/${serviceId}`, { body: selectedStatus }, { // إرسال 'status'
+      if (!token) {
+        alert('Authentication token is missing. Please log in.');
+        return;
+      }
+      await axios.put(`/api/services/${serviceId}`, { status: selectedStatus }, { // إرسال 'status'
         headers: { Authorization: `Bearer ${token}` } // أرسل التوكن إذا كان مطلوباً
 
       });

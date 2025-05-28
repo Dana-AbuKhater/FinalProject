@@ -137,9 +137,11 @@ const AddServiceForm = ({ setServices }) => {
         </div>
 
         {/* Submit Button */}
-        <button type="submit" className="submit-button"  >
-          Add Service
-        </button>
+        <link to="/SalonDashboard">
+          <button type="submit" className="submit-button"  >
+            Add Service
+          </button>
+        </link>
       </form>
     </div>
   );
