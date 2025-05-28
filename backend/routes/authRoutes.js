@@ -66,7 +66,7 @@ router.post("/register", async (req, res) => {
     return id;
   }
 
-  if (req.query.type == "customer") {
+  if (req.body.type == "customer") {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -76,7 +76,7 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    const { type, email, username, phone, password } = req.query;
+    const { type, email, username, phone, password } = req.body;
 
     try {
       const existingUser = await User.findOne({
@@ -143,7 +143,7 @@ router.post("/register", async (req, res) => {
         message: "Server error",
       });
     }
-  } else if (req.query.type == "salon") {
+  } else if (req.body.type == "salon") {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -154,7 +154,7 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    const { type, email, username, phone, password } = req.query;
+    const { type, email, username, phone, password } = req.body;
 
     try {
       const existingSalon = await Salon.findOne({
@@ -229,7 +229,7 @@ router.post("/register", async (req, res) => {
 router.options('/api/auth/register', cors()); // Enable preflight for this route
 
 router.post("/login", async (req, res) => {
-  const { type, email, password } = req.query;
+  const { type, email, password } = req.body;
 
   try {
     let user;
