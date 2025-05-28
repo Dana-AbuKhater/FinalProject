@@ -227,11 +227,11 @@ const SalonDashboard = () => {
           </div>
 
 
-          <div className="info-section">
+          {/* <div className="info-section">
             <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
               Manage Services
             </button>
-          </div>
+          </div> */}
 
 
 

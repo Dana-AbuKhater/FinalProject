@@ -28,16 +28,16 @@ function SignInUp() {
   const handleSignUpClick = () => {
     navigate('/SignUp', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
-  const handleSalonInfoForm = () => {
-    navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
-  };
-  const handleCustomerPage = () => {
-    navigate('/Customer', { state: { userType } });
-  };
+  // const handleSalonInfoForm = () => {
+  //   navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
+  // };
+  // const handleCustomerPage = () => {
+  //   navigate('/Customer', { state: { userType } });
+  // };
 
-  const handleSalonDashboard = () => {
-    navigate('/SalonDashboard', { state: { userType } });
-  };
+  // const handleSalonDashboard = () => {
+  //   navigate('/SalonDashboard', { state: { userType } });
+  // };
 
   return (
     <div>
@@ -49,7 +49,7 @@ function SignInUp() {
       <button onClick={handleSignUpClick} className='SignUp-button'>
         Sign Up
       </button>
-      <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
+      {/* <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
         SalonInfoForm
       </button>
       <button onClick={handleCustomerPage} className='Customer-button'>
@@ -57,7 +57,7 @@ function SignInUp() {
       </button>
       <button onClick={handleSalonDashboard} className='Dashboard-button'>
         Salon Dashboard
-      </button>
+      </button> */}
       <Link to="/">
         <button>←</button>
       </Link>
