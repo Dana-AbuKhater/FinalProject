@@ -119,6 +119,7 @@ router.post('/', async (req, res) => {
 
 // مسار PUT لتحديث حالة خدمة معينة (مرئية/مخفية/محذوفة)
 router.put('/:serviceId', async (req, res) => {
+  console.log();
   try {
     const serviceId = parseInt(req.params.serviceId, 10); // تحويل serviceId من string إلى number
 
@@ -130,7 +131,7 @@ router.put('/:serviceId', async (req, res) => {
     // استخراج الحالة الجديدة من req.body
     // سنقوم بتلقي 'status' مباشرة بدلاً من isActive و isDeleted
     const { status } = req.body;
-
+    console.log("status" , status);
     // التحقق من أن الحالة المرسلة صالحة وفقاً لـ enum
     const validStatuses = ['visible', 'hidden', 'deleted'];
     if (!status || !validStatuses.includes(status)) {

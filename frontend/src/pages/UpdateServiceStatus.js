@@ -13,8 +13,9 @@ const UpdateServiceStatus = ({ serviceId, currentStatus }) => { // استقبا�
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`/api/services/${serviceId}`, { status: selectedStatus }, { // إرسال 'status'
+      await axios.put(`/api/services/${serviceId}`, { body: selectedStatus }, { // إرسال 'status'
         headers: { Authorization: `Bearer ${token}` } // أرسل التوكن إذا كان مطلوباً
+
       });
       alert('Service status updated successfully!');
     } catch (error) {
