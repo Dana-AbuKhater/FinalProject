@@ -26,40 +26,25 @@ const SignUp = () => {
     }
     const url = "http://localhost:3000/api/auth/register"; // هذا هو مسار التسجيل الصحيح
 
-    // Determine the appropriate endpoint based on user type
-   /* console.log("Password:", password);
-    const endpoint = "http://localhost:3000/api/auth/register";
-    const body = {
-      type,
-      email,
-      username,
-      phone,
-      password,
-    };*/
+
     const requestBody = {
       type,
       email,
-      name: username, // استخدم 'name' هنا لأنه يطابق الـ userSchema في الباك إند
-      phone: phone, // أبقيها string الآن، وسنرى إذا كان الباك إند يحتاج parseInt
+      username, // استخدم 'name' هنا لأنه يطابق الـ userSchema في الباك إند
+      phone, // أبقيها string الآن، وسنرى إذا كان الباك إند يحتاج parseInt
       password,
     };
+
     console.log("Sending request body:", requestBody); // للمساعدة في التصحيح
 
     //console.log("Body:", body);
-   /* let query = "?type=" + type + "&email=" + email + "&username=" + username + "&phone=" + phone + "&password=" + password;
-    console.log("Query:", query);
-    const url = endpoint + query;*/
+    /* let query = "?type=" + type + "&email=" + email + "&username=" + username + "&phone=" + phone + "&password=" + password;
+     console.log("Query:", query);
+     const url = endpoint + query;*/
     /*if (!type || (type !== 'salon' && type !== 'customer')) {
       alert("Please select a valid user type (Salon or Customer).");
       return;
     }*/
-    /*const requestBody = {
-      type,
-      email,
-      name: username, // استخدم 'name' هنا لأنه يطابق الـ userSchema في الباك إند
-      phone: parseInt(phone), // قم بتحويل رقم الهاتف إلى رقم صحيح إذا كان Schema يتوقع Number
-      password,
-    };*/
 
     fetch(url, {
       method: "POST",
@@ -76,6 +61,10 @@ const SignUp = () => {
             localStorage.setItem("userLoggedIn", true)
             localStorage.setItem("token", data.token);
             localStorage.setItem("salonId", data.salon.id);
+            localStorage.getItem("salonName", data.salon.username);
+            localStorage.getItem("salonEmail", data.salon.email);
+            localStorage.getItem("salonPhone", data.salon.phone);
+
             window.location.href = "/SalonInfoForm";
           }
           else if (type === 'customer') {

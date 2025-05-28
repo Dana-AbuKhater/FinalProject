@@ -263,7 +263,7 @@ router.post("/login", async (req, res) => {
     const { password: _, ...userData } = user._doc;
     if (type === "salon") {
       userData.email = userData.owner_email;
-      delete userData.owner_email;
+      // delete userData.owner_email;
     }
 
     console.log("data=", userData)

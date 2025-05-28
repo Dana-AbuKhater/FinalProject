@@ -14,7 +14,7 @@ const SalonDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  console.log("Salon Info:", salonInfo); // لتتبع بيانات الصالون
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
 
@@ -145,7 +145,7 @@ const SalonDashboard = () => {
             </div>
             <div className="info-item">
               <span className="info-label">Email:</span>
-              <span className="info-value">{salonInfo.email}</span>
+              <span className="info-value">{salonInfo.owner_email}</span>
             </div>
             <div className="info-item">
               <span className="info-label">Phone:</span>
@@ -161,11 +161,7 @@ const SalonDashboard = () => {
             </div>
             <div className="info-item">
               <span className="info-label">Service Type:</span>
-              <span className="info-value">
-                {salonInfo.serviceType === 'home-only'}
-                {salonInfo.serviceType === 'salon-only'}
-                {salonInfo.serviceType === 'both'}
-              </span>
+              <span className="info-value">{salonInfo.service_type}</span>
             </div>
             {salonInfo.website && (
               <div className="info-item">
@@ -230,7 +226,7 @@ const SalonDashboard = () => {
             </button>
           </div>
 
-          
+
           <div className="info-section">
             <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
               Manage Services

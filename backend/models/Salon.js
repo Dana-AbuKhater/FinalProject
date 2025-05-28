@@ -12,6 +12,7 @@ const salonSchema = new mongoose.Schema({
   logo_url: { type: String, maxlength: 255 },
   created_at: { type: Date, default: Date.now },
   workingHours: { type: String },
+  service_type: { type: String, enum: ['salon_only', 'home_only', 'both'], default: 'both' },
   website: { type: String, maxlength: 255 },
 
 

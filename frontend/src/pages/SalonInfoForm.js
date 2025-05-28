@@ -85,10 +85,13 @@ const SalonInfoForm = () => {
     } catch (error) {
       alert(error.response.data.error);
     }**/
-    const endpoint = `http://localhost:3000/api/salons/${id}`;
+    const endpoint = `http://localhost:3000/api/salon/info/${id}`;
     const token = localStorage.getItem("token");
-    const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
-    const url = endpoint + query;
+    // const query = `?address=${address}&workingHours=${workingHours}&serviceType=${serviceType}&website=${website}&description=${description}`;
+    const body = {
+      address, description, workingHours, website, //service_type: serviceType
+    }
+    const url = endpoint; // + query;
 
     const formData = new FormData();
     formData.append('inputuploads', selectedImage);
@@ -98,22 +101,22 @@ const SalonInfoForm = () => {
       formData.append(key, value);
     });
 
-    try {
-      const response = await fetch('http://localhost:3000/api/salon/upload', {
-        method: 'POST',
-        body: formData,
-        // Don't set Content-Type header - the browser will set it with boundary
-      });
+    // try {
+    //   const response = await fetch('http://localhost:3000/api/salon/upload', {
+    //     method: 'POST',
+    //     body: formData,
+    //     // Don't set Content-Type header - the browser will set it with boundary
+    //   });
 
-      const data = await response.json();
-      console.log("Response data123:", data);
-      if (data.success) {
-        alert('Salon info updated successfully!');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error updating salon info');
-    }
+    //   const data = await response.json();
+    //   console.log("Response data123:", data);
+    //   if (data.success) {
+    //     alert('Salon info updated successfully!');
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   alert('Error updating salon info');
+    // }
     console.log(localStorage.getItem("token"))
     if (!token) {
       alert("Token not found");
@@ -126,13 +129,14 @@ const SalonInfoForm = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(salonInfo),
+      body: JSON.stringify(body),
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("Response data:", data);
         if (data.success) {
           alert("Salon info updated successfully!");
-          navigate("/SalonInfoForm");
+          navigate("/SalonDashboard");
         } else {
           alert(data.message || "Update failed");
         }

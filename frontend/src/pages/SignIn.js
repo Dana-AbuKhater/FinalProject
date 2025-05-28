@@ -44,21 +44,21 @@ const SignIn = () => {
      })
      .catch(err => console.error("Error:", err));
    };*/
-   /*
-    const query = `email=${email}&password=${password}&type=${type}`;
-    const url = `${endpoint}?${query}`;
-*/
+    /*
+     const query = `email=${email}&password=${password}&type=${type}`;
+     const url = `${endpoint}?${query}`;
+ */
     try {
       const response = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, userType: type }), // نرسل البيانات في body كـ JSON
+        body: JSON.stringify({ email, password, type }), // نرسل البيانات في body كـ JSON
 
       });
 
       const data = await response.json();
       console.log("data= ", data);
-
+      console.log("response= ", response); // ✅ هون
       if (response.ok) {
         if (type === "salon") {
           const user = data.user;
@@ -68,7 +68,7 @@ const SignIn = () => {
           localStorage.setItem("salonId", user._id); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonName", user.name); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonPhone", user.phone); // تخزين الـ salonId في localStorage
-          localStorage.setItem("salonEmail", user.owner_email); // تخزين الـ salonId في localStorage
+          localStorage.setItem("salonEmail", user.email); // تخزين الـ salonId في localStorage
 
           // تخزين الـ salonId في localStorage
           if (!user || !user.address || !user.workingHours) {

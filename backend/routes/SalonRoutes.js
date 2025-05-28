@@ -155,13 +155,25 @@ module.exports = (upload) => {
   return router;
 };
 // تعديل بيانات الصالون (حسب التوكن)
-router.put('/info', requireAuth('salon'), async (req, res) => {
+router.put('/info/:id', requireAuth('salon'), async (req, res) => {
+  // console.log("Email from req.user:", req.user.email);
   try {
+    const { id } = req.params;
+    const updateData = req.body; // البيانات التي سيتم تحديثها
+    console.log("Update Data:", updateData);
+    console.log("ID from params:", id);
+
+    // التحقق من وجود الصالون
     const salon = await Salon.findOneAndUpdate(
-      { owner_email: req.user.email },
-      { $set: req.body },
+      { _id: id }, // التأكد من أن الصالون يعود لنفس المستخدم
+      { $set: updateData },
       { new: true, runValidators: true }
     );
+    // remove password from the response
+    delete salon.password;
+    res.status(200).json({ success: true, message: 'Salon updated successfully', salon });
+
+    console.log("Updated Salon:", salon);
     if (!salon) return res.status(404).json({ error: 'Salon not found' });
 
     res.json(salon);
