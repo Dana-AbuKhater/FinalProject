@@ -176,7 +176,7 @@ const SalonDashboard = () => {
           </div>
           <button
             className="edit-button"
-            onClick={() => navigate('./SalonInfoForm')}
+            onClick={() => navigate('/SalonInfoForm')}
           >
             Edit Information
           </button>
