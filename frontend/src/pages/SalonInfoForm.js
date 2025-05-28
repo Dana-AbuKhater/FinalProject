@@ -61,11 +61,11 @@ const SalonInfoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   /* const address = e.target.address.value;
-    const workingHours = e.target.workingHours.value;
-    const serviceType = e.target.serviceType.value;
-    const website = e.target.website.value;
-    const description = e.target.description.value;*/
+    /* const address = e.target.address.value;
+     const workingHours = e.target.workingHours.value;
+     const serviceType = e.target.serviceType.value;
+     const website = e.target.website.value;
+     const description = e.target.description.value;*/
 
     const { logo_url, address, workingHours, serviceType, website, description } = salonInfo;
 
@@ -303,6 +303,7 @@ const SalonInfoForm = () => {
             onChange={handleImageChange}
             accept="image/*"
             style={{ display: 'none' }}
+            name="logo"
           />
           <button
             type="button"
