@@ -15,7 +15,6 @@ const router = express.Router();
 const requireAuth = require('./middleware/requireAuth'); // عدل المسار حسب مكان الملف الحقيقي
 
 const multer = require('multer');
-const ذ = require('./routes/SalonRoutes');
 
 const SalonRoutes = require('./routes/SalonRoutes');
 const CustomerRoutes = require('./routes/CustomerRoutes');
@@ -23,7 +22,7 @@ const ServiceRoutes = require('./routes/ServiceRoutes');
 //const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
 const RatingRoutes = require('./routes/RatingRoutes');
 const authRoutes = require('./routes/authRoutes');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -39,7 +38,6 @@ mongoose.connect(process.env.MONGO_URL)
 const appointmentRoutes = require('./routes/AppointmentsRoutes');
 app.use('/appointments', appointmentRoutes);
 
-app.listen(3000, () => console.log('Server running on port 3000'));
 // Serve static files from the frontend directory
 //app.use(express.static('frontend'));
 
@@ -173,7 +171,7 @@ app.post('/register1234', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: messages1
+      message: error.message
     });
   }
 }
