@@ -5,6 +5,7 @@ import './AddServiceForm.css';
 const AddServiceForm = ({ setServices }) => {
   const navigate = useNavigate();
 
+  
   const [service, setService] = useState({
     name: '',
     price: 0,
@@ -148,6 +149,7 @@ const AddServiceForm = ({ setServices }) => {
             Add Service
           </button>
         </link>
+        
       
       </form>
     </div>
