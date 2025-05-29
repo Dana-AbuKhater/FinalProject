@@ -18,6 +18,7 @@ const UpdateServiceStatus = ({ serviceId, currentStatus }) => { // استقبا�
         return;
       }
       /*
+
       await axios.put(`/api/services/${serviceId}`, { status: selectedStatus }, { // إرسال 'status'
         headers: { Authorization: `Bearer ${token}` } // أرسل التوكن إذا كان مطلوباً
 

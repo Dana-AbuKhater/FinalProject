@@ -43,8 +43,14 @@ const AddServiceForm = ({ setServices }) => {
     // عرض رسالة نجاح
     alert('Service added successfully!');
 
+    navigate('/SalonDashboard', {
+      state: {
+        message: "Service added successfully!",
+        newService: newService // إرسال بيانات الخدمة المضافة إذا لزم الأمر
+      }
+    });
     // إعادة التوجيه إلى الفورم الرئيسي
-    navigate('/salon-info');
+    //navigate('/salon-info');
   };
 
   return (
@@ -142,6 +148,7 @@ const AddServiceForm = ({ setServices }) => {
             Add Service
           </button>
         </link>
+      
       </form>
     </div>
   );

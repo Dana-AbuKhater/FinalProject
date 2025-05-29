@@ -235,7 +235,7 @@ const SalonDashboard = () => {
 
 
 
-          <div className="service-category">
+          {/* <div className="service-category">
             <h2>Visible Services</h2>
             {visibleServices.map((service) => (
               <div key={service.id} className="service-item">
@@ -303,7 +303,7 @@ const SalonDashboard = () => {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
       </div>
