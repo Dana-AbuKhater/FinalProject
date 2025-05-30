@@ -3,7 +3,7 @@ const router = express.Router();
 const Service = require('../models/Service');
 const jwt = require('jsonwebtoken');
 const Salon = require('../models/Salon'); // استدعاء موديل الصالون
-const { updateServiceStatus } = require('../controllers/serviceController');
+const { addService, updateServiceStatus } = require('../controllers/serviceController');
 
 /*
 router.get('/', async (req, res) => {
@@ -42,7 +42,7 @@ router.get('/salon/:salonId', async (req, res) => {
     res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
   }
 });
-
+/*
 router.post('/create', async (req, res) => {
   console.log("🚀🚀 create service API called");
   console.log("📥 البيانات واصلة:", req.body);
@@ -56,7 +56,8 @@ router.post('/create', async (req, res) => {
     res.status(500).json({ success: false, message: "فشل في الإضافة." });
   }
 });
-
+*/
+/*
 // مسار POST لإضافة خدمة جديدة
 router.post('/', async (req, res) => {
   try {
@@ -116,7 +117,7 @@ router.post('/', async (req, res) => {
     console.error('خطأ في إضافة الخدمة:', error);
     res.status(500).json({ message: 'خطأ في الخادم', error: error.message });
   }
-});
+});*/
 /*
 // مسار PUT لتحديث حالة خدمة معينة (مرئية/مخفية/محذوفة)
 router.put('/:serviceId', async (req, res) => {
@@ -168,4 +169,7 @@ router.put('/:serviceId', async (req, res) => {
 
 // تحديث حالة خدمة
 router.put('/services/:id/status', updateServiceStatus);
+
+// إضافة خدمة جديدة
+router.post('/', addService);
 module.exports = router;

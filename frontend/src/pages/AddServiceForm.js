@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './AddServiceForm.css';
 
 const AddServiceForm = ({ setServices }) => {
@@ -16,7 +16,7 @@ const AddServiceForm = ({ setServices }) => {
     status: 'visible' // حالة الخدمة (ظاهرة، مخفية، محذوفة)
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // التحقق من أن الحقول المطلوبة مليئة
@@ -24,7 +24,49 @@ const AddServiceForm = ({ setServices }) => {
       alert('Please fill in all required fields (Name and Price).');
       return;
     }
+    try {
+      // جلب التوكن من localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You must be logged in to add a service.');
+        return;
+      }
+      // إرسال الطلب للسيرفر
+    const response = await fetch('/api/services', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(service),
+    });
+      // تحويل الاستجابة لـ JSON
+      const data = await response.json();
 
+      // التحقق من حالة الاستجابة
+      if (!response.ok) {
+        alert(data.message || 'Failed to add service');
+        return;
+      }
+      // تحديث قائمة الخدمات
+      setServices(prev => [...prev, data.service]);
+
+      // عرض رسالة نجاح
+      alert('Service added successfully!');
+
+      // إعادة التوجيه للداشبورد
+      navigate('/SalonDashboard', {
+        state: {
+          message: "Service added successfully!",
+          newService: data.service
+        }
+      });
+
+    } catch (error) {
+      console.error('Error adding service:', error);
+      alert('An error occurred while adding the service.');
+    }
+/*
     // جلب الخدمات الحالية من localStorage
     const existingServices = JSON.parse(localStorage.getItem('services')) || [];
 
@@ -51,7 +93,7 @@ const AddServiceForm = ({ setServices }) => {
       }
     });
     // إعادة التوجيه إلى الفورم الرئيسي
-    //navigate('/salon-info');
+    //navigate('/salon-info');*/
   };
 
   return (
@@ -143,12 +185,8 @@ const AddServiceForm = ({ setServices }) => {
           </select>
         </div>
 
-        {/* Submit Button */}
-        <link to="/SalonDashboard">
-          <button type="submit" className="submit-button"  >
-            Add Service
-          </button>
-        </link>
+        <button type="submit" className="submit-button">Add Service</button>
+
         
       
       </form>

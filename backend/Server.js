@@ -18,7 +18,7 @@ const ServiceRoutes = require('./routes/ServiceRoutes');
 //const AppointmentsRoutes = require('./routes/AppointmentsRoutes');
 const RatingRoutes = require('./routes/RatingRoutes');
 const authRoutes = require('./routes/authRoutes');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const app = express();
 app.use(express.json());
 app.use(cors({
