@@ -35,7 +35,7 @@ const Calendar = () => {
 
   return (
     <div className="calendar">
-      <div className='close-button'></div>
+      {/* <div className='close-button'></div> */}
       <div className="header">
         <button onClick={handlePrevMonth}>&lt;</button>
         <h2>{format(currentDate, 'MMMM yyyy', { locale: enUS })}</h2> {/* English date */}

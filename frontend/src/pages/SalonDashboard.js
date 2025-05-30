@@ -7,27 +7,23 @@ import './SalonDashboard.css'; // تأكد من وجود ملف CSS المناس
 
 const SalonDashboard = () => {
 
-  const [setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [appointmentsCount, setAppointmentsCount] = useState(0);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [salonInfo, setSalonInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  console.log("Salon Info:", salonInfo); // لتتبع بيانات الصالون
   const [services, setServices] = useState([]);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
-
   const handleCalendarButtonClick = (e) => {
     e.preventDefault();
     setShowCalendarModal(!showCalendarModal);
   };
-
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     setShowCalendarModal(false);
   };
-
   const visibleServices = services.filter(
     (service) => service.status === "visible"
   );
@@ -37,8 +33,6 @@ const SalonDashboard = () => {
   const deletedServices = services.filter(
     (service) => service.status === "deleted"
   );
-
-  // دالة لجلب عدد الحجوزات (تم نقلها لتكون دالة مستقلة وليست داخل الـ catch)
   const fetchAppointmentsCount = async (salonId) => {
     console.log("  salonId  =", salonId);
     try {
@@ -56,6 +50,9 @@ const SalonDashboard = () => {
       }
     }
   }; // 🌟 هذا هو القوس الذي يغلق دالة `WorkspaceAppointmentsCount`
+  console.log("Salon Info:", salonInfo); // لتتبع بيانات الصالون
+
+  // دالة لجلب عدد الحجوزات (تم نقلها لتكون دالة مستقلة وليست داخل الـ catch)
 
 
   useEffect(() => {
@@ -173,6 +170,15 @@ const SalonDashboard = () => {
                 </span>
               </div>
             )}
+            {salonInfo.description && (
+              <div className="description-section">
+                <h2>Description</h2>
+                <p className="salon-description">{salonInfo.description}</p>
+              </div>
+
+
+
+            )}
           </div>
           <button
             className="edit-button"
@@ -187,11 +193,21 @@ const SalonDashboard = () => {
             <label>Show appointments</label>
             <button
               onClick={handleCalendarButtonClick}
-              className="show-close-calendar"
+              className="show-calendar"
               type="button"
             >
               {showCalendarModal ? "❌" : "📅 Show Booked Days"}
             </button>
+            {showCalendarModal && (
+              <div className="calendar-modal">
+                <div className="calendar-modal-content">
+                  <Calendar onDateSelect={handleDateSelect} />
+                  <button className="close-calendar-button" onClick={() => setShowCalendarModal(false)}>
+                    ❌
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           {/* <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
             View Appointments
@@ -207,15 +223,7 @@ const SalonDashboard = () => {
 
 
 
-        {salonInfo.description && (
-          <div className="description-section">
-            <h2>Description</h2>
-            <p className="salon-description">{salonInfo.description}</p>
-          </div>
 
-
-
-        )}
         <div className="services-section">
           <div className="add-service-button">
             <button
@@ -227,11 +235,11 @@ const SalonDashboard = () => {
           </div>
 
 
-          {/* <div className="info-section">
+          <div className="info-section">
             <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
               Manage Services
             </button>
-          </div> */}
+          </div>
 
 
 

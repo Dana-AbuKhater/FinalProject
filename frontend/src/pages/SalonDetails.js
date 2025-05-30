@@ -17,7 +17,7 @@ export default function SalonDetails() {
   useEffect(() => {
     const fetchSalonDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/salons/${id}`);
+        const res = await fetch(`http://localhost:3000/api/salon/${id}`);
         const data = await res.json();
         if (data.success) {
           setSalon(data.salon);
