@@ -32,7 +32,7 @@ const AddServiceForm = ({ setServices }) => {
         return;
       }
       // إرسال الطلب للسيرفر
-    const response = await fetch('/api/services', {
+      const response = await fetch('http://localhost:3000/api/services', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,13 +41,33 @@ const AddServiceForm = ({ setServices }) => {
       body: JSON.stringify(service),
     });
       // تحويل الاستجابة لـ JSON
-      const data = await response.json();
+      //const data = await response.json();
 
       // التحقق من حالة الاستجابة
       if (!response.ok) {
-        alert(data.message || 'Failed to add service');
-        return;
+        const errorText = await response.text(); // قراءة الرد كنص خام
+        console.error('الباك إند أرجع خطأ (الوضع الخام):', response.status, errorText); // طباعة حالة الرد والنص الخام
+
+        let errorMessage = 'فشل في إضافة الخدمة.'; // رسالة خطأ افتراضية بالعربي
+        try {
+          // حاول تحويل النص الخام إلى JSON. هذا سينجح إذا كان السيرفر أرجع JSON صحيح.
+          const errorData = JSON.parse(errorText);
+          // إذا نجح التحويل، استخدم رسالة الخطأ من الـ JSON، أو رسالة الافتراضية
+          errorMessage = errorData.message || errorMessage;
+        }
+        catch (parseError) {
+          // إذا فشل تحويل النص الخام إلى JSON (وهنا بيصير الـ SyntaxError الأصلي)،
+          // هذا يعني أن الرد كان نصًا عاديًا أو فارغًا أو HTML.
+          // استخدم النص الخام كرسالة خطأ إذا كان موجوداً
+          errorMessage = errorText || errorMessage;
+        }
+        alert(errorMessage); // عرض رسالة الخطأ للمستخدم
+        return; // توقف تنفيذ الدالة هنا
+
       }
+
+      // إذا كان الرد OK (200, 201)، قم بتحويله لـ JSON بشكل طبيعي
+      const data = await response.json();
       // تحديث قائمة الخدمات
       setServices(prev => [...prev, data.service]);
 
