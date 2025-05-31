@@ -299,45 +299,7 @@ const SalonInfoForm = () => {
           {isLoading ? "Loading..." : `Hi ${salonInfo.name}`}
         </h1>
         {/* عرض الصورة  */}
-        <div className="form-group">
-          <label>Salon Image</label>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
-            style={{ display: 'none' }}
-            name="logo"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current.click()}
-            className="upload-button"
-          >
-            Choose Image
-          </button>
 
-          {/* Image Preview */}
-          {imagePreview && (
-            <div className="image-preview">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                style={{ maxWidth: '200px', marginTop: '10px' }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedImage(null);
-                  setImagePreview('');
-                }}
-                className="remove-image"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-        </div>
 
         <div className="form-group">
           <label>Address</label>
@@ -399,18 +361,47 @@ const SalonInfoForm = () => {
             }
           />
         </div>
-
-        {/* <div className="form-group">
-          <label>Show appointments</label>
+        <div className="form-group">
+          <label>Salon Image</label>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            accept="image/*"
+            style={{ display: 'none' }}
+            name="logo"
+          />
           <button
-            onClick={handleCalendarButtonClick}
-            className="show-close-calendar"
             type="button"
+            onClick={() => fileInputRef.current.click()}
+            className="upload-button"
           >
-            {showCalendarModal ? "❌" : "📅 Show Booked Days"}
+            Choose Image
           </button>
-        </div>
 
+          {/* Image Preview */}
+          {imagePreview && (
+            <div className="image-preview">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage(null);
+                  setImagePreview('');
+                }}
+                className="remove-image"
+              >
+                ❌
+              </button>
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ maxWidth: '300px', marginTop: '10px' }}
+              />
+
+            </div>
+          )}
+        </div>
+        {/* 
         <div className="add-service-button">
           <button
             onClick={() => navigate("/AddServiceForm")}

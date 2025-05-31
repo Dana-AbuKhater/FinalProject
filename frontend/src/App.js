@@ -17,7 +17,7 @@ import Customer from './pages/Customer';
 import CustomerAppointment from './pages/CustomerAppointment';
 import SalonDashboard from './pages/SalonDashboard';
 import SalonDetails from './pages/SalonDetails'; // استيراد صفحة تفاصيل الصالون
-
+import EditSalonInfo from './pages/EditSalonInfo'; // استيراد صفحة تعديل معلومات الصالون
 function App() {
   return (<>
 
@@ -36,6 +36,7 @@ function App() {
         <Route path="/Customer" element={<Customer />} />
         <Route path="/CustomerAppointment" element={<CustomerAppointment />} />
         <Route path="/SalonDashboard" element={<SalonDashboard />} />
+        <Route path="/EditSalonInfo" element={<EditSalonInfo />} /> {/* تعريف مسار تعديل معلومات الصالون */}
         <Route path="/SalonDetails" element={<SalonDetails />} /> {/* تعريف مسار تفاصيل الصالون مع باراميتر id */}
         {/* يمكن استخدام :id في الرابط لتمرير معرف الصالون */}Ks
         <Route path="/AddServiceForm" element={<AddServiceForm setServices={(services) => {

@@ -171,18 +171,15 @@ const SalonDashboard = () => {
               </div>
             )}
             {salonInfo.description && (
-              <div className="description-section">
-                <h2>Description</h2>
-                <p className="salon-description">{salonInfo.description}</p>
+              <div className="info-item">
+                <span className="info-label">Description:</span>
+                <span className="info-value">{salonInfo.description}</span>
               </div>
-
-
-
             )}
           </div>
           <button
             className="edit-button"
-            onClick={() => navigate('/SalonInfoForm')}
+            onClick={() => navigate('/EditSalonInfo')} // Pass the salonInfo to the edit page
           >
             Edit Information
           </button>
