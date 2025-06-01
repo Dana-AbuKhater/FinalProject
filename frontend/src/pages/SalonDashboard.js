@@ -3,10 +3,23 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Calendar from "../InteractiveCalendar/Calendar";
 import './SalonDashboard.css'; // تأكد من وجود ملف CSS المناسب
+import { se } from 'date-fns/locale';
 
 
 const SalonDashboard = () => {
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [salonData, setSalonData] = useState({
+    name: '',
+    owner_email: '',
+    phone: '',
+    address: '',
+    workingHours: '',
+    service_type: '',
+    website: '',
+    description: ''
+  });
+  const [editingField, setEditingField] = useState(null);
+  const [editingValue, setEditingValue] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [appointmentsCount, setAppointmentsCount] = useState(0);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
@@ -15,6 +28,82 @@ const SalonDashboard = () => {
   const [error, setError] = useState(null);
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
+  const handleEditInfo = () => { setIsEditing(true); };
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingField(null);
+  };
+  const handleUpdateInfo = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put('http://localhost:3000/api/salon/update', salonData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+
+        }
+      });
+      setIsEditing(false);
+      setEditingField(null);
+      setSalonInfo(response.data); // Update displayed info with server response
+      setSalonData({
+        name: response.data.name || '',
+        owner_email: response.data.owner_email || '',
+        phone: response.data.phone || '',
+        address: response.data.address || '',
+        workingHours: response.data.workingHours || '',
+        service_type: response.data.service_type || '',
+        website: response.data.website || '',
+        description: response.data.description || ''
+      }); // Update local state with the new salon data
+      alert('Salon information updated successfully!');
+    } catch (error) {
+      console.error('Error updating salon info:', error);
+      alert('Failed to update salon information');
+    }
+  };
+  // هنا يمكنك إضافة الكود لتحديث المعلومات في قاعدة البيانات
+  console.log("Updated salon data:", salonData);
+  const startEditingField = (field) => {
+    setEditingField(field);
+    setEditingValue(salonData[field] || '');
+  };
+  const saveFieldEdit = (field) => {
+    setSalonData((prev) => ({
+      ...prev,
+      [field]: editingValue
+    }));
+    setEditingField(null);
+  };
+  const handleInputChange = (e) => {
+    setEditingValue(e.target.value);
+  };
+  // const renderField = (label, fieldName) => {
+  //   return (
+  //     <div className="info-filed" key={fieldName}>
+  //       <label>{label};</label>
+  //       {editingField === fieldName ? (
+  //         <>
+  //           <input
+  //             type="fieldName === 'owner_email' ? 'email' : 'text'"
+
+  //             value={editingValue}
+  //             onChange={handleInputChange}
+  //             className='edit-field-input'
+  //           />
+  //           <button onClick={() => saveFieldEdit(fieldName)} className='save-field-button'>✔️</button>
+  //         </>
+  //       ) : (
+  //         <>
+  //           <span className='info-value'>{salonData[fieldName]}</span>
+  //           {isEditing && (
+  //             <button onClick={() => startEditingField(fieldName)} className='edit-field-button'>✏️</button>
+  //           )}
+  //         </>
+  //       )}
+  //     </div>
+  //   );
+  // };
+
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
   const handleCalendarButtonClick = (e) => {
     e.preventDefault();
@@ -54,7 +143,20 @@ const SalonDashboard = () => {
 
   // دالة لجلب عدد الحجوزات (تم نقلها لتكون دالة مستقلة وليست داخل الـ catch)
 
-
+  useEffect(() => {
+    if (salonInfo) {
+      setSalonData({
+        name: salonInfo.name || '',
+        owner_email: salonInfo.owner_email || '',
+        phone: salonInfo.phone || '',
+        address: salonInfo.address || '',
+        workingHours: salonInfo.workingHours || '',
+        service_type: salonInfo.service_type || '',
+        website: salonInfo.website || '',
+        description: salonInfo.description || ''
+      });
+    }
+  }, [salonInfo]); // 🌟 هذا هو القوس الذي يغلق الـ useEffect الخاص بتحديث بيانات الصالوqن
   useEffect(() => {
     const fetchSalonInfo = async () => {
       try {
@@ -129,62 +231,205 @@ const SalonDashboard = () => {
   return (
     <div className="salon-dashboard">
       <div className="dashboard-header">
-        <h1>Welcome {salonInfo.name}</h1>
+        <h1>Welcome {salonData.name}</h1>
       </div>
-
       <div className="dashboard-content">
         <div className="info-section">
           <h2>Salon Information</h2>
           <div className="info-card">
             <div className="info-item">
               <span className="info-label">Name:</span>
-              <span className="info-value">{salonInfo.name}</span>
+              {editingField === 'name' ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('name')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.name}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('name')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
             <div className="info-item">
               <span className="info-label">Email:</span>
-              <span className="info-value">{salonInfo.owner_email}</span>
+              {editingField === 'owner_email' ? (
+                <>
+                  <input
+                    type="email"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('owner_email')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.owner_email}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('owner_email')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
             <div className="info-item">
               <span className="info-label">Phone:</span>
-              <span className="info-value">{salonInfo.phone}</span>
+              {editingField === 'phone' ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('phone')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.phone}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('phone')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
             <div className="info-item">
               <span className="info-label">Address:</span>
-              <span className="info-value">{salonInfo.address}</span>
+              {editingField === 'address' ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('address')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.address}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('address')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
             <div className="info-item">
               <span className="info-label">Working Hours:</span>
-              <span className="info-value">{salonInfo.workingHours}</span>
+              {editingField === 'workingHours' ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('workingHours')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.workingHours}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('workingHours')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
             <div className="info-item">
               <span className="info-label">Service Type:</span>
-              <span className="info-value">{salonInfo.service_type}</span>
+              {editingField === 'service_type' ? (
+                <>
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={handleInputChange}
+                    className="info-edit"
+                  />
+                  <button onClick={() => saveFieldEdit('service_type')} className='save-field-button'>✔️</button>
+                </>
+              ) : (
+                <>
+                  <span className="info-value">{salonData.service_type}</span>
+                  {isEditing && (
+                    <button onClick={() => startEditingField('service_type')} className='edit-field-button'>✏️</button>
+                  )}
+                </>
+              )}
             </div>
-            {salonInfo.website && (
+            {salonData.website && (
               <div className="info-item">
                 <span className="info-label">Website:</span>
-                <span className="info-value">
-                  <a href={salonInfo.website} target="_blank" rel="noopener noreferrer">
-                    {salonInfo.website}
-                  </a>
-                </span>
+                {editingField === 'website' ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editingValue}
+                      onChange={handleInputChange}
+                      className="info-edit"
+                    />
+                    <button onClick={() => saveFieldEdit('website')} className='save-field-button'>✔️</button>
+                  </>
+                ) : (
+                  <>
+                    <span className="info-value">
+                      <a href={salonData.website} target="_blank" rel="noopener noreferrer">
+                        {salonData.website}
+                      </a>
+                    </span>
+                    {isEditing && (
+                      <button onClick={() => startEditingField('website')} className='edit-field-button'>✏️</button>
+                    )}
+                  </>
+                )}
               </div>
             )}
-            {salonInfo.description && (
+            {salonData.description && (
               <div className="info-item">
                 <span className="info-label">Description:</span>
-                <span className="info-value">{salonInfo.description}</span>
+                {editingField === 'description' ? (
+                  <>
+                    <textarea
+                      value={editingValue}
+                      onChange={handleInputChange}
+                      className="info-edit"
+                    />
+                    <button onClick={() => saveFieldEdit('description')} className='save-field-button'>✔️</button>
+                  </>
+                ) : (
+                  <>
+                    <span className="info-value">{salonData.description}</span>
+                    {isEditing && (
+                      <button onClick={() => startEditingField('description')} className='edit-field-button'>✏️</button>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </div>
-          <button
-            className="edit-button"
-            onClick={() => navigate('/EditSalonInfo')} // Pass the salonInfo to the edit page
-          >
-            Edit Information
-          </button>
+          <div className="action-buttons">
+            {!isEditing ? (
+              <button className="edit-button" onClick={handleEditInfo}>
+                Edit Information
+              </button>
+            ) : (
+              <>
+                <button className="save-button" onClick={handleUpdateInfo}>
+                  Save Changes
+                </button>
+                <button className="cancel-button" onClick={handleCancelEdit}>
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
         </div>
-
         <div className="appointments-section">
           <div className="form-group">
             <label>Show appointments</label>
@@ -206,9 +451,9 @@ const SalonDashboard = () => {
               </div>
             )}
           </div>
-          {/* <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
+          <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
             View Appointments
-          </button> */}
+          </button>
           <h2>Statistics</h2>
           <div className="info-card" style={{ background: '#f5f5f5', padding: '20px', borderRadius: '10px' }}>
             <h3>Appointments Count</h3>
@@ -217,10 +462,6 @@ const SalonDashboard = () => {
           {/* كارد عدد الحجوزات */}
 
         </div>
-
-
-
-
         <div className="services-section">
           <div className="add-service-button">
             <button
