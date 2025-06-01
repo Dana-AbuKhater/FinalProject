@@ -64,7 +64,8 @@ const SignUp = () => {
             localStorage.getItem("salonName", data.salon.username);
             localStorage.getItem("salonEmail", data.salon.email);
             localStorage.getItem("salonPhone", data.salon.phone);
-
+            localStorage.setItem("id",data.salon.salon_id)
+            
             window.location.href = "/SalonInfoForm";
           }
           else if (type === 'customer') {
