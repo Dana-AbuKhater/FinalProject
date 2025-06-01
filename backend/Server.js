@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path'); // Add this line to import path
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
-const bodyParse = require("body-parser")
+//const bodyParse = require("body-parser")
 require('dotenv').config();
 const router = express.Router();
 const requireAuth = require('./middleware/requireAuth'); // عدل المسار حسب مكان الملف الحقيقي
@@ -83,6 +83,7 @@ const userSchema = new mongoose.Schema({
 
 //   next();
 // });
+
 // Replace your model definition with:
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 app.engine('JSON', require('ejs').renderFile)

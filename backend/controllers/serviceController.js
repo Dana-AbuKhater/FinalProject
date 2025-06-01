@@ -58,6 +58,15 @@ const addService = async (req, res) => {
         const parsedDiscount = parseFloat(discount);
         const parsedDuration = parseInt(duration, 10);
 
+        const existingService = await Service.findOne({
+            $and: [{ name }, { salon_id }],
+        });
+        if (existingService) {
+            return res.status(400).json({
+                success: false,
+                message: "This service is exist",
+            });
+          }
         if (!name || isNaN(parsedPrice)) {
             return res.status(400).json({ message: 'اسم الخدمة والسعر مطلوبان' });
         }

@@ -69,7 +69,7 @@ const SignIn = () => {
           localStorage.setItem("salonName", user.name); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonPhone", user.phone); // تخزين الـ salonId في localStorage
           localStorage.setItem("salonEmail", user.email); // تخزين الـ salonId في localStorage
-
+          localStorage.setItem("id",user.salon_id);
           // تخزين الـ salonId في localStorage
           if (!user || !user.address || !user.workingHours) {
             navigate("/SaloninfoForm");
