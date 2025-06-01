@@ -17,7 +17,8 @@ import Customer from './pages/Customer';
 import CustomerAppointment from './pages/CustomerAppointment';
 import SalonDashboard from './pages/SalonDashboard';
 import SalonDetails from './pages/SalonDetails'; // استيراد صفحة تفاصيل الصالون
-
+import ManageServices from './pages/ManageServices';
+import EditService from './pages/EditService';
 function App() {
   return (<>
 
@@ -44,6 +45,9 @@ function App() {
         }} />} />
         <Route path="/ServicesList" element={<ServicesList />} />
         <Route path="/UpdateServiceStatus" element={<UpdateServiceStatus />}></Route>
+        <Route path="/manage-services" element={<ManageServices />} />
+        <Route path="/edit-service/:id" element={<EditService />} />
+
       </Routes>
     </Router>
 
