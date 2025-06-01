@@ -1,0 +1,48 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.service-card {
+    background-color: #fff8dc;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.service-details {
+    flex: 1;
+}
+
+.service-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.service-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.service-actions .edit-btn {
+    background-color: #f0a500;
+}
+
+.service-actions .delete-btn {
+    background-color: #d00000;
+}
