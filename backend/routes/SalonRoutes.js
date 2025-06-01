@@ -207,7 +207,7 @@ router.put('/update-salon/:salon_id', async (req, res) => {
   try {
     const { salon_id } = req.params;
 
-    const updateData = req.query; // 👈 البيانات من query
+    const updateData = req.body; // 👈 البيانات من query
 
     const updatedSalon = await Salon.findOneAndUpdate(
       { salon_id: salon_id },
@@ -227,5 +227,6 @@ router.put('/update-salon/:salon_id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 module.exports = router;
