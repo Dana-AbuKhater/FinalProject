@@ -1,0 +1,231 @@
+/* تنسيق الخلفية العامة */
+.salon-form-container {
+    padding: 20px;
+    margin-top: 50px;
+    /* لابعاد الفورم عن النافبار */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* تنسيق الفورم */
+.salon-form {
+    background-color: #ffffff;
+    /* لون أبيض */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #bc9c3c;
+    max-width: 500px;
+    /* زيادة العرض قليلاً */
+    width: 100%;
+    border: 1px solid #e2b631;
+    /* إعادة إضافة الـ border */
+
+
+}
+
+/* العنوان في أعلى الفورم */
+.salon-form-title {
+    color: #000000;
+    /* لون أسود */
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-shadow: gray 0px 2px 2px;
+}
+
+/* تنسيق الحقول */
+.form-group {
+    margin-bottom: 20px;
+    /* زيادة المسافة بين الحقول */
+    max-width: 450px;
+    /* زيادة العرض قليلاً */
+    margin-left: auto;
+    margin-right: auto;
+    /* توسيط الحقول */
+
+}
+
+
+.submit-button {
+
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+    background-color: #ebb812c7;
+    max-width: 250px;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+
+}
+
+.submit-button:hover {
+    background-color: #e2b631;
+    /* لون أغمق عند التمرير */
+    color: white;
+    /* لون النص أبيض عند التمرير */
+}
+
+/* تنسيق وسائل التواصل الاجتماعي */
+.social-media-group {
+    margin-bottom: 10px;
+    /* تقليل المسافة بين حقول وسائل التواصل */
+}
+
+
+
+/* تنسيق زر الإرسال */
+.submit-button {
+    /* زيادة المسافة بين الزر والحقل الأخير */
+    /* لجعل الزر يأخذ عرض الحقل */
+    max-width: 450px;
+    /* نفس عرض الحقول */
+    /* توسيط الزر */
+}
+
+
+
+/* تنسيق عرض الخدمات */
+.services-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f5f1eb;
+    /* لون بيج */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #a08c52;
+    /* لون ذهبي */
+}
+
+.add-service-button {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-service-link {
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #e8b923;
+    width: 40%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.service-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.add-service-link:hover {
+    background-color: #927d3e;
+
+}
+
+input,
+select,
+textarea {
+    box-shadow: 0 1px 3px #bc9c3c;
+
+}
+
+/*
+  .service-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #744c10;
+    border-radius: 5px;
+    border: 1px solid #2e1903;
+    
+  }
+  
+  .service-details h3 {
+    margin: 0;
+    color: #5a4a42;
+    
+  }
+  
+  .service-details p {
+    margin: 0;
+    color: #8b7355;
+    
+  }
+    */
+/* .show-close-calendar {
+    color: #e8b923;
+    font-weight: bold;
+    padding: 10px;
+    background-color: white;
+    width: 45%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    border: 1px solid #e2b631;
+    
+  
+  } */
+
+.image-preview {
+    margin-top: 10px;
+}
+
+/* Add to SalonInfoForm.css */
+.upload-button {
+    padding: 8px 16px;
+    background-color: #e8ba2337;
+    border: 1px solid #bc9c3c;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.upload-button:hover {
+    background-color: #e8ba237f;
+}
+
+.image-preview-container {
+    margin-top: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview {
+    max-width: 300px;
+    max-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    align-items: center;
+}
+
+
+
+.remove-image:hover {
+    background: rgb(185, 3, 3);
+}
+
+/* .back-button {
+    position: fixed;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    top: 20px;
+} */

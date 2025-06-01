@@ -49,16 +49,31 @@
 
 
 .submit-button {
-  /* إضافة الزر هنا لتوحيد الطول والعرض */
-  width: 100%;
-  /* جعل جميع الحقول بنفس العرض */
-  padding: 1px;
-  /* زيادة الـ padding لتوحيد الحجم */
-  font-size: 14px;
-  /* حجم الخط موحد */
+
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+  background-color: #ebb812c7;
+  max-width: 250px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 
 }
 
+.submit-button:hover {
+  background-color: #e2b631;
+  /* لون أغمق عند التمرير */
+  color: white;
+  /* لون النص أبيض عند التمرير */
+}
 
 /* تنسيق وسائل التواصل الاجتماعي */
 .social-media-group {
@@ -70,17 +85,10 @@
 
 /* تنسيق زر الإرسال */
 .submit-button {
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-  margin-top: 10px;
   /* زيادة المسافة بين الزر والحقل الأخير */
-  display: block;
   /* لجعل الزر يأخذ عرض الحقل */
   max-width: 450px;
   /* نفس عرض الحقول */
-  margin-left: auto;
-  margin-right: auto;
   /* توسيط الزر */
 }
 
@@ -177,15 +185,15 @@ textarea {
 /* Add to SalonInfoForm.css */
 .upload-button {
   padding: 8px 16px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: #e8ba2337;
+  border: 1px solid #bc9c3c;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 10px;
 }
 
 .upload-button:hover {
-  background-color: #e0e0e0;
+  background-color: #e8ba237f;
 }
 
 .image-preview-container {
@@ -195,26 +203,16 @@ textarea {
 }
 
 .image-preview {
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 300px;
+  max-height: 300px;
   border: 1px solid #ddd;
   border-radius: 4px;
+
+  align-items: center;
 }
 
-.remove-image {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  font-size: 14px;
-}
+
 
 .remove-image:hover {
-  background: darkred;
+  background: rgb(185, 3, 3);
 }
