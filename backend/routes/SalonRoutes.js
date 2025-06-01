@@ -373,9 +373,9 @@ router.get("/getsalons", async (req, res) => {
 router.put('/update-salon/:salon_id', async (req, res) => {
   try {
     const { salon_id } = req.params;
-
+    console.log("Salon ID from params:", salon_id);
     const updateData = req.body; // 👈 البيانات من query
-
+    console.log("Update Data222:", updateData);
     const updatedSalon = await Salon.findOneAndUpdate(
       { salon_id: salon_id },
       { $set: updateData },

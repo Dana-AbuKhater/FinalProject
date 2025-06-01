@@ -35,25 +35,27 @@ const SalonDashboard = () => {
   };
   const handleUpdateInfo = async () => {
     try {
+      const salon_id = salonInfo.salon_id; // تأكد من وجود _id في بيانات الصالون
       const token = localStorage.getItem('token');
-      const response = await axios.put('http://localhost:3000/api/salon/update', salonData, {
+      const response = await axios.put(`http://localhost:3000/api/salon/update-salon/${salon_id}`, salonData, {
         headers: {
           Authorization: `Bearer ${token}`,
-
         }
       });
+      console.log("Update response Data123:", response.data);
+      // salonInfo = response.data; // تأكد من أن هذا هو الشكل الصحيح للبيانات التي تعيدها السيرفر
       setIsEditing(false);
       setEditingField(null);
-      setSalonInfo(response.data); // Update displayed info with server response
+      setSalonInfo(response.data.data); // Update displayed info with server response
       setSalonData({
-        name: response.data.name || '',
-        owner_email: response.data.owner_email || '',
-        phone: response.data.phone || '',
-        address: response.data.address || '',
-        workingHours: response.data.workingHours || '',
-        service_type: response.data.service_type || '',
-        website: response.data.website || '',
-        description: response.data.description || ''
+        name: response.data.data.name || '',
+        owner_email: response.data.data.owner_email || '',
+        phone: response.data.data.phone || '',
+        address: response.data.data.address || '',
+        workingHours: response.data.data.workingHours || '',
+        service_type: response.data.data.service_type || '',
+        website: response.data.data.website || '',
+        description: response.data.data.description || ''
       }); // Update local state with the new salon data
       alert('Salon information updated successfully!');
     } catch (error) {
