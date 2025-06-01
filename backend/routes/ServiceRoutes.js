@@ -19,8 +19,8 @@ router.get('/', async (req, res) => {
 // مسار GET لجلب الخدمات لصالون معين باستخدام salon_id
 router.get('/salon/:salonId', async (req, res) => {
   try {
-    const salonId = parseInt(req.params.salonId, 10); // تحويل salonId من string إلى number
-
+    //const salonId = parseInt(req.params.salonId, 10); // تحويل salonId من string إلى number
+    const salonId = req.params.salonId;
     // التحقق من أن salonId رقم صحيح
     if (isNaN(salonId)) {
       return res.status(400).json({ message: 'معرف الصالون غير صالح.' });
@@ -172,4 +172,65 @@ router.put('/services/:id/status', updateServiceStatus);
 
 // إضافة خدمة جديدة
 router.post('/', addService);
+/*
+router.get("/salon/:salonId", async (req, res) => {
+  const salonId = req.params.salonId;
+  console.log("eman");
+  const services = await Service.find({ _id: salonId });
+
+  res.status(200).json({ services });
+});*/
+
+// delete service
+router.delete("/:id", async (req, res) => {
+  await Service.findByIdAndDelete(req.params.id);
+  res.json({ message: "Service deleted" });
+});
+
+// get service by id
+router.get("/:id", async (req, res) => {
+  const service = await Service.findById(req.params.id);
+  res.json(service);
+});
+
+// تعديل خدمة
+router.put("/:id", async (req, res) => {
+  const { name, price } = req.body;
+  try {
+    const updatedService = await Service.findByIdAndUpdate(
+      req.params.id,
+      { name, price },
+      { new: true }
+    );
+    if (!updatedService) {
+      return res.status(404).json({ message: "الخدمة غير موجودة" });
+    }
+    res.json({ message: "تم تعديل الخدمة", service: updatedService });
+  } catch (err) {
+    res.status(500).json({ message: "فشل في تعديل الخدمة" });
+  }
+});
+
+router.delete('/api/services/:id', async (req, res) => {
+  try {
+    const serviceId = parseInt(req.params.id, 10);
+
+    if (isNaN(serviceId)) {
+      return res.status(400).json({ message: 'معرّف الخدمة غير صالح.' });
+    }
+
+    const deletedService = await Service.findOneAndDelete({ service_id: service_id });
+
+    if (!deletedService) {
+      return res.status(404).json({ message: 'الخدمة غير موجودة.' });
+    }
+
+    res.status(200).json({ message: 'تم حذف الخدمة بنجاح.' });
+  } catch (error) {
+    console.error('خطأ في حذف الخدمة:', error);
+    res.status(500).json({ message: 'فشل في حذف الخدمة.', error: error.message });
+  }
+});
+
+
 module.exports = router;
