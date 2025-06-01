@@ -66,7 +66,7 @@ const SignUp = () => {
             localStorage.getItem("salonPhone", data.salon.phone);
             localStorage.setItem("id",data.salon.salon_id)
             
-            window.location.href = "/SalonInfoForm";
+            window.location.href = "./SalonInfoForm";
           }
           else if (type === 'customer') {
             window.location.href = "/Customer";
