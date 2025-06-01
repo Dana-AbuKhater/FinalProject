@@ -474,7 +474,7 @@ const SalonDashboard = () => {
 
 
           <div className="info-section">
-            <button className="manage-services-button" onClick={() => navigate('/salon-services')}>
+            <button className="manage-services-button" onClick={() => navigate('/manage-services')}>
               Manage Services
             </button>
           </div>

@@ -67,7 +67,7 @@ const SalonInfoForm = () => {
      const website = e.target.website.value;
      const description = e.target.description.value;*/
 
-    const { logo_url, address, workingHours, serviceType, website, description } = salonInfo;
+    const {  address, workingHours, serviceType, website, description } = salonInfo;
 
     const id = localStorage.getItem("salonId");
     console.log("id= ", id);

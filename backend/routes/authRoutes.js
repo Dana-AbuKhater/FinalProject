@@ -120,6 +120,7 @@ router.post("/register", async (req, res) => {
         message: "Account created successfully!",
         token, // ضروري يكون هون
         user: {
+        //  salon_id:newUser.salon_id ||"",
           id: newUser._id,
           user_id: newUser.user_id,
           type: newUser.type,
