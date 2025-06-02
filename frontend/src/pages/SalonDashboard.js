@@ -3,10 +3,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Calendar from "../InteractiveCalendar/Calendar";
 import './SalonDashboard.css'; // تأكد من وجود ملف CSS المناسب
-import { se } from 'date-fns/locale';
-
+// import { se } from 'date-fns/locale';
+import AppointmentsModal from '../AppointmentsModel/Appointments';
 
 const SalonDashboard = () => {
+
   const [isEditing, setIsEditing] = useState(false);
   const [salonData, setSalonData] = useState({
     name: '',
@@ -20,13 +21,13 @@ const SalonDashboard = () => {
   });
   const [editingField, setEditingField] = useState(null);
   const [editingValue, setEditingValue] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [setSelectedDate] = useState(null);
   const [appointmentsCount, setAppointmentsCount] = useState(0);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [salonInfo, setSalonInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [services, setServices] = useState([]);
+  // const [services] = useState([]);
   const navigate = useNavigate();
   const handleEditInfo = () => { setIsEditing(true); };
   const handleCancelEdit = () => {
@@ -79,34 +80,8 @@ const SalonDashboard = () => {
   const handleInputChange = (e) => {
     setEditingValue(e.target.value);
   };
-  // const renderField = (label, fieldName) => {
-  //   return (
-  //     <div className="info-filed" key={fieldName}>
-  //       <label>{label};</label>
-  //       {editingField === fieldName ? (
-  //         <>
-  //           <input
-  //             type="fieldName === 'owner_email' ? 'email' : 'text'"
 
-  //             value={editingValue}
-  //             onChange={handleInputChange}
-  //             className='edit-field-input'
-  //           />
-  //           <button onClick={() => saveFieldEdit(fieldName)} className='save-field-button'>✔️</button>
-  //         </>
-  //       ) : (
-  //         <>
-  //           <span className='info-value'>{salonData[fieldName]}</span>
-  //           {isEditing && (
-  //             <button onClick={() => startEditingField(fieldName)} className='edit-field-button'>✏️</button>
-  //           )}
-  //         </>
-  //       )}
-  //     </div>
-  //   );
-  // };
-
-  const [isLoading, setIsLoading] = useState(true); // حالة التحميل
+  // const [isLoading, setIsLoading] = useState(true); // حالة التحميل
   const handleCalendarButtonClick = (e) => {
     e.preventDefault();
     setShowCalendarModal(!showCalendarModal);
@@ -115,15 +90,7 @@ const SalonDashboard = () => {
     setSelectedDate(date);
     setShowCalendarModal(false);
   };
-  const visibleServices = services.filter(
-    (service) => service.status === "visible"
-  );
-  const hiddenServices = services.filter(
-    (service) => service.status === "hidden"
-  );
-  const deletedServices = services.filter(
-    (service) => service.status === "deleted"
-  );
+
   const fetchAppointmentsCount = async (salonId) => {
     console.log("  salonId  =", salonId);
     try {
@@ -144,7 +111,25 @@ const SalonDashboard = () => {
   console.log("Salon Info:", salonInfo); // لتتبع بيانات الصالون
 
   // دالة لجلب عدد الحجوزات (تم نقلها لتكون دالة مستقلة وليست داخل الـ catch)
-
+  const [showAppointmentsModal, setShowAppointmentsModal] = useState(false);
+  const [/*appointments*/, setAppointments] = useState([]);
+  const [/*loadingAppointments*/, setLoadingAppointments] = useState(false);
+  const fetchAppointments = async () => {
+    try {
+      setLoadingAppointments(true);
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:3000/api/appointments', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log("Appointments Data:", response.data); // لتتبع بيانات الحجوزات
+      setAppointments(response.data);
+      setLoadingAppointments(false);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      setLoadingAppointments(false);
+      alert('Failed to load appointments. Please try again later.');
+    }
+  };
   useEffect(() => {
     if (salonInfo) {
       setSalonData({
@@ -453,9 +438,20 @@ const SalonDashboard = () => {
               </div>
             )}
           </div>
-          <button className="view-appointments-button" onClick={() => navigate('/appointments')}>
+          <button className="view-appointments-button" onClick={() => {
+            // call the AppointmentsModal component
+            setShowAppointmentsModal(true);
+            //fetchAppointments();
+          }}
+          >
             View Appointments
           </button>
+
+          {/* Render the modal when showAppointmentsModal is true */}
+          {showAppointmentsModal && (
+            <AppointmentsModal onClose={() => setShowAppointmentsModal(false)} />
+          )}
+
           <h2>Statistics</h2>
           <div className="info-card" style={{ background: '#f5f5f5', padding: '20px', borderRadius: '10px' }}>
             <h3>Appointments Count</h3>

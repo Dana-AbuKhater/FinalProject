@@ -2,11 +2,18 @@ const express = require('express');
 const router = express.Router();
 const Appointment = require('../models/Appointment');
 const mongoose = require('mongoose');
+const requireAuth = require('../middleware/requireAuth');
+const {
+  getAllAppointments,
+  createAppointment,
+  updateAppointmentStatus
+} = require('../controllers/appointmentController');
 // Get all appointments
-router.get('/', async (req, res) => {
-  const Appointments = await Appointment.find().populate('customer salon service');
-  res.json(Appointments);
-});
+// router.get('/', async (req, res) => {
+//   const Appointments = await Appointment.find().populate('customer salon service');
+//   res.json(Appointments);
+// });
+
 // Create new appointment
 router.post('/', async (req, res) => {
   const newAppointment = new Appointment(req.body);
@@ -17,27 +24,30 @@ router.post('/', async (req, res) => {
 router.get('/count/:salon_id', async (req, res) => {
   try {
     const salonId = req.params.salon_id;
-    console.log("Received salon ID in backend:", salonId); // أضف هذا السطر
+    console.log("Received salon ID in backend:", salonId); 
 
     if (!mongoose.Types.ObjectId.isValid(salonId)) {
       return res.status(400).json({ error: 'Invalid salon ID' });
     }
 
-    console.log("Searching for appointments with salon_id:", salonId); // <--- أضف هذا
+    console.log("Searching for appointments with salon_id:", salonId);   
 
     const count = await Appointment.countDocuments({ salon_id: salonId });
-    console.log("Found appointments count:", count); // <--- أضف هذا
+    console.log("Found appointments count:", count);  
 
     res.status(200).json({
       salon_id: salonId,
       total_appointments: count
     });
   } catch (err) {
-    console.error("Error fetching appointments count for salon:", err); // ADD THIS LINE
+    console.error("Error fetching appointments count for salon:", err); 
 
     res.status(500).json({ message: 'Server error', error: err });
   }
 });
+
+router.get('/getappointments', requireAuth('salon') ,getAllAppointments);
+
 /*
 //ممكن نحطه مع الكالندر انه كل يوم كم حجز عنده 
 // Get number of appointments for a specific salon on a specific day
