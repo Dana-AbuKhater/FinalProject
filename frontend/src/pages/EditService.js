@@ -9,11 +9,18 @@ function EditService() {
     const [service, setService] = useState({
         name: "",
         price: "",
-        image: ""
+        image: "",
+        discount_price: 0, // لازم نفس اسم الداتابيز
+        duration_minutes: 0, // لازم نفس اسم الداتابيز
+        description: "",
+        category: "",
+        status: "visible"
     });
+
 
     const fetchService = async () => {
         const res = await axios.get(`http://localhost:3000/api/services/${id}`);
+        console.log("data ", res.data)
         setService(res.data);
     };
 
@@ -35,11 +42,11 @@ function EditService() {
     return (
         <div className="add-service-form-container">
             <form onSubmit={handleSubmit} className="add-service-form">
-                <h1 className="form-title">تعديل الخدمة</h1>
+                <h1 className="form-title">Edit Service </h1>
 
                 {/* Service Name */}
                 <div className="form-group">
-                    <label>اسم الخدمة:</label>
+                    <label>Service Name:</label>
                     <input
                         type="text"
                         value={service.name}
@@ -50,7 +57,7 @@ function EditService() {
 
                 {/* Price */}
                 <div className="form-group">
-                    <label>السعر:</label>
+                    <label>Price:</label>
                     <input
                         type="number"
                         value={service.price}
@@ -61,28 +68,30 @@ function EditService() {
 
                 {/* Discount */}
                 <div className="form-group">
-                    <label>الخصم:</label>
+                    <label>Discount:</label>
                     <input
+
                         type="number"
-                        value={service.discount}
-                        onChange={(e) => setService({ ...service, discount: e.target.value })}
+                        value={service.discount_price}
+                        onChange={(e) => setService({ ...service, discount_price: e.target.value })}
                     />
                 </div>
 
                 {/* Duration */}
                 <div className="form-group">
-                    <label>المدة (بالدقائق):</label>
+                    <label>Duration (minutes):</label>
                     <input
                         type="number"
-                        value={service.duration}
-                        onChange={(e) => setService({ ...service, duration: e.target.value })}
+                        value={service.duration_minutes}
+                        onChange={(e) => setService({ ...service, duration_minutes: e.target.value })}
                     />
                 </div>
 
                 {/* Description */}
                 <div className="form-group">
-                    <label>الوصف:</label>
+                    <label>Description:</label>
                     <textarea
+                        type="String"
                         value={service.description}
                         onChange={(e) => setService({ ...service, description: e.target.value })}
                     />
@@ -90,16 +99,17 @@ function EditService() {
 
                 {/* Category */}
                 <div className="form-group">
-                    <label>الفئة:</label>
+                    <label>Category:</label>
                     <select
+                        type="String"
                         value={service.category}
                         onChange={(e) => setService({ ...service, category: e.target.value })}
                     >
                         <option value="">اختيار الفئة</option>
-                        <option value="hair">شعر</option>
-                        <option value="nails">أظافر</option>
-                        <option value="skin">بشرة</option>
-                        <option value="other">أخرى</option>
+                        <option value="hair">Hair</option>
+                        <option value="nails">Nails</option>
+                        <option value="skin">Skin</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
 
@@ -117,11 +127,10 @@ function EditService() {
                 </div>
 
                 <button type="submit" className="submit-button">
-                    حفظ التعديلات
-                </button>
+                    Save Changes                </button>
             </form>
         </div>
-      );
+    );
 }
 
 export default EditService;

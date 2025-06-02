@@ -195,11 +195,11 @@ router.get("/:id", async (req, res) => {
 
 // تعديل خدمة
 router.put("/:id", async (req, res) => {
-  const { name, price } = req.body;
+  const { name, price, description, category, discount_price, duration_minutes } = req.body;
   try {
     const updatedService = await Service.findByIdAndUpdate(
       req.params.id,
-      { name, price },
+      { name, price, description, category, discount_price, duration_minutes },
       { new: true }
     );
     if (!updatedService) {
