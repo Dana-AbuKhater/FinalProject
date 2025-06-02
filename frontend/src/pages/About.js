@@ -38,27 +38,27 @@ const About = () => {
       <div className="section-title">Meet The Developers</div>
       <div className="dev-cards">
         <div className="about-card dev-card">
-          <img src="https://via.placeholder.com/80" alt="إيمان" className="dev-img" />
+          
           <h3 className="dev-name">Eman Alomari</h3>
           <p className="dev-role">Front-End Developer</p>
           <p className="about-text">Professional and elegant website interfaces creator.</p>
         </div>
 
         <div className="about-card dev-card">
-          <img src="https://via.placeholder.com/80" alt="رغد" className="dev-img" />
+          
           <h3 className="dev-name">Raghad Abuhammmam</h3>
           <p className="dev-role">Back-End Developer</p>
-          <p className="about-text">متخصصة في بناء قواعد البيانات والسيرفرات بكل احتراف.</p>
+          <p className="about-text">Specialized in building databases and servers with great professionalism.</p>
         </div>
 
         <div className="about-card dev-card">
-          <img src="https://via.placeholder.com/80" alt="دانه" className="dev-img" />
+          
           <h3 className="dev-name">Dana Abu-kater</h3>
           <p className="dev-role">Full-Stack Developer</p>
-          <p className="about-text">خبيرة بتطوير مواقع متكاملة من الواجهة للـ API.</p>
+          <p className="about-text">Expert in developing integrated websites from frontend to API.</p>
         </div>
       </div>
-
+a
 
 
       {/* Vision */}

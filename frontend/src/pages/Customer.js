@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import Salon from "../models/Salons";
 import "./Customer.css";
+import { Placeholder } from "react-bootstrap";
 
 export default function SalonScreen() {
   const [salons, setData] = useState([]);
@@ -141,7 +142,20 @@ export default function SalonScreen() {
           <option value="91-100">91 - 100</option>
         </select>
         <select className="filter-select" aria-label="Discount">
+          
           <option>Discount</option>
+          <option value="">All discounted services</option>
+          <option value="1-10">1-10</option>
+          <option value="11-20">11-20</option>
+          <option value="21-30">21-30</option>
+          <option value="31-40">31-40</option>
+          <option value="41-50">41-50</option>
+          <option value="51-60">51-60</option>
+          <option value="61-70">61-70</option>
+          <option value="71-80">71-80</option>
+          <option value="81-90">81-90</option>
+          <option value="91-100">91-100</option>
+
         </select>
 
         <select className="filter-select" aria-label="Category" onChange={handleCategoryChange} value={category}>
@@ -174,14 +188,7 @@ export default function SalonScreen() {
           <option value="Balqa">Balqa</option>
         </select>
 
-        <select className="filter-select" aria-label="Rating">
-          <option>Rating</option>
-          <option value="5">★★★★★</option>
-          <option value="4">★★★★☆</option>
-          <option value="3">★★★☆☆</option>
-          <option value="2">★★☆☆☆</option>
-          <option value="1">★☆☆☆☆</option>
-        </select>
+        
       </div>
 
       {/* Salon List */}

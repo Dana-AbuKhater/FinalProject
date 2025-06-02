@@ -15,7 +15,7 @@
   
   .contact-header h1 {
     font-size: 2.5rem;
-    color: #3A0B50;
+    color: #e8b923;
     margin-bottom: 15px;
   }
   
@@ -38,7 +38,7 @@
   .contact-info {
     flex: 1;
     min-width: 300px;
-    background-color: #f9f3ff;
+    background-color: #fffeed;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -60,7 +60,7 @@
   
   .contact-method h3 {
     font-size: 1.3rem;
-    color: #3A0B50;
+    color: #e8b923;
     margin-bottom: 10px;
   }
   
@@ -73,7 +73,7 @@
   /* Form Styles */
   .contact-form h2 {
     font-size: 1.8rem;
-    color: #3A0B50;
+    color: #e8b923;
     margin-bottom: 25px;
   }
   
@@ -84,7 +84,7 @@
   .form-group label {
     display: block;
     font-size: 1.1rem;
-    color: #3A0B50;
+    color: #e8b923;
     margin-bottom: 8px;
     font-weight: 600;
   }
@@ -102,7 +102,7 @@
   .form-group input:focus,
   .form-group textarea:focus {
     outline: none;
-    border-color: #3A0B50;
+    border-color: #e8b923;
   }
   
   .form-group textarea {
@@ -112,7 +112,7 @@
   
   /* Submit Button */
   .submit-btn {
-    background-color: #3A0B50;
+    background-color: #e8b923;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -125,7 +125,7 @@
   }
   
   .submit-btn:hover {
-    background-color: #4c0d6a;
+    background-color: #e8b923;
   }
   
   /* Responsive Design */

@@ -83,7 +83,7 @@ const getAllAppointments = async (req, res) => {
             isDiscounted: appointment.service_id?.is_discounted || false,
             discountPrice: appointment.service_id?.discount_price || 0,
             serviceStatus: appointment.service_id?.status || 'visible',
-            date: appointment.appointment_date,
+            date: appointment.Appointment_date || "N/A",
             startTime: appointment.start_time,
             endTime: appointment.end_time,
             status: appointment.status

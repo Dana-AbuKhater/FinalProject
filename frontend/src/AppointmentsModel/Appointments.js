@@ -63,33 +63,19 @@ const AppointmentsModal = ({ onClose }) => {
 
                 {isLoading ? (
                     <p>Loading appointments...</p>
-                ) : appointments.length === 0 ? (
+                ) : appointments.length == 0 ? (
                     <p>No appointments found.</p>
                 ) : (
                     <div className="appointments-list">
                         {appointments.map(appointment => (
                             <div key={appointment.id} className="appointment-card">
                                 <h3>{appointment.customerName}</h3>
-                                {/* "_id": "6836c6405febdd8651e28366",
-                                "Appointment_id": 120,
-                                "user_id": 1001,
-                                "salon_id": "6836bbd166e8fb624563f337",
-                                "service_id": 2001,
-                                "appointment_date": "2025-05-27T10:00:00.000Z",
-                                "start_time": "09:00 AM",
-                                "end_time": "10:00 AM",
-                                "status": "Confirmed",
-                                "created_at": "2025-05-27T10:00:00.000Z" */}
-                                {/* <div className="customer-info">
-                                    <p><strong>Email:</strong> {appointment.customerEmail}</p>
-                                    <p><strong>Phone:</strong> {appointment.customerPhone}</p>
-                                </div> */}
                                 <div className="service-details">
                                     <p><strong>Service:</strong> {appointment.serviceName}</p>
                                     <p><strong>Description:</strong> {appointment.description}</p>
-                                    <p><strong>Date:</strong> {appointment.appointment_date}</p>
-                                    <p><strong>Time:</strong> {appointment.start_time}</p>
-                                    <p><strong>Duration:</strong> {appointment.duration}</p>
+                                    <p><strong>Date:</strong> {(appointment.date).split('T')[0]}</p>
+                                    <p><strong>Time:</strong> {appointment.startTime} - {appointment.endTime}</p>
+            
                                     <p><strong>Price:</strong> {appointment.price}</p>
                                 </div>
                             </div>

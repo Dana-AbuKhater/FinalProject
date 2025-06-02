@@ -419,7 +419,7 @@ const SalonDashboard = () => {
         </div>
         <div className="appointments-section">
           <div className="form-group">
-            <label>Show appointments</label>
+            {/* <label>Show appointments</label>
             <button
               onClick={handleCalendarButtonClick}
               className="show-calendar"
@@ -436,8 +436,8 @@ const SalonDashboard = () => {
                   </button>
                 </div>
               </div>
-            )}
-          </div>
+            )}*/}
+          </div> 
           <button className="view-appointments-button" onClick={() => {
             // call the AppointmentsModal component
             setShowAppointmentsModal(true);

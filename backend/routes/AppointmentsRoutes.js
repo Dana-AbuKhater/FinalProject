@@ -57,75 +57,75 @@ router.get('/', async (req, res) => {
 // @desc    Get a single appointment by ID with customer and service details
 // @route   GET /api/appointments/:id
 // @access  Private
-router.get('/:id', async (req, res) => {
-  try {
-    const appointment = await Appointment.findById(req.params.id)
-      // إذا كان اسم الحقل في Appointment هو customerId
-      .populate('customerId', 'name email phone user_id')
-      // إذا كان اسم الحقل في Appointment هو userId
-      // .populate('userId', 'name email phone user_id')
-      .populate('serviceId', 'name description price duration_minutes service_id');
+// route  r.get('/:id', async (req, res) => {
+//   try {
+//     const appointment = await Appointment.findById(req.params.id)
+//       // إذا كان اسم الحقل في Appointment هو customerId
+//       .populate('customerId', 'name email phone user_id')
+//       // إذا كان اسم الحقل في Appointment هو userId
+//       // .populate('userId', 'name email phone user_id')
+//       .populate('serviceId', 'name description price duration_minutes service_id');
 
-    if (!appointment) {
-      return res.status(404).json({
-        success: false,
-        error: 'Appointment not found',
-      });
-    }
+//     if (!appointment) {
+//       return res.status(404).json({
+//         success: false,
+//         error: 'Appointment not found',
+//       });
+//     }
 
-    if (!(appointment.customerId || appointment.userId) || !appointment.serviceId) {
-      return res.status(404).json({
-        success: false,
-        error: 'Related customer or service not found for this appointment',
-      });
-    }
+//     if (!(appointment.customerId || appointment.userId) || !appointment.serviceId) {
+//       return res.status(404).json({
+//         success: false,
+//         error: 'Related customer or service not found for this appointment',
+//       });
+//     }
 
-    res.status(200).json({
-      success: true,
-      data: appointment,
-    });
-  } catch (error) {
-    console.error(`Error fetching appointment with ID ${req.params.id}:`, error);
-    if (error.kind === 'ObjectId') {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid appointment ID',
-      });
-    }
-    res.status(500).json({
-      success: false,
-      error: 'Server Error: Could not retrieve appointment',
-    });
-  }
-});
+//     res.status(200).json({
+//       success: true,
+//       data: appointment,
+//     });
+//   } catch (error) {
+//     console.error(`Error fetching appointment with ID ${req.params.id}:`, error);
+//     if (error.kind === 'ObjectId') {
+//       return res.status(400).json({
+//         success: false,
+//         error: 'Invalid appointment ID',
+//       });
+//     }
+//     res.status(500).json({
+//       success: false,
+//       error: 'Server Error: Could not retrieve appointment',
+//     });
+//   }
+// });
 
 // Get number of appointments for a specific salon
 router.get('/count/:salon_id', async (req, res) => {
   try {
     const salonId = req.params.salon_id;
-    console.log("Received salon ID in backend:", salonId); 
+    console.log("Received salon ID in backend:", salonId);
 
     if (!mongoose.Types.ObjectId.isValid(salonId)) {
       return res.status(400).json({ error: 'Invalid salon ID' });
     }
 
-    console.log("Searching for appointments with salon_id:", salonId);   
+    console.log("Searching for appointments with salon_id:", salonId);
 
     const count = await Appointment.countDocuments({ salon_id: salonId });
-    console.log("Found appointments count:", count);  
+    console.log("Found appointments count:", count);
 
     res.status(200).json({
       salon_id: salonId,
       total_appointments: count
     });
   } catch (err) {
-    console.error("Error fetching appointments count for salon:", err); 
+    console.error("Error fetching appointments count for salon:", err);
 
     res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
-router.get('/getappointments', requireAuth('salon') ,getAllAppointments);
+router.get('/getappointments', requireAuth('salon'), getAllAppointments);
 
 /*
 //ممكن نحطه مع الكالندر انه كل يوم كم حجز عنده 

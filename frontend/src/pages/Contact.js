@@ -19,13 +19,13 @@ const Contact = () => {
           </div>
 
           <div className="contact-method">
-            <h3>Email</h3>
-            <p>info@jordanbeauty.com</p>
+            <h3>Email</h3>  
+            <p>stylehive@gmail.com</p>
           </div>
 
           <div className="contact-method">
             <h3>Visit Us</h3>
-            <p>Al-Jabal Al-Ma'ali, Amman, Jordan</p>
+            <p>Irbid, Jordan</p>
           </div>
         </div>
 
