@@ -55,7 +55,7 @@ const SalonInfoForm = () => {
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
 
   useEffect(() => {
-    console.log("Services = ", localStorage.getItem("services"));
+    console.log("Services = ", services);
     // const storedServices = JSON.parse(localStorage.getItem("services")) || [];
     // setServices(storedServices);
   }, []);
@@ -336,9 +336,9 @@ const SalonInfoForm = () => {
             }
             required
           >
-            <option value="home-only">منزلي فقط</option>
-            <option value="salon-only">صالون فقط</option>
-            <option value="both">الاثنين معًا</option>
+            <option value="home-only">Home Only</option>
+            <option value="salon-only">Salon Only</option>
+            <option value="both">Both</option>
           </select>
         </div>
 

@@ -26,11 +26,15 @@ const AppointmentsModal = ({ onClose }) => {
                     })
                     .then(res => {
                         console.log("============================================");
+                        if (!res.success) {
+                            res.data = [];
+                        }
                         console.log("Appointments fetched:", res.data);
                         setAppointments(res.data);
                     })
                     .catch(error => {
                         console.error('Error fetching appointments:', error);
+                        console.log("Test test testes")
                         setAppointments([]);
                     });
                 // // Example API call to fetch appointments
@@ -75,7 +79,7 @@ const AppointmentsModal = ({ onClose }) => {
                                     <p><strong>Description:</strong> {appointment.description}</p>
                                     <p><strong>Date:</strong> {(appointment.date).split('T')[0]}</p>
                                     <p><strong>Time:</strong> {appointment.startTime} - {appointment.endTime}</p>
-            
+
                                     <p><strong>Price:</strong> {appointment.price}</p>
                                 </div>
                             </div>

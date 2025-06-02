@@ -75,7 +75,7 @@ const AddServiceForm = ({ setServices }) => {
       alert('Service added successfully!');
 
       // إعادة التوجيه للداشبورد
-      navigate('/SalonDashboard', {
+      navigate('/ManageServices', {
         state: {
           message: "Service added successfully!",
           newService: data.service
@@ -124,13 +124,20 @@ const AddServiceForm = ({ setServices }) => {
         {/* Service Name */}
         <div className="form-group">
           <label>Service Name:</label>
-          <input
-            type="text"
-            placeholder="e.g., Haircut"
+          <select
             value={service.name}
             onChange={(e) => setService({ ...service, name: e.target.value })}
-            required
-          />
+          >
+            <option value="" unselectable=''>Select Service</option>
+            <option value="Haircut">Haircut</option>
+            <option value="Manicure">Manicure</option>
+            <option value="Pedicure">Pedicure</option>
+            <option value="Facial">Facial</option>
+            <option value="Massage">Massage</option>
+            <option value="Makeup">Makeup</option>
+            <option value="Waxing">Waxing</option>
+            <option value="Other">Other</option>
+          </select>
         </div>
 
         {/* Price */}
@@ -193,7 +200,7 @@ const AddServiceForm = ({ setServices }) => {
         </div>
 
         {/* Status */}
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Status:</label>
           <select
             value={service.status}
@@ -203,12 +210,10 @@ const AddServiceForm = ({ setServices }) => {
             <option value="hidden">Hidden</option>
             <option value="deleted">Deleted</option>
           </select>
-        </div>
+        </div> */}
 
         <button type="submit" className="submit-button">Add Service</button>
 
-        
-      
       </form>
     </div>
   );

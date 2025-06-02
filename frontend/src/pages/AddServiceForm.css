@@ -1,70 +1,159 @@
-/* تنسيق الفورم */
+/* تنسيقات عامة للصفحة */
 .add-service-form-container {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
+/* تنسيقات النافبار لتناسب الصور المرفقة */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  padding: 15px 0;
+  display: flex;
+  justify-content: space-around;
+  z-index: 1000;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+  background-color: #555;
+}
+
+/* تنسيقات الفورم الرئيسية */
 .add-service-form {
-  background-color: #f4e9d8;
-  /* لون بيج */
-  padding: 20px;
+  background-color: white;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
   width: 100%;
+  max-width: 700px;
+  margin-top: 60px;
+  /* لتعويض النافبار الثابتة */
 }
 
 .form-title {
-  color: #8b7355;
-  /* لون عسلي */
+  color: #333;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 24px;
+  position: relative;
+  padding-bottom: 10px;
 }
 
-/* تنسيق الحقول */
+.form-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background-color: #8b7355;
+}
+
+/* تنسيقات مجموعات الحقول */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  color: #000000;
-  /* لون عسلي */
-  font-weight: bold;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 600;
 }
 
 .form-group input,
-.form-group textarea,
-.form-group select {
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #e2b631;
-  /* لون ذهبي فاتح */
-  border-radius: 5px;
-  background-color: #ffffff;
-  /* لون بيج فاتح */
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
+}
 
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #8b7355;
+  box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.2);
+  outline: none;
+  background-color: white;
 }
 
 .form-group textarea {
-  min-height: 100px;
+  min-height: 120px;
+  resize: vertical;
 }
 
-/* تنسيق زر الإرسال */
-/* .submit-button {
-    width: 100%;
-    padding: 10px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
+/* تنسيقات خاصة بالاختيارات */
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 15px;
+}
+
+/* تنسيقات الأزرار */
+.submit-button {
+  background-color: #8b7355;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submit-button:hover {
+  background-color: #6b5a45;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+/* تنسيقات للعرض على الجوال */
+@media (max-width: 768px) {
+  .add-service-form {
+    padding: 20px;
+    margin-top: 80px;
   }
-  
-  .submit-button:hover {
-    background-color: #c9a381; /* لون ذهبي غامق عند التحويم 
-  } */
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+  }
+
+  .submit-button {
+    padding: 10px 20px;
+  }
+}
