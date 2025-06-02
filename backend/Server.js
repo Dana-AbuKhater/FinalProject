@@ -31,8 +31,8 @@ mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ DB Connection Error", err));
 
-const appointmentRoutes = require('./routes/AppointmentsRoutes');
-app.use('/appointments', appointmentRoutes);
+const AppointmentRoutes = require('./routes/AppointmentsRoutes');
+app.use('/appointments', AppointmentRoutes);
 // app.use('/api/salon', SalonRoutes);
 // app.listen(3000, () => console.log('Server running on port 3000'));
 // Serve static files from the frontend directory
@@ -44,7 +44,7 @@ app.use('/appointments', appointmentRoutes);
 //app.use('/api', serviceRoutes);
 
 app.use('/api/services', ServiceRoutes);
-// app.use('/api/appointments', AppointmentsRoutes);
+app.use('/api/appointments', AppointmentRoutes);
 // app.use('/api/ratings', RatingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/salon', require('./routes/SalonRoutes'));

@@ -126,17 +126,25 @@ export default function SalonScreen() {
       {/* Filters */}
       <div className="filters-bar">
         {/* استبدل الزرين بزر select بنفس الكلاسات */}
-        <select className="filter-select" aria-label="Service charge">
-          <option>Service charge</option>
-          {/* ممكن تضيف خيارات هنا لو حبيت */}
+        <select className="filter-select" aria-label="Service charge" onChange={handlePriceRangeChange} value={`${minPrice}-${maxPrice}`}>
+            <option>Service charge</option>
+          <option value="">All Prices</option>
+          <option value="1-10">1 - 10</option>
+          <option value="11-20">11 - 20</option>
+          <option value="21-30">21 - 30</option>
+          <option value="31-40">31 - 40</option>
+          <option value="41-50">41 - 50</option>
+          <option value="51-60">51 - 60</option>
+          <option value="61-70">61 - 70</option>
+          <option value="71-80">71 - 80</option>
+          <option value="81-90">81 - 90</option>
+          <option value="91-100">91 - 100</option>
         </select>
         <select className="filter-select" aria-label="Discount">
           <option>Discount</option>
-          {/* ممكن تضيف خيارات هنا لو حبيت */}
         </select>
 
-        {/* باقي الفلاتر */}
-        <select className="filter-select" aria-label="Category">
+        <select className="filter-select" aria-label="Category" onChange={handleCategoryChange} value={category}>
           <option value="">Category</option>
           <option value="hair">Hair</option>
           <option value="nails">Nails</option>

@@ -14,19 +14,22 @@
   font-family: "Cinzel Decorative", serif;
   font-weight: 900;
 }
-html{
+
+html {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-body, html {
+
+body,
+html {
   position: absolute;
   margin: 0;
   padding: 0;
-  background-image: url(../images/PCP_Hex_Background_Gold_less_opacity.png) , url(../images/PCP_Hex_Background_Gold_less_opacity1.png);
-  background-size: cover,cover;
-  background-repeat: no-repeat,no-repeat;
+  background-image: url(../images/PCP_Hex_Background_Gold_less_opacity.png), url(../images/PCP_Hex_Background_Gold_less_opacity1.png);
+  background-size: cover, cover;
+  background-repeat: no-repeat, no-repeat;
   background-attachment: fixed;
   background-position: center, center;
   height: 100vh;
@@ -36,11 +39,8 @@ body, html {
 
 
 .customer-button {
-  font-family: "Cinzel Decorative", serif;
-  font-weight: 800;
-  font-style: normal;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   background-image: url(../images/UserLogo1.png);
   background-size: 100%;
   background-color: #ffffff00;
@@ -50,18 +50,17 @@ body, html {
   background-repeat: no-repeat;
   position: absolute;
   bottom: 0;
-  left: 32.5%;
-  top: 65%;
-  font-size: 30px;
+  left: 35%;
+  top: 45%;
+  font-size: 150%;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 800;
+  font-style: normal;
 }
 
 .beautyCenter-button {
-
-  font-family: "Cinzel Decorative", serif;
-  font-weight: 800;
-  font-style: normal;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   background-image: url(../images/UserLogo1.png);
   background-size: 100%;
   background-color: #ffffff00;
@@ -71,13 +70,14 @@ body, html {
   background-repeat: no-repeat;
   position: absolute;
   bottom: 0;
-  right: 32.5%;
-  top: 65%;
-  font-size: 23px;
-
-
-
+  right: 35%;
+  top: 45%;
+  font-size: 120%;
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 800;
+  font-style: normal;
 }
+
 
 .browsWithoutSignIn-button {
   font-family: "Cinzel Decorative", serif;
@@ -99,4 +99,3 @@ body, html {
   font-size: 25px;
 
 }
-

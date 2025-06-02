@@ -55,8 +55,9 @@ const SalonInfoForm = () => {
   const [isLoading, setIsLoading] = useState(true); // حالة التحميل
 
   useEffect(() => {
-    const storedServices = JSON.parse(localStorage.getItem("services")) || [];
-    setServices(storedServices);
+    console.log("Services = ", localStorage.getItem("services"));
+    // const storedServices = JSON.parse(localStorage.getItem("services")) || [];
+    // setServices(storedServices);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -67,7 +68,7 @@ const SalonInfoForm = () => {
      const website = e.target.website.value;
      const description = e.target.description.value;*/
 
-    const {  address, workingHours, serviceType, website, description } = salonInfo;
+    const { address, workingHours, serviceType, website, description } = salonInfo;
 
     const id = localStorage.getItem("salonId");
     console.log("id= ", id);
