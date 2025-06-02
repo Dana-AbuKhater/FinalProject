@@ -75,7 +75,7 @@ const AddServiceForm = ({ setServices }) => {
       alert('Service added successfully!');
 
       // إعادة التوجيه للداشبورد
-      navigate('/ManageServices', {
+      navigate('/SalonDashboard', {
         state: {
           message: "Service added successfully!",
           newService: data.service
