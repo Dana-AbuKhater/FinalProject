@@ -294,9 +294,7 @@ const SalonInfoForm = () => {
 
     return (
         <div className="salon-form-container" >
-            {/* <Link to="./SalonDashboard" className="back-button">
-                <button>←</button>
-            </Link> */}
+            
             <form onSubmit={handleSubmit} className="salon-form">
                 {/* 👇 عرض رسالة التحميل إذا كانت البيانات ما زالت تُحمّل */}
                 <h1 className="salon-form-title">

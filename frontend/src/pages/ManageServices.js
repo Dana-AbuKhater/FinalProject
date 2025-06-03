@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ManageServices.css";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 
 const ManageServices = () => {
     const [services, setServices] = useState([]);
@@ -43,6 +43,11 @@ const ManageServices = () => {
     }, []);
 
     const handleDelete = async (id) => {
+        // Show confirmation dialog
+        const confirmDelete = window.confirm("Are you sure you want to delete this service?");
+        if (!confirmDelete) {
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:3000/api/services/${id}`, {
                 method: 'DELETE',
@@ -67,6 +72,12 @@ const ManageServices = () => {
     };
 
     return (
+        <div className="manage-services">
+            <div className="back-button-container">
+                <Link to="/SalonDashboard">
+                    <button className="back-button">←</button>
+                </Link>
+            </div>
         <div className="container">
             <h2>Service Management Page</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
@@ -88,6 +99,7 @@ const ManageServices = () => {
                     </div>
                 </div>
             ))}
+        </div>
         </div>
     );
 };

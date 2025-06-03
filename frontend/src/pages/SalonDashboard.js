@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Calendar from "../InteractiveCalendar/Calendar";
 import './SalonDashboard.css'; // تأكد من وجود ملف CSS المناسب
 // import { se } from 'date-fns/locale';
@@ -216,6 +216,12 @@ const SalonDashboard = () => {
   if (error) return <div className="dashboard-error">{error}</div>;
 
   return (
+    <div className="salon-dashboard-container">
+      <div className="back-button-container">
+        <Link to="/SalonInfoForm">
+          <button className="back-button">←</button>
+        </Link>
+      </div>
     <div className="salon-dashboard">
       <div className="dashboard-header">
         <h1>Welcome {salonData.name}</h1>
@@ -418,30 +424,11 @@ const SalonDashboard = () => {
           </div>
         </div>
         <div className="appointments-section">
-          <div className="form-group">
-            {/* <label>Show appointments</label>
-            <button
-              onClick={handleCalendarButtonClick}
-              className="show-calendar"
-              type="button"
-            >
-              {showCalendarModal ? "❌" : "📅 Show Booked Days"}
-            </button>
-            {showCalendarModal && (
-              <div className="calendar-modal">
-                <div className="calendar-modal-content">
-                  <Calendar onDateSelect={handleDateSelect} />
-                  <button className="close-calendar-button" onClick={() => setShowCalendarModal(false)}>
-                    ❌
-                  </button>
-                </div>
-              </div>
-            )}*/}
-          </div> 
+          
           <button className="view-appointments-button" onClick={() => {
             // call the AppointmentsModal component
             setShowAppointmentsModal(true);
-            //fetchAppointments();
+            
           }}
           >
             View Appointments
@@ -461,7 +448,7 @@ const SalonDashboard = () => {
 
         </div>
         <div className="services-section">
-          <div className="add-service-button">
+          <div className="add-new-service-button">
             <button
               onClick={() => navigate("/AddServiceForm")}
               className="add-service-link"
@@ -479,78 +466,12 @@ const SalonDashboard = () => {
 
 
 
-          {/* <div className="service-category">
-            <h2>Visible Services</h2>
-            {visibleServices.map((service) => (
-              <div key={service.id} className="service-item">
-                <img
-                  src={service.image || "https://via.placeholder.com/50"}
-                  alt={service.name}
-                  className="service-image"
-                />
-                <div className="service-details">
-                  <h3>{service.name}</h3>
-                  <p>Price: ${service.price}</p>
-                  <p>Discount: {service.discount}%</p>
-                  <p>Duration: {service.duration} minutes</p>
-                  <p>Category: {service.category}</p>
-                  <p>Description: {service.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="service-category">
-            <h2>Hidden Services</h2>
-            {hiddenServices.map((service) => (
-              <div key={service.id} className="service-item">
-                <img
-                  src={service.image || "https://via.placeholder.com/50"}
-                  alt={service.name}
-                  className="service-image"
-                />
-                <div className="service-details">
-                  <h3>{service.name}</h3>
-                  <p>Price: ${service.price}</p>
-                  <p>Discount: {service.discount}%</p>
-                  <p>Duration: {service.duration} minutes</p>
-                  <p>Category: {service.category}</p>
-                  <p>Description: {service.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="service-category">
-            <h2>Deleted Services</h2>
-            {deletedServices.map((service) => (
-              <div key={service.id} className="service-item">
-                <img
-                  src={service.image || "https://via.placeholder.com/50"}
-                  alt={service.name}
-                  className="service-image"
-                />
-                <div className="service-details">
-                  <h3>{service.name}</h3>
-                  <p>Price: ${service.price}</p>
-                  <p>Discount: {service.discount}%</p>
-                  <p>Duration: {service.duration} minutes</p>
-                  <p>Category: {service.category}</p>
-                  <p>Description: {service.description}</p>
-                </div>
-              </div>
-            ))}
-            {showCalendarModal && (
-              <div className="calendar-modal">
-                <div className="calendar-modal-content">
-                  <Calendar onDateSelect={handleDateSelect} />
-                </div>
-              </div>
-            )}
-          </div> */}
+        
         </div>
 
       </div>
+
+    </div>
     </div>
   );
 };

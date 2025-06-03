@@ -46,3 +46,18 @@ h2 {
 .service-actions .delete-btn {
     background-color: #d00000;
 }
+.back-button {
+    position: fixed;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    top: 20px;
+    background-color: #d6d6d6;
+}
+.back-button:hover {
+    background-color: #c0c0c0;
+}   

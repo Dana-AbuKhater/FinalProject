@@ -13,10 +13,7 @@ function SignInUp() {
     if (location.state && location.state.userType) {
       setUserType(location.state.userType); // تعيين نوع المستخدم من الـ state
     }
-    /**  else {
-      alert('من فضلك اختر نوع المستخدم أولًا');
-      navigate('/'); // إذا لم يتم تحديد نوع المستخدم، الرجوع للصفحة الرئيسية
-    }*/
+   
   }, [location.state, navigate]);
 
   // الانتقال إلى صفحة تسجيل الدخول
@@ -28,16 +25,7 @@ function SignInUp() {
   const handleSignUpClick = () => {
     navigate('/SignUp', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
   };
-  // const handleSalonInfoForm = () => {
-  //   navigate('/SalonInfoForm', { state: { userType } }); // تمرير نوع المستخدم مع الـ navigation
-  // };
-  // const handleCustomerPage = () => {
-  //   navigate('/Customer', { state: { userType } });
-  // };
 
-  // const handleSalonDashboard = () => {
-  //   navigate('/SalonDashboard', { state: { userType } });
-  // };
 
   return (
     <div>
@@ -49,18 +37,13 @@ function SignInUp() {
       <button onClick={handleSignUpClick} className='SignUp-button'>
         Sign Up
       </button>
-      {/* <button onClick={handleSalonInfoForm} className='SalonInfoForm-button'>
-        SalonInfoForm
-      </button>
-      <button onClick={handleCustomerPage} className='Customer-button'>
-        Customer Page
-      </button>
-      <button onClick={handleSalonDashboard} className='Dashboard-button'>
-        Salon Dashboard
-      </button> */}
-      <Link to="/">
-        <button>←</button>
+    
+      <div className="back-button-container">
+        <Link to="/">
+        <button className="back-button">←</button>
       </Link>
+      </div>
+      
     </div>
   );
 }

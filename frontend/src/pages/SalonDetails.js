@@ -70,7 +70,7 @@ export default function SalonDetails() {
   return (
 
     <div className="salon-page">
-      <div className="back-button">
+      <div className="back-button-container">
         <Link to="/SalonDashboard">
           <button className="back-button">←</button>
         </Link>

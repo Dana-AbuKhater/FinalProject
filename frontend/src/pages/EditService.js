@@ -43,16 +43,38 @@ function EditService() {
         <div className="add-service-form-container">
             <form onSubmit={handleSubmit} className="add-service-form">
                 <h1 className="form-title">Edit Service </h1>
-
+                {/* Category */}
+                <div className="form-group">
+                    <label>Category:</label>
+                    <select
+                        type="String"
+                        value={service.category}
+                        onChange={(e) => setService({ ...service, category: e.target.value })}
+                    >
+                        <option value="">اختيار الفئة</option>
+                        <option value="hair">Hair</option>
+                        <option value="nails">Nails</option>
+                        <option value="skin">Skin</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
                 {/* Service Name */}
                 <div className="form-group">
                     <label>Service Name:</label>
-                    <input
-                        type="text"
+                    <select
                         value={service.name}
                         onChange={(e) => setService({ ...service, name: e.target.value })}
-                        required
-                    />
+                    >
+                        <option value="" unselectable=''>Select Service</option>
+                        <option value="Haircut">Haircut</option>
+                        <option value="Manicure">Manicure</option>
+                        <option value="Pedicure">Pedicure</option>
+                        <option value="Facial">Facial</option>
+                        <option value="Massage">Massage</option>
+                        <option value="Makeup">Makeup</option>
+                        <option value="Waxing">Waxing</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
 
                 {/* Price */}
@@ -61,7 +83,20 @@ function EditService() {
                     <input
                         type="number"
                         value={service.price}
-                        onChange={(e) => setService({ ...service, price: e.target.value })}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+                            if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                                setService({ ...service, price: value });
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                e.preventDefault();
+                            }
+                        }}
+                          min="0"
                         required
                     />
                 </div>
@@ -73,7 +108,20 @@ function EditService() {
 
                         type="number"
                         value={service.discount_price}
-                        onChange={(e) => setService({ ...service, discount_price: e.target.value })}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+                            if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                                setService({ ...service, discount_price: value });
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                e.preventDefault();
+                            }
+                        }}
+                        min="0"
                     />
                 </div>
 
@@ -93,39 +141,24 @@ function EditService() {
                     <textarea
                         type="String"
                         value={service.description}
-                        onChange={(e) => setService({ ...service, description: e.target.value })}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+                            if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                                setService({ ...service, duration: value });
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+                            if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                                e.preventDefault();
+                            }
+                        }}
+                          min="0"
                     />
                 </div>
 
-                {/* Category */}
-                <div className="form-group">
-                    <label>Category:</label>
-                    <select
-                        type="String"
-                        value={service.category}
-                        onChange={(e) => setService({ ...service, category: e.target.value })}
-                    >
-                        <option value="">اختيار الفئة</option>
-                        <option value="hair">Hair</option>
-                        <option value="nails">Nails</option>
-                        <option value="skin">Skin</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                {/* Status */}
-                <div className="form-group">
-                    <label>الحالة:</label>
-                    <select
-                        value={service.status}
-                        onChange={(e) => setService({ ...service, status: e.target.value })}
-                    >
-                        <option value="visible">ظاهرة</option>
-                        <option value="hidden">مخفية</option>
-                        <option value="deleted">محذوفة</option>
-                    </select>
-                </div>
-
+              
                 <button type="submit" className="submit-button">
                     Save Changes                </button>
             </form>

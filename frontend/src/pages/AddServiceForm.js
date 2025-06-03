@@ -86,41 +86,34 @@ const AddServiceForm = ({ setServices }) => {
       console.error('Error adding service:', error);
       alert('An error occurred while adding the service.');
     }
-/*
-    // جلب الخدمات الحالية من localStorage
-    const existingServices = JSON.parse(localStorage.getItem('services')) || [];
 
-    // إضافة الخدمة الجديدة إلى القائمة
-    const newService = {
-      id: Date.now(), // إنشاء ID فريد
-      ...service
-    };
-    const updatedServices = [...existingServices, newService];
-
-    // حفظ الخدمات في localStorage
-    localStorage.setItem('services', JSON.stringify(updatedServices));
-
-    // تحديث قائمة الخدمات في الصفحة الرئيسية
-    setServices(updatedServices);
-
-    // عرض رسالة نجاح
-    alert('Service added successfully!');
-
-    navigate('/SalonDashboard', {
-      state: {
-        message: "Service added successfully!",
-        newService: newService // إرسال بيانات الخدمة المضافة إذا لزم الأمر
-      }
-    });
-    // إعادة التوجيه إلى الفورم الرئيسي
-    //navigate('/salon-info');*/
   };
 
   return (
     <div className="add-service-form-container">
+      
+      <div className="back-button-container">
+        <Link to="/SalonDashboard">
+          <button className="back-button">←</button>
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="add-service-form">
         <h1 className="form-title">Add New Service</h1>
 
+        {/* Category */}
+        <div className="form-group">
+          <label>Category:</label>
+          <select
+            value={service.category}
+            onChange={(e) => setService({ ...service, category: e.target.value })}
+          >
+            <option value="">Select Category</option>
+            <option value="hair">Hair</option>
+            <option value="nails">Nails</option>
+            <option value="skin">Skin</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
         {/* Service Name */}
         <div className="form-group">
           <label>Service Name:</label>
@@ -147,7 +140,21 @@ const AddServiceForm = ({ setServices }) => {
             type="number"
             placeholder="e.g., 30"
             value={service.price}
-            onChange={(e) => setService({ ...service, price: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+              if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                setService({ ...service, price: value });
+              }
+            }}
+            onKeyDown={(e) => {
+              // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+              if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            }}
+            min="0"
+            
             required
           />
         </div>
@@ -159,7 +166,20 @@ const AddServiceForm = ({ setServices }) => {
             type="number"
             placeholder="e.g., 10"
             value={service.discount}
-            onChange={(e) => setService({ ...service, discount: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+              if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                setService({ ...service, discount: value });
+              }
+            }}
+            onKeyDown={(e) => {
+              // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+              if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            }}
+            min="0"
           />
         </div>
 
@@ -170,7 +190,20 @@ const AddServiceForm = ({ setServices }) => {
             type="number"
             placeholder="e.g., 60"
             value={service.duration}
-            onChange={(e) => setService({ ...service, duration: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              // يمنع إدخال القيم السالبة مع السماح بمسح الحقل
+              if (value === '' || (Number(value) >= 0 && /^\d*\.?\d*$/.test(value))) {
+                setService({ ...service, duration: value });
+              }
+            }}
+            onKeyDown={(e) => {
+              // يمنع كتابة علامة السالب والنقطتين (للأرقام العلمية)
+              if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                e.preventDefault();
+              }
+            }}
+            min="0"
           />
         </div>
 
@@ -184,35 +217,10 @@ const AddServiceForm = ({ setServices }) => {
           />
         </div>
 
-        {/* Category */}
-        <div className="form-group">
-          <label>Category:</label>
-          <select
-            value={service.category}
-            onChange={(e) => setService({ ...service, category: e.target.value })}
-          >
-            <option value="">Select Category</option>
-            <option value="hair">Hair</option>
-            <option value="nails">Nails</option>
-            <option value="skin">Skin</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
 
-        {/* Status */}
-        {/* <div className="form-group">
-          <label>Status:</label>
-          <select
-            value={service.status}
-            onChange={(e) => setService({ ...service, status: e.target.value })}
-          >
-            <option value="visible">Visible</option>
-            <option value="hidden">Hidden</option>
-            <option value="deleted">Deleted</option>
-          </select>
-        </div> */}
+     
 
-        <button type="submit" className="submit-button">Add Service</button>
+        <button type="submit" className="add-service-button">Add Service</button>
 
       </form>
     </div>
