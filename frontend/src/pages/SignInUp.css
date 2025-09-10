@@ -1,0 +1,58 @@
+.SignIn-button {
+    width: 200px;
+    height: 200px;
+    background-image: url(../images/UserLogo1.png);
+    background-size: 100%;
+    background-color: #ffffff00;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    position: absolute;
+    bottom: 0;
+    left: 35%;
+    top: 45%;
+    font-size: 25px;
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  .SignUp-button {
+    width: 200px;
+    height: 200px;
+    background-image: url(../images/UserLogo1.png);
+    background-size: 100%;
+    background-color: #ffffff00;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    position: absolute;
+    bottom: 0;
+    right: 35%;
+    top: 45%;
+    font-size: 25px;
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 800;
+    font-style: normal;
+    
+  }
+  .CusomerPage-button {
+    width: 10px;
+    height: 10px;
+
+    background-color: #ffffff00;
+    background-position: center;
+    border: none;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    position: absolute;
+    bottom: 0;
+    left: 35%;
+    top: 45%;
+    font-size: 25px;
+    font-family: "Cinzel Decorative", serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  

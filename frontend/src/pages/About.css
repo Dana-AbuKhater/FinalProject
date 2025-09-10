@@ -1,0 +1,147 @@
+.about-page {
+    background-color: #fffdf5;
+    color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    background-color: #ffffff;
+    padding: 80px 0;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 60px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+  }
+  
+  .hero-subtitle {
+    font-size: 20px;
+    color: #444;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  
+  /* Section Title */
+  .section-title {
+    font-size: 36px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  /* About Card */
+  .about-card {
+    background-color: #ffffff;
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  
+  .about-text {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.8;
+  }
+  
+  /* Vision Title */
+  .vision-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  
+  /* CTA Section */
+  .cta-section {
+    background-color: #fffaf0;
+    padding: 70px 0;
+    text-align: center;
+  }
+  
+  .cta-title {
+    font-size: 38px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 20px;
+  }
+  
+  .cta-text {
+    font-size: 18px;
+    color: #444;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 42px;
+    }
+  
+    .section-title {
+      font-size: 28px;
+    }
+  }
+  .dev-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 50px 0;
+  }
+  
+  .dev-card {
+    width: 250px;
+    background-color: #ffffff;
+    border: 2px solid #d4af37;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+  
+  .dev-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #d4af37;
+    margin-bottom: 15px;
+  }
+  
+  .dev-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+  }
+  
+  .dev-role {
+    font-size: 16px;
+    color: #d4af37;
+    margin-bottom: 10px;
+  }
+  
+  .about-text {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.7;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dev-cards {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
