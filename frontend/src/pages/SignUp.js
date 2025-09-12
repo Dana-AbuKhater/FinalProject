@@ -19,7 +19,7 @@ const SignUp = () => {
     
     const body = JSON.stringify({ type, email, username, phone, password })
     console.log(body)
-    fetch("http://localhost:3000/api/auth/register", {
+    fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       query: JSON.stringify({ type, email, username, phone, password }),
@@ -46,7 +46,7 @@ const SignUp = () => {
     // تحقق إذا كان نوع المستخدم هو صالون أو كستمر
     if (type === 'salon') {
       // تحقق من سكيما الصالون
-      fetch("http://localhost:3000/api/salon/register", {
+      fetch("/api/salon/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         query: JSON.stringify({ type, email, username, phone, password }),
@@ -63,7 +63,7 @@ const SignUp = () => {
         .catch(err => console.error("Error:", err));
     } else if (type === 'customer') {
       // تحقق من سكيما الكستمر
-      fetch("http://localhost:3000/api/customer/register", {
+      fetch("/api/customer/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         query: JSON.stringify({ type, email, username, phone, password }),
@@ -140,9 +140,9 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-    
+
     // Determine the appropriate endpoint based on user type
-    const endpoint = "http://localhost:3000/api/auth/register";
+    const endpoint = "/api/auth/register";
     let query = "?type=" + type + "&email=" + email + "&username=" + username + "&phone=" + phone + "&password=" + password;
     const url = endpoint + query;
     if (!type || (type !== 'salon' && type !== 'customer')) {
@@ -249,7 +249,7 @@ const SignUp = () => {
         >
           Sign Up
         </button>
-        
+
       </form>
       <p style={{ marginTop: '15px', fontSize: '14px' }}>
         Already have an account? <a href="/SignIn" style={{ textDecoration: 'none' }}>Sign In</a>

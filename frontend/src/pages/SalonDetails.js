@@ -16,7 +16,7 @@ export default function SalonDetails() {
   useEffect(() => {
     const fetchSalonDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/salons/${id}`);
+        const res = await fetch(`/api/salons/${id}`);
         const data = await res.json();
         if (data.success) {
           setSalon(data.salon);
@@ -45,7 +45,7 @@ export default function SalonDetails() {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/appointments/", {
+      const response = await fetch("/api/appointments/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

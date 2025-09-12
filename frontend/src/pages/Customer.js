@@ -11,7 +11,7 @@ export default function SalonScreen() {
   useEffect(() => {
     const fetchSalons = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/salons");
+        const response = await fetch("/api/salons");
         const data = await response.json();
         const loadedSalons = data.salons.map((s) => new Salon(s));
         setSalons(loadedSalons);

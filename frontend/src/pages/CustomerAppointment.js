@@ -10,7 +10,7 @@ export default function CustomerAppointments() {
     const fetchAppointments = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/appointments/1"
+          "/api/appointments/1"
         ); // مثال: ID الكستمور = 1
         const data = await response.json();
         console.log("data is:" + data.success);

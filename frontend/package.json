@@ -49,5 +49,6 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.0"
-  }
+  },
+  "proxy": "http://localhost:3000"
 }
