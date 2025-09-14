@@ -51,7 +51,7 @@ body, html {
   position: absolute;
   bottom: 0;
   left: 32.5%;
-  top: 65%;
+  top: 50%;
   font-size: 30px;
 }
 
@@ -72,31 +72,12 @@ body, html {
   position: absolute;
   bottom: 0;
   right: 32.5%;
-  top: 65%;
+  top: 50%;
   font-size: 23px;
 
 
 
 }
 
-.browsWithoutSignIn-button {
-  font-family: "Cinzel Decorative", serif;
-  font-weight: 750;
-  font-style: normal;
-  width: 250px;
-  height: 250px;
-  background-image: url(../images/UserLogo1.png);
-  background-size: 100%;
-  background-color: #ffffff00;
-  background-position: center;
-  border: none;
-  cursor: pointer;
-  background-repeat: no-repeat;
-  position: absolute;
-  bottom: 0;
-  left: 43.5%;
-  top: 50%;
-  font-size: 25px;
 
-}
 

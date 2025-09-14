@@ -1,27 +1,7 @@
-/*
 
-nav{
-    height: auto;
-    width: 100%;
-   
-}
-.Home{
-    align-items: start;
-}
-.About{
-    align-items: end;
- }
-.Help{
-    
-    
-    }
-.Contact{
- 
 
-}
-/* تنسيق عام لشريط التنقل */
 .navbar {
-    background-color: #ffffff; /* لون الخلفية */
+    background-color: #ffffff; 
     padding: 10px 20px; /* تباعد داخلي */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل */
     display: flex;
